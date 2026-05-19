@@ -1,0 +1,197 @@
+// ============================================================
+// schema.prisma — DevPortfolio + Marketplace
+// Database: Supabase (PostgreSQL)
+// ORM: Prisma v5
+// RLS: Enforced at DB level; Prisma operates via service-role
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+  // Enables Edge runtime support (useful for Next.js middleware)
+  // previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Standard pooled connection for queries
+  url       = env("DATABASE_URL")
+  // Direct connection for migrations (bypasses PgBouncer)
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProductCategory {
+  APP
+  WOO_PLUGIN
+  CHROME_EXTENSION
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
+
+// ============================================================
+// USER MODEL
+// Synced from Clerk via webhook. Clerk userId is the source
+// of truth for identity; this table stores app-level metadata.
+// ============================================================
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique          // Clerk's user ID (e.g. "user_2abc...")
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  role      Role     @default(USER)
+
+  // ── Subscription placeholder ──────────────────────────────
+  // Reserved for a future subscription rollout.
+  // Do NOT expose this field directly in client components.
+  hasActiveSubscription Boolean @default(false)
+  subscriptionExpiresAt DateTime?
+
+  // ── Audit timestamps ──────────────────────────────────────
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ── Relations ─────────────────────────────────────────────
+  orders    Order[]
+  downloads Download[]
+
+  @@index([clerkId])
+  @@index([email])
+  @@map("users")
+}
+
+// ============================================================
+// PRODUCT MODEL
+// Represents a digital product in the marketplace.
+// The `downloadUrl` is a PRIVATE storage path — never a
+// public URL. Signed URLs are generated server-side on demand.
+// ============================================================
+
+model Product {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  description String          @db.Text  // Supports full Markdown content
+  price       Decimal         @db.Decimal(10, 2)
+  category    ProductCategory
+
+  // ── Storage ───────────────────────────────────────────────
+  // Stores the PRIVATE storage bucket path, e.g.:
+  //   "products/2024/my-plugin-v1.2.zip"
+  // A signed URL is generated on-demand after purchase
+  // verification. This field is NEVER sent to the client.
+  downloadUrl String
+
+  // ── Display ───────────────────────────────────────────────
+  thumbnailUrl String?         // Public CDN thumbnail image
+  version      String?         @default("1.0.0")
+  fileSize     String?         // Human-readable, e.g. "2.4 MB"
+  isPublished  Boolean         @default(false)
+  isFeatured   Boolean         @default(false)
+
+  // ── Audit timestamps ──────────────────────────────────────
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // ── Relations ─────────────────────────────────────────────
+  orderItems  OrderItem[]
+  downloads   Download[]
+
+  @@index([slug])
+  @@index([category])
+  @@index([isPublished])
+  @@map("products")
+}
+
+// ============================================================
+// ORDER MODEL
+// Represents a completed purchase transaction.
+// Integrates with Stripe/payment gateway in future.
+// ============================================================
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status        OrderStatus @default(PENDING)
+
+  // Snapshot the price at time of purchase for audit trail
+  totalAmount   Decimal     @db.Decimal(10, 2)
+
+  // External payment provider reference (Stripe PaymentIntent, etc.)
+  paymentRef    String?     @unique
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  items         OrderItem[]
+
+  @@index([userId])
+  @@index([paymentRef])
+  @@map("orders")
+}
+
+// ============================================================
+// ORDER ITEM MODEL
+// Junction between Order and Product (many-to-many).
+// Snapshots the price at time of purchase.
+// ============================================================
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  // Price snapshot at purchase time (product price may change later)
+  priceAtPurchase Decimal @db.Decimal(10, 2)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([orderId, productId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+// ============================================================
+// DOWNLOAD MODEL
+// Tracks every time a user generates a signed download URL.
+// Used for audit, abuse detection, and download history UI.
+// ============================================================
+
+model Download {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // The IP and user-agent at time of download request
+  ipAddress   String?
+  userAgent   String?
+
+  // Whether the signed URL was successfully generated
+  success     Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([productId])
+  @@index([createdAt])
+  @@map("downloads")
+}
