@@ -29,11 +29,11 @@ export default async function AdminLayout({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-              <span className="flex h-7 w-7 items-center justify-center rounded border border-slate-900 bg-slate-900 text-xs font-bold text-white">
+            <Link href="/" className="flex items-center gap-2 text-sm font-bold text-slate-900">
+              <span className="flex h-7 w-7 items-center justify-center rounded border border-blue-600 bg-blue-600 text-xs font-bold text-white shadow-sm">
                 D
               </span>
-              DevPortfolio
+              <span className="tracking-tight text-lg">Druporia</span>
             </Link>
             <span className="text-slate-300">/</span>
             <div className="flex items-center gap-1.5">

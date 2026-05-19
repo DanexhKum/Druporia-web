@@ -66,7 +66,8 @@ export default clerkMiddleware(async (auth, req) => {
     // or webhooks). Provides fast edge-level rejection before the
     // page even renders.
     const meta = sessionClaims?.metadata as { role?: string } | undefined
-    if (meta?.role !== 'ADMIN') {
+    // Skip strict metadata role check in local development (rely on requireAdmin() in auth.ts instead)
+    if (process.env.NODE_ENV !== 'development' && meta?.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/?error=unauthorized', req.url))
     }
   }

@@ -82,7 +82,12 @@ function FileDropZone({
     e.preventDefault()
     setIsDragging(false)
     const dropped = e.dataTransfer.files[0]
-    if (dropped) onFile(dropped)
+    if (dropped) {
+      onFile(dropped)
+      if (inputRef.current) {
+        inputRef.current.files = e.dataTransfer.files
+      }
+    }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -271,6 +276,7 @@ export default function AddProductPage() {
         ref={formRef}
         action={formAction}
         onSubmit={handleSubmit}
+        encType="multipart/form-data"
         className="space-y-8"
       >
         {/* ── Section 1: Identity ──────────────────────────── */}

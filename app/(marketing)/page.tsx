@@ -1,175 +1,168 @@
 // ============================================================
-// app/(marketing)/page.tsx — Home / Portfolio Page
-// Design: Minimalist white, Linear-inspired layout.
+// app/(marketing)/page.tsx — Home / Landing Page
+// Rebranded for Druporia Enterprise Solutions
 // ============================================================
 
 import Link from 'next/link'
-import { ArrowRight, Code2, Package, Puzzle, Globe, Zap, Shield } from 'lucide-react'
+import { ArrowRight, Box, Code2, Bot, Layers, CheckCircle2, ChevronRight, Workflow } from 'lucide-react'
 
 // ── Tech stack badges ──────────────────────────────────────────
 const TECH_STACK = [
-  'Next.js', 'TypeScript', 'React', 'Node.js',
-  'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Clerk',
-  'Supabase', 'AWS', 'Docker', 'WooCommerce',
+  'Next.js', 'n8n', 'Node.js', 'PostgreSQL', 
+  'React', 'WooCommerce', 'Shopify', 'Magento',
+  'TensorFlow', 'OpenAI', 'Python', 'AWS'
 ]
 
-// ── Freelance service offerings ───────────────────────────────
+// ── Enterprise Services ───────────────────────────────
 const SERVICES = [
   {
-    icon: Globe,
-    title: 'Full-Stack Web Apps',
+    icon: Box,
+    title: 'Custom Plugin Development',
     description:
-      'End-to-end web applications built with Next.js, TypeScript, and PostgreSQL. Production-ready, scalable, and secure.',
-    tags: ['Next.js', 'TypeScript', 'PostgreSQL'],
+      'Extend and optimize platforms such as WooCommerce, Shopify, Magento, and BetterCommerce with scalable, custom-built plugins.',
+    tags: ['WooCommerce', 'Shopify', 'Magento'],
   },
   {
-    icon: Package,
-    title: 'WooCommerce Plugins',
+    icon: Layers,
+    title: 'Shopify App & Integration',
     description:
-      'Custom WordPress & WooCommerce plugins that extend store functionality, integrate payment gateways, and automate workflows.',
-    tags: ['PHP', 'WordPress', 'WooCommerce'],
+      'Create custom Shopify apps that enhance functionality, boost store performance, and integrate seamlessly with third-party APIs.',
+    tags: ['Shopify Apps', 'API Integration', 'GraphQL'],
   },
   {
-    icon: Puzzle,
-    title: 'Chrome Extensions',
+    icon: Bot,
+    title: 'AI-Driven Solutions & Chatbots',
     description:
-      'Productivity-focused Chrome extensions with clean UI, background workers, and seamless browser API integration.',
-    tags: ['JavaScript', 'Chrome API', 'React'],
+      'Leverage artificial intelligence for smarter product recommendations, personalized experiences, and intelligent customer support bots.',
+    tags: ['AI/ML', 'Chatbots', 'Personalization'],
   },
   {
     icon: Code2,
-    title: 'API Development',
+    title: 'Full-Stack Web Development',
     description:
-      'RESTful and GraphQL APIs with authentication, rate limiting, and comprehensive documentation. Built to scale.',
-    tags: ['REST', 'GraphQL', 'Node.js'],
+      'Build modern, high-performing websites and applications designed for growth using cutting-edge technologies like Next.js and React.',
+    tags: ['Next.js', 'React', 'Node.js'],
   },
   {
-    icon: Zap,
-    title: 'Performance Audits',
+    icon: Workflow,
+    title: 'Business Automation (n8n)',
     description:
-      'Identify and resolve Core Web Vitals issues, reduce bundle sizes, and optimize database queries for measurable speed gains.',
-    tags: ['Web Vitals', 'Lighthouse', 'SQL'],
+      'Streamline your business operations and synchronize data across all your tools with custom, robust n8n automation workflows.',
+    tags: ['n8n', 'Automation', 'Workflows'],
   },
-  {
-    icon: Shield,
-    title: 'Security Reviews',
-    description:
-      'Comprehensive security audits covering OWASP Top 10, authentication flows, data exposure, and dependency vulnerabilities.',
-    tags: ['OWASP', 'Auth', 'Pen Testing'],
-  },
-]
-
-// ── Stats ──────────────────────────────────────────────────────
-const STATS = [
-  { value: '50+', label: 'Projects delivered' },
-  { value: '30+', label: 'Happy clients' },
-  { value: '5 yrs', label: 'Industry experience' },
-  { value: '99%', label: 'Client satisfaction' },
 ]
 
 export default function HomePage() {
   return (
-    <div className="bg-white">
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="container-page py-20 sm:py-28">
-        <div className="max-w-3xl">
-          {/* Available badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-3 py-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            <span className="text-xs font-medium text-green-700">
-              Available for freelance work
+    <div className="bg-slate-50 min-h-screen">
+      {/* ── Hero Section ─────────────────────────────────────────── */}
+      <section className="container-page py-24 sm:py-32 relative overflow-hidden">
+        {/* Subtle background glow for enterprise feel */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-blue-500/10 rounded-full blur-3xl opacity-50 -z-10" />
+
+        <div className="max-w-4xl text-center mx-auto">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="text-xs font-semibold text-blue-800 tracking-wide uppercase">
+              Enterprise Technology Solutions
             </span>
           </div>
 
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-            Full-Stack Developer.
-            <br />
-            <span className="text-slate-400">Products. Plugins. Extensions.</span>
+          <h1 className="text-5xl font-bold leading-tight tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+            Empowering Digital Commerce with <span className="text-blue-600">Innovative Technology</span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-500 sm:text-lg">
-            I build reliable web applications, WooCommerce plugins, and Chrome
-            extensions for businesses that need clean code and on-time delivery.
-            Browse my digital product marketplace or hire me directly.
+          <p className="mt-8 max-w-2xl mx-auto text-lg leading-relaxed text-slate-600">
+            At <strong>Druporia</strong>, we help businesses unlock growth in the digital commerce era with innovative, scalable, and future-ready solutions tailored to their needs.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/marketplace" className="btn-primary gap-2">
-              Browse Marketplace
-              <ArrowRight className="h-4 w-4" />
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/contact" className="btn-primary gap-2 text-base px-8 py-4 w-full sm:w-auto shadow-lg shadow-blue-500/20">
+              Schedule a Consultation
+              <ArrowRight className="h-5 w-5" />
             </Link>
-            <Link href="/#contact" className="btn-secondary">
-              Hire Me
+            <Link href="/marketplace" className="btn-secondary gap-2 text-base px-8 py-4 w-full sm:w-auto bg-white">
+              Browse Digital Products
+              <ChevronRight className="h-5 w-5 text-slate-400" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Stats bar ────────────────────────────────────── */}
-      <section className="border-y border-slate-100 bg-slate-50/50">
-        <div className="container-page py-8">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-2xl font-semibold text-slate-900">
-                  {stat.value}
-                </p>
-                <p className="mt-0.5 text-xs text-slate-500">{stat.label}</p>
+      {/* ── Tech Stack Marquee ───────────────────────────────────── */}
+      <section className="border-y border-slate-200 bg-white shadow-sm relative z-10">
+        <div className="container-page py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <p className="text-sm font-semibold uppercase tracking-widest text-slate-400 whitespace-nowrap">
+            Powered By
+          </p>
+          <div className="flex flex-wrap justify-center sm:justify-end gap-3 w-full">
+            {TECH_STACK.map((tech) => (
+              <span key={tech} className="px-3 py-1 text-sm font-medium text-slate-600 bg-slate-100 rounded-md border border-slate-200">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── About Us Section ───────────────────────────────────── */}
+      <section className="bg-slate-900 text-white relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Why partner with Druporia?
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-slate-300">
+              We provide end-to-end eCommerce and technology services for both B2B and B2C companies, enabling brands like yours to strengthen their online presence, streamline operations, and deliver exceptional customer experiences.
+            </p>
+            <p className="mt-4 text-lg leading-relaxed text-slate-300">
+              With Druporia as your technology partner, you gain access to a team dedicated to innovation, quality, and measurable results. We don’t just deliver solutions — we empower your business to stay ahead of the competition and thrive in the digital economy.
+            </p>
+          </div>
+          <div className="space-y-6 lg:pl-12">
+            {['Scalable Architecture', 'Enterprise Security', 'AI-Driven Innovation', 'Measurable ROI'].map((benefit) => (
+              <div key={benefit} className="flex items-center gap-4 p-4 rounded-xl bg-slate-800/50 border border-slate-700 backdrop-blur-sm">
+                <CheckCircle2 className="h-6 w-6 text-blue-400 shrink-0" />
+                <span className="text-lg font-medium text-slate-200">{benefit}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Tech Stack ───────────────────────────────────── */}
-      <section className="container-page py-16">
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-5">
-          Tech Stack
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {TECH_STACK.map((tech) => (
-            <span key={tech} className="badge">
-              {tech}
-            </span>
-          ))}
-        </div>
-      </section>
-
       {/* ── Services Grid ────────────────────────────────── */}
-      <section id="services" className="border-t border-slate-100 bg-white">
-        <div className="container-page py-16 sm:py-20">
-          <div className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">
-              Services
+      <section id="services" className="bg-slate-50 py-20 sm:py-28">
+        <div className="container-page">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-3">
+              Our Expertise
             </p>
-            <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
-              What I build
+            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+              Tailored technology services for modern commerce
             </h2>
-            <p className="mt-2 text-sm text-slate-500 max-w-lg">
-              End-to-end development across the full spectrum of modern web technology.
-            </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((service) => {
               const Icon = service.icon
               return (
                 <div
                   key={service.title}
-                  className="card-hover p-6 group cursor-default"
+                  className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300 group"
                 >
-                  <div className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 transition-colors group-hover:border-slate-300 group-hover:bg-slate-100">
-                    <Icon className="h-4 w-4" />
+                  <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-900">
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">
                     {service.title}
                   </h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+                  <p className="text-sm leading-relaxed text-slate-600 mb-6 min-h-[80px]">
                     {service.description}
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-2 mt-auto">
                     {service.tags.map((tag) => (
-                      <span key={tag} className="badge text-xs">
+                      <span key={tag} className="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded">
                         {tag}
                       </span>
                     ))}
@@ -181,61 +174,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Marketplace CTA ──────────────────────────────── */}
-      <section className="border-t border-slate-100 bg-slate-50/50">
-        <div className="container-page py-16 sm:py-20">
-          <div className="rounded-lg border border-slate-200 bg-white p-8 sm:p-12">
-            <div className="max-w-xl">
-              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">
-                Marketplace
-              </p>
-              <h2 className="text-2xl font-semibold text-slate-900">
-                Ready-to-use digital products
-              </h2>
-              <p className="mt-3 text-sm text-slate-500 leading-relaxed">
-                Browse premium apps, WooCommerce plugins, and Chrome extensions.
-                Secure checkout, instant download, and lifetime updates.
-              </p>
-              <Link href="/marketplace" className="btn-primary mt-6 gap-2">
-                View all products
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Contact ──────────────────────────────────────── */}
-      <section id="contact" className="border-t border-slate-100 bg-white">
-        <div className="container-page py-16 sm:py-20">
-          <div className="max-w-lg">
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">
-              Contact
-            </p>
-            <h2 className="text-2xl font-semibold text-slate-900">
-              Let&apos;s work together
-            </h2>
-            <p className="mt-3 text-sm text-slate-500 leading-relaxed">
-              Available for project-based contracts and ongoing retainer
-              arrangements. Response within 24 hours.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="mailto:hello@yourdomain.com"
-                className="btn-primary gap-2"
-              >
-                Send an email
-                <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary"
-              >
-                LinkedIn Profile
-              </a>
-            </div>
+      {/* ── Contact CTA ──────────────────────────────────────── */}
+      <section id="contact" className="border-t border-slate-200 bg-white">
+        <div className="container-page py-20 sm:py-28 text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+            Ready to transform your business?
+          </h2>
+          <p className="mt-4 text-lg text-slate-600">
+            Let's discuss how Druporia can engineer the perfect solution to accelerate your digital growth.
+          </p>
+          <div className="mt-10">
+            <Link
+              href="/contact"
+              className="btn-primary inline-flex text-lg px-10 py-5 shadow-lg shadow-blue-500/20"
+            >
+              Contact Our Team
+            </Link>
           </div>
         </div>
       </section>

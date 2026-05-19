@@ -19,7 +19,7 @@ const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Marketplace', href: '/marketplace' },
   { label: 'Services', href: '/#services' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 export function Navbar() {
@@ -32,12 +32,12 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-semibold text-slate-900"
+          className="flex items-center gap-2 text-sm font-bold text-slate-900"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded border border-slate-200 bg-slate-900 text-xs font-bold text-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded border border-blue-600 bg-blue-600 text-xs font-bold text-white shadow-sm">
             D
           </span>
-          <span>DevPortfolio</span>
+          <span className="tracking-tight text-lg">Druporia</span>
         </Link>
 
         {/* Nav links — desktop */}

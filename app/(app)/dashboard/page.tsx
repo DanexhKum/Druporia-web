@@ -5,6 +5,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { ensureDbUser, isAdminRole } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { formatPrice, formatDate, CATEGORY_LABELS, CATEGORY_ICONS } from '@/lib/utils'
 import { Download, Package, Clock, User, ShieldAlert } from 'lucide-react'
@@ -57,10 +58,10 @@ export default async function DashboardPage() {
   const { userId } = await auth()
   if (!userId) return redirect('/sign-in')
 
+  await ensureDbUser(userId)
   const user = await getDashboardData(userId)
 
   if (!user) {
-    // User exists in Clerk but not DB — first sign-in edge case
     return (
       <div className="container-page py-16 text-center">
         <p className="text-sm text-slate-500">
@@ -72,6 +73,8 @@ export default async function DashboardPage() {
       </div>
     )
   }
+
+  const isAdmin = isAdminRole(user.role)
 
   const totalPurchased = user.orders.reduce(
     (sum, o) => sum + o.items.length,
@@ -272,18 +275,12 @@ export default async function DashboardPage() {
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Role</span>
-                <span
-                  className={`font-medium ${
-                    user.role === 'ADMIN'
-                      ? 'text-purple-700'
-                      : 'text-slate-700'
-                  }`}
-                >
-                  {user.role}
-                </span>
-              </div>
+              {isAdmin && (
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Role</span>
+                  <span className="font-medium text-purple-700">Admin</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-slate-500">Member since</span>
                 <span className="text-slate-700">
@@ -306,7 +303,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Admin panel shortcut */}
-          {user.role === 'ADMIN' && (
+          {isAdmin && (
             <div className="card border-purple-100 bg-purple-50/50 p-4">
               <div className="flex items-center gap-2 mb-2">
                 <ShieldAlert className="h-4 w-4 text-purple-600" />

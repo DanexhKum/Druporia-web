@@ -14,11 +14,11 @@ export default function SignInPage() {
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded border border-slate-900 bg-slate-900 text-sm font-bold text-white mb-4">
+          <div className="inline-flex h-10 w-10 items-center justify-center rounded border border-blue-600 bg-blue-600 text-sm font-bold text-white shadow-sm mb-4">
             D
           </div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Sign in to DevPortfolio
+            Sign in to Druporia
           </h1>
           <p className="mt-1.5 text-sm text-slate-500">
             Access your purchased products and downloads.

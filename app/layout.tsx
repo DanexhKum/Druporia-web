@@ -10,19 +10,19 @@ import '@/app/globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'DevPortfolio — Freelance Developer & Digital Products',
-    template: '%s | DevPortfolio',
+    default: 'Druporia — Enterprise Technology Solutions',
+    template: '%s | Druporia',
   },
   description:
-    'Freelance full-stack developer specializing in web applications, WooCommerce plugins, and Chrome extensions. Browse and download premium digital products.',
+    'Druporia provides end-to-end eCommerce and technology services for B2B and B2C companies. Custom plugins, AI solutions, and full-stack development.',
   keywords: [
     'freelance developer',
     'web development',
     'WooCommerce plugins',
     'Chrome extensions',
-    'digital products',
+    'business automation',
   ],
-  authors: [{ name: 'Your Name' }],
+  authors: [{ name: 'Druporia' }],
   robots: {
     index: true,
     follow: true,
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    title: 'DevPortfolio — Freelance Developer & Digital Products',
+    title: 'Druporia — Enterprise Technology Solutions',
     description:
-      'Premium web apps, WooCommerce plugins, and Chrome extensions built by a professional developer.',
-    siteName: 'DevPortfolio',
+      'Innovative, scalable, and future-ready technology solutions tailored to your business needs.',
+    siteName: 'Druporia',
   },
 }
 

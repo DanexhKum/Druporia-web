@@ -150,17 +150,17 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
   return (
     <div className="bg-white">
       {/* ── Page header ──────────────────────────────────── */}
-      <div className="border-b border-slate-100">
-        <div className="container-page py-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1.5">
-            Marketplace
+      <div className="bg-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        <div className="container-page py-16 relative z-10">
+          <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">
+            Druporia Marketplace
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-            Digital Products
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Premium Digital Products
           </h1>
-          <p className="mt-2 max-w-lg text-sm text-slate-500">
-            Premium apps, WooCommerce plugins, and Chrome extensions.
-            Secure checkout, instant download.
+          <p className="mt-4 max-w-xl text-lg text-slate-300">
+            Browse our catalog of high-quality plugins, extensions, and digital assets designed to scale your business. Secure checkout and instant delivery.
           </p>
         </div>
       </div>

@@ -30,10 +30,27 @@ export async function getCurrentDbUser() {
   return user
 }
 
+// ── Ensure Clerk user exists in DB (webhook may not have fired yet) ─
+export async function ensureDbUser(clerkUserId: string) {
+  const existing = await prisma.user.findUnique({
+    where: { clerkId: clerkUserId },
+    select: { id: true },
+  })
+
+  if (existing) return existing
+
+  return syncUserToDb(clerkUserId)
+}
+
+export function isAdminRole(role: Role | string | undefined) {
+  return role === Role.ADMIN
+}
+
 // ── Require authentication — redirect to sign-in if not authed ─
 export async function requireAuth() {
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
+  await ensureDbUser(userId)
   return userId
 }
 
@@ -52,10 +69,19 @@ export async function requireAdmin() {
     | { role?: string; twoFactorVerified?: boolean }
     | undefined
 
-  const dbUser = await prisma.user.findUnique({
+  let dbUser = await prisma.user.findUnique({
     where: { clerkId: userId },
     select: { role: true },
   })
+
+  // Auto-sync user locally if webhooks haven't fired
+  if (!dbUser && process.env.NODE_ENV !== 'production') {
+    await syncUserToDb(userId)
+    dbUser = await prisma.user.findUnique({
+      where: { clerkId: userId },
+      select: { role: true },
+    })
+  }
 
   const isAdmin = dbUser?.role === Role.ADMIN
 

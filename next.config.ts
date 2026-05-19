@@ -1,6 +1,12 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Next.js "N" dev menu (Route / Turbopack) — dev-only, not your app UI.
+  // Hidden by default; set SHOW_NEXT_DEV_INDICATOR=true in .env.local on admin machines.
+  devIndicators:
+    process.env.SHOW_NEXT_DEV_INDICATOR === 'true'
+      ? { position: 'bottom-left' }
+      : false,
   experimental: {
     serverActions: {
       allowedOrigins: ['localhost:3000'],
