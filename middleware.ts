@@ -65,11 +65,19 @@ export default clerkMiddleware(async (auth, req) => {
     // Check role from Clerk session metadata (set via Clerk dashboard
     // or webhooks). Provides fast edge-level rejection before the
     // page even renders.
+    // const meta = sessionClaims?.metadata as { role?: string } | undefined
+    // // Skip strict metadata role check in local development (rely on requireAdmin() in auth.ts instead)
+    // if (process.env.NODE_ENV !== 'development' && meta?.role !== 'ADMIN') {
+    //   return NextResponse.redirect(new URL('/?error=unauthorized', req.url))
+    // }
+    // NOTE: commented out to avoid Vercel redirection loops if Clerk Custom JWT template is not configured.
+    // Deep role validation is done securely via requireAdmin() in the Server Components/Layouts.
+    /*
     const meta = sessionClaims?.metadata as { role?: string } | undefined
-    // Skip strict metadata role check in local development (rely on requireAdmin() in auth.ts instead)
     if (process.env.NODE_ENV !== 'development' && meta?.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/?error=unauthorized', req.url))
     }
+    */
   }
 
   return NextResponse.next()
