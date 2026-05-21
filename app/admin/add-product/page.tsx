@@ -356,6 +356,31 @@ export default function AddProductPage() {
             />
             <FieldError errors={fieldErrors} field="version" state={state} />
           </div>
+
+          {/* Thumbnail URL */}
+          <div>
+            <label htmlFor="thumbnailUrl" className="form-label">
+              Thumbnail image URL
+              <span className="ml-1.5 text-xs text-slate-400 font-normal">
+                (optional)
+              </span>
+            </label>
+            <input
+              id="thumbnailUrl"
+              name="thumbnailUrl"
+              type="url"
+              placeholder="https://example.com/product-thumbnail.png"
+              className={cn(
+                fieldErrors?.thumbnailUrl
+                  ? 'border-red-300 focus:ring-red-500'
+                  : ''
+              )}
+            />
+            <p className="mt-1 text-xs text-slate-400">
+              Used on marketplace cards and product detail pages.
+            </p>
+            <FieldError errors={fieldErrors} field="thumbnailUrl" state={state} />
+          </div>
         </section>
 
         {/* ── Section 2: Categorisation & Pricing ─────────── */}

@@ -1,76 +1,111 @@
-// ============================================================
-// components/layout/Footer.tsx
-// ============================================================
-
 import Link from 'next/link'
+import { Logo } from '@/components/branding/Logo'
+import { Mail, MapPin } from 'lucide-react'
+
+const PRODUCT_LINKS = [
+  { label: 'Marketplace', href: '/marketplace' },
+  { label: 'WooCommerce Plugins', href: '/marketplace?category=WOO_PLUGIN' },
+  { label: 'Chrome Extensions', href: '/marketplace?category=CHROME_EXTENSION' },
+  { label: 'Web Apps', href: '/marketplace?category=APP' },
+]
+
+const COMPANY_LINKS = [
+  { label: 'About', href: '/#team' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Client Reviews', href: '/#reviews' },
+]
+
+const LEGAL_LINKS = [
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
+  { label: 'Refund Policy', href: '/refund' },
+]
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-white">
-      <div className="container-page py-6">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-          <div>
-            <p className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <span className="flex h-5 w-5 items-center justify-center rounded border border-blue-600 bg-blue-600 text-[10px] font-bold text-white shadow-sm">
-                D
-              </span>
-              Druporia
+    <footer className="border-t border-slate-800 bg-slate-950 text-slate-300">
+      <div className="container-page py-16">
+        <div className="grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Logo href="/" imageClassName="h-15 w-auto sm:h-15" />
+            <p className="mt-5 text-sm leading-relaxed text-slate-400 max-w-sm">
+              Druporia builds enterprise-grade digital products, WooCommerce plugins,
+              and automation for brands scaling in global commerce.
             </p>
-            <p className="mt-2 text-xs text-slate-500 leading-relaxed max-w-xs">
-              Enterprise technology solutions, custom plugins, AI integrations, and full-stack development for modern commerce.
-            </p>
+            <div className="mt-6 space-y-2 text-sm text-slate-500">
+              <p className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-blue-400 shrink-0" />
+                hello@druporia.com
+              </p>
+              <p className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-blue-400 shrink-0" />
+                Remote-first · Worldwide
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              Navigate
-            </p>
-            <ul className="space-y-2">
-              {[
-                { label: 'Home', href: '/' },
-                { label: 'Marketplace', href: '/marketplace' },
-                { label: 'Services', href: '/#services' },
-                { label: 'Contact', href: '/contact' },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-xs text-slate-500 hover:text-slate-900 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              Account
-            </p>
-            <ul className="space-y-2">
-              {[
-                { label: 'Sign In', href: '/sign-in' },
-                { label: 'Dashboard', href: '/dashboard' },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-xs text-slate-500 hover:text-slate-900 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-white mb-4">
+                Products
+              </p>
+              <ul className="space-y-2.5">
+                {PRODUCT_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-white mb-4">
+                Company
+              </p>
+              <ul className="space-y-2.5">
+                {COMPANY_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-white mb-4">
+                Legal
+              </p>
+              <ul className="space-y-2.5">
+                {LEGAL_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="section-divider" />
-        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <p className="text-xs text-slate-400">
-            © {new Date().getFullYear()} Druporia. All rights reserved.
+        <div className="mt-14 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-slate-500">
+            © {new Date().getFullYear()} Druporia Technologies. All rights reserved.
           </p>
-          <p className="text-xs text-slate-400">
-            Built with Next.js, Tailwind CSS & Clerk
+          <p className="text-xs text-slate-600">
+            Built with Next.js · Secured by Clerk · Hosted on Vercel
           </p>
         </div>
       </div>

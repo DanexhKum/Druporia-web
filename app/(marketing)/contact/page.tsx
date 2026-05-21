@@ -4,7 +4,8 @@
 // ============================================================
 
 import type { Metadata } from 'next'
-import { Mail, MessageSquare, Building, Send } from 'lucide-react'
+import { Mail, MessageSquare, Building } from 'lucide-react'
+import { ContactForm } from '@/components/contact/ContactForm'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -74,71 +75,9 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Formspree Form */}
+          {/* Contact form */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 sm:p-10 shadow-sm">
-              <form action="https://formspree.io/f/xojypayy" method="POST" className="space-y-6">
-                
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="name" className="form-label text-slate-700">Full Name</label>
-                    <input 
-                      type="text" 
-                      id="name" 
-                      name="name" 
-                      required 
-                      className="mt-1 block w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 bg-slate-50 focus:bg-white transition-colors" 
-                      placeholder="John Doe" 
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="form-label text-slate-700">Email Address</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
-                      required 
-                      className="mt-1 block w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 bg-slate-50 focus:bg-white transition-colors" 
-                      placeholder="john@example.com" 
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="form-label text-slate-700">Subject / Inquiry Type</label>
-                  <select 
-                    id="subject" 
-                    name="subject" 
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 bg-slate-50 focus:bg-white transition-colors"
-                  >
-                    <option value="Project Inquiry">Project Inquiry</option>
-                    <option value="Product Support">Product Support</option>
-                    <option value="Partnership">Partnership / Automation (n8n)</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="form-label text-slate-700">Message</label>
-                  <textarea 
-                    id="message" 
-                    name="message" 
-                    rows={6} 
-                    required 
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 bg-slate-50 focus:bg-white transition-colors resize-y" 
-                    placeholder="How can we help you?"
-                  ></textarea>
-                </div>
-
-                <button 
-                  type="submit" 
-                  className="btn-primary w-full py-4 text-base font-semibold shadow-lg shadow-blue-500/20 gap-2 justify-center"
-                >
-                  Send Message
-                  <Send className="h-5 w-5" />
-                </button>
-              </form>
-            </div>
+            <ContactForm />
           </div>
 
         </div>

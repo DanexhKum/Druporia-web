@@ -7,6 +7,8 @@
 
 generator client {
   provider = "prisma-client-js"
+
+  // seed: npx tsx prisma/seed.ts
   // Enables Edge runtime support (useful for Next.js middleware)
   // previewFeatures = ["driverAdapters"]
 }
@@ -39,6 +41,12 @@ enum OrderStatus {
   COMPLETED
   REFUNDED
   FAILED
+}
+
+enum ReviewSource {
+  FIVERR
+  DIRECT
+  MARKETPLACE
 }
 
 // ============================================================
@@ -194,4 +202,49 @@ model Download {
   @@index([productId])
   @@index([createdAt])
   @@map("downloads")
+}
+
+// ============================================================
+// TEAM MEMBER — shown on homepage / about
+// ============================================================
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  role        String
+  bio         String   @db.Text
+  avatarUrl   String?
+  linkedInUrl String?
+  githubUrl   String?
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@map("team_members")
+}
+
+// ============================================================
+// CLIENT REVIEW — e.g. verified Fiverr order feedback
+// ============================================================
+
+model Review {
+  id           String       @id @default(cuid())
+  clientName   String
+  clientCountry String?
+  rating       Int          @default(5)
+  comment      String       @db.Text
+  projectTitle String?
+  source       ReviewSource @default(FIVERR)
+  avatarUrl    String?
+  reviewDate   DateTime     @default(now())
+  sortOrder    Int          @default(0)
+  isPublished  Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@index([source])
+  @@map("reviews")
 }

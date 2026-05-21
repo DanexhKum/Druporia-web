@@ -109,6 +109,7 @@ export async function createProduct(
     price: formData.get('price'),
     category: formData.get('category'),
     version: formData.get('version') || undefined,
+    thumbnailUrl: formData.get('thumbnailUrl') || '',
     isPublished: formData.get('isPublished') ?? 'false',
     isFeatured: formData.get('isFeatured') ?? 'false',
   }
@@ -129,7 +130,7 @@ export async function createProduct(
     }
   }
 
-  const { title, slug, description, price, category, version, isPublished, isFeatured } =
+  const { title, slug, description, price, category, version, thumbnailUrl, isPublished, isFeatured } =
     parsed.data
 
   // ── STEP 4: Check slug uniqueness ─────────────────────────
@@ -176,6 +177,7 @@ export async function createProduct(
         price,
         category,
         downloadUrl: storagePath, // PRIVATE path — never exposed to client
+        thumbnailUrl: thumbnailUrl || null,
         version,
         fileSize,
         isPublished,

@@ -1,0 +1,19 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Refund Policy' }
+
+export default function RefundPage() {
+  return (
+    <div className="container-page py-16 max-w-3xl prose prose-slate">
+      <h1>Refund Policy</h1>
+      <p>
+        Digital products may be refunded within 14 days of purchase if the product is
+        defective or not as described. Contact us with your order details at
+        hello@druporia.com.
+      </p>
+      <p>
+        Custom development and consulting services are governed by separate agreements.
+      </p>
+    </div>
+  )
+}

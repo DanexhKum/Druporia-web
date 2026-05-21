@@ -70,14 +70,6 @@ export default clerkMiddleware(async (auth, req) => {
     // if (process.env.NODE_ENV !== 'development' && meta?.role !== 'ADMIN') {
     //   return NextResponse.redirect(new URL('/?error=unauthorized', req.url))
     // }
-    // NOTE: commented out to avoid Vercel redirection loops if Clerk Custom JWT template is not configured.
-    // Deep role validation is done securely via requireAdmin() in the Server Components/Layouts.
-    /*
-    const meta = sessionClaims?.metadata as { role?: string } | undefined
-    if (process.env.NODE_ENV !== 'development' && meta?.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/?error=unauthorized', req.url))
-    }
-    */
   }
 
   return NextResponse.next()

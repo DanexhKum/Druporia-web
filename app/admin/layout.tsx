@@ -7,11 +7,20 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/auth'
 import { UserButton } from '@clerk/nextjs'
-import { LayoutDashboard, PackagePlus, ShieldCheck } from 'lucide-react'
+import { Logo } from '@/components/branding/Logo'
+import {
+  LayoutDashboard,
+  PackagePlus,
+  ShieldCheck,
+  Users,
+  MessageSquareQuote,
+} from 'lucide-react'
 
 const ADMIN_NAV = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
   { label: 'Add Product', href: '/admin/add-product', icon: PackagePlus },
+  { label: 'Team', href: '/admin/team', icon: Users },
+  { label: 'Reviews', href: '/admin/reviews', icon: MessageSquareQuote },
 ]
 
 export default async function AdminLayout({
@@ -29,12 +38,7 @@ export default async function AdminLayout({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 text-sm font-bold text-slate-900">
-              <span className="flex h-7 w-7 items-center justify-center rounded border border-blue-600 bg-blue-600 text-xs font-bold text-white shadow-sm">
-                D
-              </span>
-              <span className="tracking-tight text-lg">Druporia</span>
-            </Link>
+            <Logo href="/" imageClassName="h-8 w-auto" />
             <span className="text-slate-300">/</span>
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-slate-400" />

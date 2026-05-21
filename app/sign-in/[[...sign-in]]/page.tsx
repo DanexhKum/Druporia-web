@@ -3,6 +3,7 @@
 // ============================================================
 
 import { SignIn } from '@clerk/nextjs'
+import { Logo } from '@/components/branding/Logo'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -14,8 +15,8 @@ export default function SignInPage() {
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded border border-blue-600 bg-blue-600 text-sm font-bold text-white shadow-sm mb-4">
-            D
+          <div className="flex justify-center mb-6">
+            <Logo href="/" imageClassName="h-10 w-auto" />
           </div>
           <h1 className="text-xl font-semibold text-slate-900">
             Sign in to Druporia

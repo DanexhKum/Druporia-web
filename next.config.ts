@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'img.clerk.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'media.licdn.com',
+      },
     ],
   },
   // Security headers
@@ -52,7 +56,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://*.clerk.accounts.dev https://clerk.io",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https://img.clerk.com https://*.supabase.co https://*.amazonaws.com blob:",
+              "img-src 'self' data: https://img.clerk.com https://media.licdn.com https://*.supabase.co https://*.amazonaws.com blob:",
               "connect-src 'self' https://*.supabase.co https://*.clerk.accounts.dev wss://*.clerk.accounts.dev",
               "frame-src https://*.clerk.accounts.dev",
             ].join('; '),

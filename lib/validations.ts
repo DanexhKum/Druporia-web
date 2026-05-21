@@ -45,6 +45,12 @@ export const CreateProductSchema = z.object({
     .optional()
     .default('1.0.0'),
 
+  thumbnailUrl: z
+    .string()
+    .url('Thumbnail must be a valid image URL')
+    .optional()
+    .or(z.literal('')),
+
   isPublished: z
     .string()
     .optional()

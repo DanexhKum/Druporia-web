@@ -5,7 +5,7 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { formatPrice, formatDate, CATEGORY_LABELS } from '@/lib/utils'
-import { PackagePlus, Package, Users, ShoppingBag } from 'lucide-react'
+import { PackagePlus, Package, Users, ShoppingBag, Pencil } from 'lucide-react'
 
 async function getAdminStats() {
   const [totalProducts, totalUsers, totalOrders, recentProducts] =
@@ -112,6 +112,9 @@ export default async function AdminPage() {
                 <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500">
                   Created
                 </th>
+                <th className="px-5 py-3 text-right text-xs font-semibold text-slate-500">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -139,6 +142,15 @@ export default async function AdminPage() {
                   </td>
                   <td className="px-5 py-3 text-slate-500">
                     {formatDate(product.createdAt)}
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <Link
+                      href={`/admin/products/${product.id}`}
+                      className="inline-flex items-center gap-1.5 rounded border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      Edit
+                    </Link>
                   </td>
                 </tr>
               ))}
