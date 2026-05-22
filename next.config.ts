@@ -9,7 +9,14 @@ const nextConfig: NextConfig = {
       : false,
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000'],
+      allowedOrigins: [
+        'localhost:3000',
+        'localhost:3002',
+        'localhost:3003',
+        'druporia.vercel.app',
+        '*.vercel.app',
+      ],
+      bodySizeLimit: '110mb',
     },
   },
   images: {
