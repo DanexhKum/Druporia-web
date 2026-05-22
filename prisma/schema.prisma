@@ -36,6 +36,12 @@ enum ProductCategory {
   CHROME_EXTENSION
 }
 
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 enum OrderStatus {
   PENDING
   COMPLETED
@@ -47,6 +53,12 @@ enum ReviewSource {
   FIVERR
   DIRECT
   MARKETPLACE
+}
+
+enum ReviewApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 // ============================================================
@@ -106,8 +118,12 @@ model Product {
 
   // ── Display ───────────────────────────────────────────────
   thumbnailUrl String?         // Public CDN thumbnail image
+  galleryUrls  Json            @default("[]")
   version      String?         @default("1.0.0")
   fileSize     String?         // Human-readable, e.g. "2.4 MB"
+  changelog    String?         @db.Text
+  documentation String?        @db.Text
+  status       ProductStatus   @default(DRAFT)
   isPublished  Boolean         @default(false)
   isFeatured   Boolean         @default(false)
 
@@ -121,6 +137,7 @@ model Product {
 
   @@index([slug])
   @@index([category])
+  @@index([status])
   @@index([isPublished])
   @@map("products")
 }
@@ -226,6 +243,44 @@ model TeamMember {
 }
 
 // ============================================================
+// HOMEPAGE SERVICE — managed from admin
+// ============================================================
+
+model ServiceItem {
+  id          String   @id @default(cuid())
+  sourceKey   String?
+  title       String
+  description String   @db.Text
+  iconKey     String   @default("Code2")
+  tags        Json     @default("[]")
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@map("service_items")
+}
+
+// ============================================================
+// FAQ — managed from admin
+// ============================================================
+
+model Faq {
+  id          String   @id @default(cuid())
+  question    String
+  answer      String   @db.Text
+  category    String?
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@map("faqs")
+}
+
+// ============================================================
 // CLIENT REVIEW — e.g. verified Fiverr order feedback
 // ============================================================
 
@@ -240,11 +295,13 @@ model Review {
   avatarUrl    String?
   reviewDate   DateTime     @default(now())
   sortOrder    Int          @default(0)
+  approvalStatus ReviewApprovalStatus @default(APPROVED)
   isPublished  Boolean      @default(true)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
   @@index([isPublished, sortOrder])
+  @@index([approvalStatus])
   @@index([source])
   @@map("reviews")
 }

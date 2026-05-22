@@ -1,6 +1,17 @@
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Terms of Service' }
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description:
+    'Review Druporia terms for using the website, purchasing digital products, licensing, support, and custom development services.',
+  alternates: { canonical: '/terms' },
+  openGraph: {
+    title: 'Terms of Service — Druporia',
+    description:
+      'Terms for Druporia website usage, digital product purchases, licensing, and support.',
+    url: '/terms',
+  },
+}
 
 export default function TermsPage() {
   return (

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { ReviewSource } from '@prisma/client'
+import { ReviewApprovalStatus, ReviewSource } from '@prisma/client'
 import { z } from 'zod'
 
 const reviewSchema = z.object({
@@ -15,6 +15,7 @@ const reviewSchema = z.object({
   source: z.nativeEnum(ReviewSource).default(ReviewSource.FIVERR),
   avatarUrl: z.string().url().optional().or(z.literal('')),
   sortOrder: z.coerce.number().int().min(0).max(999).default(0),
+  approvalStatus: z.nativeEnum(ReviewApprovalStatus).default(ReviewApprovalStatus.APPROVED),
   isPublished: z.coerce.boolean().optional(),
 })
 
@@ -29,7 +30,8 @@ export async function createReview(formData: FormData) {
     source: formData.get('source') || ReviewSource.FIVERR,
     avatarUrl: formData.get('avatarUrl') || '',
     sortOrder: formData.get('sortOrder') || 0,
-    isPublished: formData.get('isPublished') === 'on',
+    approvalStatus: formData.get('approvalStatus') || ReviewApprovalStatus.APPROVED,
+    isPublished: formData.get('approvalStatus') === ReviewApprovalStatus.APPROVED,
   })
   if (!parsed.success) {
     throw new Error(parsed.error.errors[0]?.message ?? 'Invalid input')
@@ -45,7 +47,8 @@ export async function createReview(formData: FormData) {
       source: d.source,
       avatarUrl: d.avatarUrl || null,
       sortOrder: d.sortOrder,
-      isPublished: d.isPublished ?? true,
+      approvalStatus: d.approvalStatus,
+      isPublished: d.approvalStatus === ReviewApprovalStatus.APPROVED,
     },
   })
   revalidatePath('/')
@@ -66,7 +69,8 @@ export async function updateReview(formData: FormData) {
     source: formData.get('source') || ReviewSource.FIVERR,
     avatarUrl: formData.get('avatarUrl') || '',
     sortOrder: formData.get('sortOrder') || 0,
-    isPublished: formData.get('isPublished') === 'on',
+    approvalStatus: formData.get('approvalStatus') || ReviewApprovalStatus.PENDING,
+    isPublished: formData.get('approvalStatus') === ReviewApprovalStatus.APPROVED,
   })
 
   if (!parsed.success) {
@@ -85,7 +89,8 @@ export async function updateReview(formData: FormData) {
       source: d.source,
       avatarUrl: d.avatarUrl || null,
       sortOrder: d.sortOrder,
-      isPublished: d.isPublished ?? false,
+      approvalStatus: d.approvalStatus,
+      isPublished: d.approvalStatus === ReviewApprovalStatus.APPROVED,
     },
   })
 

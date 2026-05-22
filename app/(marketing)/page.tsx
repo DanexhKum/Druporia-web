@@ -10,6 +10,8 @@ import { TeamSection } from '@/components/marketing/TeamSection'
 import { FiverrReviews } from '@/components/marketing/FiverrReviews'
 import { AnimateIn } from '@/components/marketing/AnimateIn'
 import { TawkWidget } from '@/components/chat/TawkWidget'
+import { getHomepageServices, getPublishedFaqs } from '@/lib/site-data'
+import { DEFAULT_SERVICES } from '@/lib/default-services'
 
 const TECH_STACK = [
   'Next.js', 'n8n', 'Node.js', 'PostgreSQL',
@@ -17,52 +19,46 @@ const TECH_STACK = [
   'OpenAI', 'Python', 'AWS',
 ]
 
-const SERVICES = [
-  {
-    icon: Box,
-    title: 'Custom Plugin Development',
-    description:
-      'Extend WooCommerce, Shopify, and Magento with scalable, production-ready plugins.',
-    tags: ['WooCommerce', 'Shopify'],
-  },
-  {
-    icon: Layers,
-    title: 'Shopify Apps & Integrations',
-    description:
-      'Custom Shopify apps and API integrations that improve performance and UX.',
-    tags: ['Shopify', 'GraphQL'],
-  },
-  {
-    icon: Bot,
-    title: 'AI Solutions & Chatbots',
-    description:
-      'Intelligent recommendations, support bots, and workflow automation powered by AI.',
-    tags: ['AI/ML', 'Chatbots'],
-  },
-  {
-    icon: Code2,
-    title: 'Full-Stack Development',
-    description:
-      'Modern web apps with Next.js, React, and robust PostgreSQL backends.',
-    tags: ['Next.js', 'React'],
-  },
-  {
-    icon: Workflow,
-    title: 'Business Automation (n8n)',
-    description:
-      'Connect your stack with custom n8n workflows and reliable data pipelines.',
-    tags: ['n8n', 'Automation'],
-  },
-  {
-    icon: BarChart3,
-    title: 'Data Analytics & Reporting',
-    description:
-      'Turn sales, customer, and marketing data into clear dashboards and actionable insights.',
-    tags: ['Data Analyst', 'Dashboards'],
-  },
-]
+const ICONS = {
+  Box,
+  Layers,
+  Bot,
+  Code2,
+  Workflow,
+  BarChart3,
+}
 
-export default function HomePage() {
+function getTags(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : []
+}
+
+export default async function HomePage() {
+  const [managedServices, faqs] = await Promise.all([
+    getHomepageServices(),
+    getPublishedFaqs(),
+  ])
+  const managedKeys = new Set(
+    managedServices
+      .map((service) => service.sourceKey)
+      .filter((sourceKey): sourceKey is string => Boolean(sourceKey))
+  )
+  const services = [
+    ...managedServices.map((service) => ({
+      icon: ICONS[service.iconKey as keyof typeof ICONS] ?? Code2,
+      title: service.title,
+      description: service.description,
+      tags: getTags(service.tags),
+    })),
+    ...DEFAULT_SERVICES.filter((service) => !managedKeys.has(service.sourceKey)).map((service) => ({
+      icon: ICONS[service.iconKey as keyof typeof ICONS] ?? Code2,
+      title: service.title,
+      description: service.description,
+      tags: service.tags,
+    })),
+  ]
+
   return (
     <div className="bg-slate-50 min-h-screen">
       <TawkWidget />
@@ -127,11 +123,11 @@ export default function HomePage() {
           </AnimateIn>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((service, i) => {
+            {services.map((service, i) => {
               const Icon = service.icon
               return (
                 <AnimateIn key={service.title} delay={i * 0.06}>
-                  <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300 group h-full">
+                  <div className="motion-card bg-white rounded-2xl p-8 border border-slate-200 shadow-sm group h-full">
                     <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                       <Icon className="h-6 w-6" />
                     </div>
@@ -160,6 +156,44 @@ export default function HomePage() {
       </div>
 
       <TeamSection />
+
+      {faqs.length > 0 && (
+        <section className="bg-slate-50 py-20 sm:py-28">
+          <div className="container-page">
+            <AnimateIn className="mx-auto mb-12 max-w-2xl text-center">
+              <p className="mb-3 text-sm font-bold uppercase tracking-widest text-blue-600">
+                FAQ
+              </p>
+              <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+                Frequently asked questions
+              </h2>
+            </AnimateIn>
+
+            <div className="mx-auto grid max-w-4xl gap-4">
+              {faqs.map((faq, i) => (
+                <AnimateIn key={faq.id} delay={i * 0.05}>
+                  <details className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-slate-900">
+                      {faq.question}
+                      <span className="text-xl text-slate-400 transition group-open:rotate-45">
+                        +
+                      </span>
+                    </summary>
+                    <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                      {faq.answer}
+                    </p>
+                    {faq.category && (
+                      <span className="mt-4 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+                        {faq.category}
+                      </span>
+                    )}
+                  </details>
+                </AnimateIn>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="border-t border-slate-200 bg-white">
         <div className="container-page py-20 sm:py-28 text-center max-w-3xl mx-auto">

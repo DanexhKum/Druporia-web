@@ -7,13 +7,40 @@ import { Suspense } from 'react'
 import { prisma } from '@/lib/prisma'
 import { ProductCard } from '@/components/marketplace/ProductCard'
 import { ProductFilters } from '@/components/marketplace/ProductFilters'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { Metadata } from 'next'
-import type { ProductCategory } from '@prisma/client'
+import { ProductStatus, type ProductCategory } from '@prisma/client'
+import { PackageSearch } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketplace',
+  title: 'Marketplace — Premium Digital Products',
   description:
-    'Browse premium web apps, WooCommerce plugins, and Chrome extensions.',
+    'Browse premium web apps, WooCommerce plugins, Chrome extensions, and digital products built by Druporia for modern commerce.',
+  alternates: {
+    canonical: '/marketplace',
+  },
+  openGraph: {
+    title: 'Druporia Marketplace — Premium Digital Products',
+    description:
+      'Browse production-ready plugins, extensions, apps, and tools for modern commerce.',
+    url: '/marketplace',
+    type: 'website',
+    images: [
+      {
+        url: '/icon.svg',
+        width: 64,
+        height: 64,
+        alt: 'Druporia Marketplace',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Druporia Marketplace — Premium Digital Products',
+    description:
+      'Production-ready plugins, extensions, apps, and tools for modern commerce.',
+    images: ['/icon.svg'],
+  },
 }
 
 // Revalidate every 60 seconds (ISR)
@@ -24,18 +51,41 @@ interface PageProps {
   searchParams: Promise<{
     category?: ProductCategory | 'all'
     q?: string
+    price?: string
+    sort?: string
   }>
+}
+
+type PriceFilter = 'all' | 'free' | 'paid' | 'under-50' | 'under-100'
+type SortOption = 'featured' | 'newest' | 'price-low' | 'price-high'
+
+function getPriceWhere(price?: string) {
+  if (price === 'free') return { price: 0 }
+  if (price === 'paid') return { price: { gt: 0 } }
+  if (price === 'under-50') return { price: { lte: 50 } }
+  if (price === 'under-100') return { price: { lte: 100 } }
+  return {}
+}
+
+function getOrderBy(sort?: string) {
+  if (sort === 'newest') return [{ createdAt: 'desc' as const }]
+  if (sort === 'price-low') return [{ price: 'asc' as const }]
+  if (sort === 'price-high') return [{ price: 'desc' as const }]
+  return [{ isFeatured: 'desc' as const }, { createdAt: 'desc' as const }]
 }
 
 // ── Fetch products ─────────────────────────────────────────────
 async function getProducts(
   category?: ProductCategory | 'all',
-  query?: string
+  query?: string,
+  price?: PriceFilter,
+  sort?: SortOption
 ) {
   const products = await prisma.product.findMany({
     where: {
-      isPublished: true,
+      status: ProductStatus.PUBLISHED,
       ...(category && category !== 'all' ? { category } : {}),
+      ...getPriceWhere(price),
       ...(query
         ? {
             OR: [
@@ -45,7 +95,7 @@ async function getProducts(
           }
         : {}),
     },
-    orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+    orderBy: getOrderBy(sort),
     select: {
       id: true,
       title: true,
@@ -57,6 +107,7 @@ async function getProducts(
       version: true,
       fileSize: true,
       isFeatured: true,
+      createdAt: true,
     },
   })
   return products
@@ -91,25 +142,29 @@ function ProductGridSkeleton() {
 async function ProductGrid({
   category,
   query,
+  price,
+  sort,
 }: {
   category?: ProductCategory | 'all'
   query?: string
+  price?: PriceFilter
+  sort?: SortOption
 }) {
-  const products = await getProducts(category, query)
+  const products = await getProducts(category, query, price, sort)
 
   if (products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="text-4xl mb-4 opacity-30">📦</div>
-        <h3 className="text-sm font-semibold text-slate-700">
-          No products found
-        </h3>
-        <p className="mt-1 text-xs text-slate-400">
-          {query
-            ? `No results for "${query}". Try a different search term.`
-            : 'No products in this category yet.'}
-        </p>
-      </div>
+      <EmptyState
+        icon={PackageSearch}
+        title={query ? 'No matching products found' : 'No products available yet'}
+        description={
+          query
+            ? `No results for "${query}". Try another keyword, price range, or category.`
+            : 'Products will appear here as soon as they are published from the admin panel.'
+        }
+        actionHref="/contact"
+        actionLabel="Request a custom product"
+      />
     )
   }
 
@@ -131,13 +186,33 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams
   const category = resolvedParams.category
   const query = resolvedParams.q
+  const price = (resolvedParams.price ?? 'all') as PriceFilter
+  const sort = (resolvedParams.sort ?? 'featured') as SortOption
 
   // Count by category for filter badges
-  const [totalCount, appCount, wooCount, extCount] = await Promise.all([
-    prisma.product.count({ where: { isPublished: true } }),
-    prisma.product.count({ where: { isPublished: true, category: 'APP' } }),
-    prisma.product.count({ where: { isPublished: true, category: 'WOO_PLUGIN' } }),
-    prisma.product.count({ where: { isPublished: true, category: 'CHROME_EXTENSION' } }),
+  const countWhere = {
+    status: ProductStatus.PUBLISHED,
+    ...getPriceWhere(price),
+    ...(query
+      ? {
+          OR: [
+            { title: { contains: query, mode: 'insensitive' as const } },
+            { description: { contains: query, mode: 'insensitive' as const } },
+          ],
+        }
+      : {}),
+  }
+  const [totalCount, appCount, wooCount, extCount, filteredCount] = await Promise.all([
+    prisma.product.count({ where: countWhere }),
+    prisma.product.count({ where: { ...countWhere, category: 'APP' } }),
+    prisma.product.count({ where: { ...countWhere, category: 'WOO_PLUGIN' } }),
+    prisma.product.count({ where: { ...countWhere, category: 'CHROME_EXTENSION' } }),
+    prisma.product.count({
+      where: {
+        ...countWhere,
+        ...(category && category !== 'all' ? { category } : {}),
+      },
+    }),
   ])
 
   const categoryCounts = {
@@ -174,6 +249,8 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
               activeCategory={category ?? 'all'}
               counts={categoryCounts}
               query={query}
+              price={price}
+              sort={sort}
             />
           </aside>
 
@@ -185,13 +262,9 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
                 {totalCount > 0 ? (
                   <>
                     Showing{' '}
-                    <span className="font-medium text-slate-900">
-                      {category && category !== 'all'
-                        ? categoryCounts[category as keyof typeof categoryCounts]
-                        : totalCount}
-                    </span>{' '}
+                    <span className="font-medium text-slate-900">{filteredCount}</span>{' '}
                     product
-                    {totalCount !== 1 ? 's' : ''}
+                    {filteredCount !== 1 ? 's' : ''}
                   </>
                 ) : (
                   'No products yet'
@@ -200,7 +273,7 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
             </div>
 
             <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid category={category} query={query} />
+              <ProductGrid category={category} query={query} price={price} sort={sort} />
             </Suspense>
           </div>
         </div>

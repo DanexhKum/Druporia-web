@@ -14,11 +14,15 @@ import {
   ShieldCheck,
   Users,
   MessageSquareQuote,
+  Wrench,
+  CircleHelp,
 } from 'lucide-react'
 
 const ADMIN_NAV = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
   { label: 'Add Product', href: '/admin/add-product', icon: PackagePlus },
+  { label: 'Services', href: '/admin/services', icon: Wrench },
+  { label: 'FAQs', href: '/admin/faqs', icon: CircleHelp },
   { label: 'Team', href: '/admin/team', icon: Users },
   { label: 'Reviews', href: '/admin/reviews', icon: MessageSquareQuote },
 ]

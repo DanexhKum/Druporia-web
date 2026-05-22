@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast'
 import '@/app/globals.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://druporia.vercel.app'),
   title: {
     default: 'Druporia — Enterprise Technology Solutions',
     template: '%s | Druporia',
@@ -21,8 +22,16 @@ export const metadata: Metadata = {
     'WooCommerce plugins',
     'Chrome extensions',
     'business automation',
+    'data analytics',
+    'AI automation',
+    'Shopify apps',
   ],
   authors: [{ name: 'Druporia' }],
+  creator: 'Druporia',
+  publisher: 'Druporia',
+  alternates: {
+    canonical: '/',
+  },
   robots: {
     index: true,
     follow: true,
@@ -34,6 +43,22 @@ export const metadata: Metadata = {
     description:
       'Innovative, scalable, and future-ready technology solutions tailored to your business needs.',
     siteName: 'Druporia',
+    url: '/',
+    images: [
+      {
+        url: '/icon.svg',
+        width: 64,
+        height: 64,
+        alt: 'Druporia',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Druporia — Enterprise Technology Solutions',
+    description:
+      'End-to-end eCommerce technology, AI automation, custom plugins, and full-stack development.',
+    images: ['/icon.svg'],
   },
 }
 

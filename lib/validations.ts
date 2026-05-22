@@ -4,7 +4,7 @@
 // ============================================================
 
 import { z } from 'zod'
-import { ProductCategory } from '@prisma/client'
+import { ProductCategory, ProductStatus } from '@prisma/client'
 
 // ── Product creation/editing ──────────────────────────────────
 export const CreateProductSchema = z.object({
@@ -50,6 +50,29 @@ export const CreateProductSchema = z.object({
     .url('Thumbnail must be a valid image URL')
     .optional()
     .or(z.literal('')),
+
+  galleryImageUrls: z
+    .string()
+    .max(5000, 'Gallery URLs are too long')
+    .optional()
+    .default(''),
+
+  changelog: z
+    .string()
+    .max(10000, 'Changelog is too long')
+    .optional()
+    .default(''),
+
+  documentation: z
+    .string()
+    .max(20000, 'Documentation is too long')
+    .optional()
+    .default(''),
+
+  status: z
+    .nativeEnum(ProductStatus)
+    .optional()
+    .default(ProductStatus.DRAFT),
 
   isPublished: z
     .string()

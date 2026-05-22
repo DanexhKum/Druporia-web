@@ -18,13 +18,36 @@ const CATEGORIES = [
   { key: 'CHROME_EXTENSION', label: 'Chrome Extensions', icon: '🧩' },
 ]
 
+const PRICE_FILTERS = [
+  { key: 'all', label: 'All prices' },
+  { key: 'free', label: 'Free' },
+  { key: 'paid', label: 'Paid' },
+  { key: 'under-50', label: 'Under $50' },
+  { key: 'under-100', label: 'Under $100' },
+]
+
+const SORT_OPTIONS = [
+  { key: 'featured', label: 'Featured first' },
+  { key: 'newest', label: 'Newest first' },
+  { key: 'price-low', label: 'Price low-high' },
+  { key: 'price-high', label: 'Price high-low' },
+]
+
 interface Props {
   activeCategory: string
   counts: Record<string, number>
   query?: string
+  price?: string
+  sort?: string
 }
 
-export function ProductFilters({ activeCategory, counts, query }: Props) {
+export function ProductFilters({
+  activeCategory,
+  counts,
+  query,
+  price = 'all',
+  sort = 'featured',
+}: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const [searchValue, setSearchValue] = useState(query ?? '')
@@ -32,22 +55,32 @@ export function ProductFilters({ activeCategory, counts, query }: Props) {
   const updateParams = useCallback(
     (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams()
-      if (updates.category && updates.category !== 'all') {
-        params.set('category', updates.category)
+      const nextCategory = updates.category ?? activeCategory
+      const nextQuery = updates.q ?? query
+      const nextPrice = updates.price ?? price
+      const nextSort = updates.sort ?? sort
+
+      if (nextCategory && nextCategory !== 'all') {
+        params.set('category', nextCategory)
       }
-      if (updates.q) {
-        params.set('q', updates.q)
+      if (nextQuery) {
+        params.set('q', nextQuery)
+      }
+      if (nextPrice && nextPrice !== 'all') {
+        params.set('price', nextPrice)
+      }
+      if (nextSort && nextSort !== 'featured') {
+        params.set('sort', nextSort)
       }
       const qs = params.toString()
       router.push(qs ? `${pathname}?${qs}` : pathname)
     },
-    [router, pathname]
+    [activeCategory, pathname, price, query, router, sort]
   )
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
     updateParams({
-      category: activeCategory !== 'all' ? activeCategory : undefined,
       q: searchValue.trim() || undefined,
     })
   }
@@ -55,7 +88,7 @@ export function ProductFilters({ activeCategory, counts, query }: Props) {
   function clearSearch() {
     setSearchValue('')
     updateParams({
-      category: activeCategory !== 'all' ? activeCategory : undefined,
+      q: undefined,
     })
   }
 
@@ -88,7 +121,7 @@ export function ProductFilters({ activeCategory, counts, query }: Props) {
       {/* Category filters */}
       <div>
         <p className="form-label">Category</p>
-        <ul className="space-y-0.5">
+        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.key
             const count = counts[cat.key] ?? 0
@@ -99,14 +132,13 @@ export function ProductFilters({ activeCategory, counts, query }: Props) {
                   onClick={() =>
                     updateParams({
                       category: cat.key,
-                      q: searchValue.trim() || undefined,
                     })
                   }
                   className={cn(
-                    'flex w-full items-center justify-between rounded px-3 py-2 text-left text-xs font-medium transition-colors duration-150',
+                    'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-colors duration-150',
                     isActive
-                      ? 'bg-slate-900 text-white'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'border-slate-900 bg-slate-900 text-white'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   )}
                 >
                   <span className="flex items-center gap-2">
@@ -128,6 +160,50 @@ export function ProductFilters({ activeCategory, counts, query }: Props) {
             )
           })}
         </ul>
+      </div>
+
+      {/* Price filters */}
+      <div>
+        <p className="form-label">Price</p>
+        <div className="flex flex-wrap gap-2 lg:flex-col">
+          {PRICE_FILTERS.map((option) => {
+            const isActive = price === option.key
+            return (
+              <button
+                key={option.key}
+                type="button"
+                onClick={() => updateParams({ price: option.key })}
+                className={cn(
+                  'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
+                  isActive
+                    ? 'border-slate-900 bg-slate-900 text-white'
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                )}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Sorting */}
+      <div>
+        <label className="form-label" htmlFor="marketplace-sort">
+          Sort by
+        </label>
+        <select
+          id="marketplace-sort"
+          value={sort}
+          onChange={(e) => updateParams({ sort: e.target.value })}
+          className="text-sm"
+        >
+          {SORT_OPTIONS.map((option) => (
+            <option key={option.key} value={option.key}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   )

@@ -9,8 +9,34 @@ import { ContactForm } from '@/components/contact/ContactForm'
 import { TawkWidget } from '@/components/chat/TawkWidget'
 
 export const metadata: Metadata = {
-  title: 'Contact Us',
-  description: 'Get in touch with Druporia for enterprise technology solutions.',
+  title: 'Contact Druporia',
+  description:
+    'Contact Druporia for custom plugins, Shopify apps, AI automation, data analytics, and full-stack product development.',
+  alternates: {
+    canonical: '/contact',
+  },
+  openGraph: {
+    title: 'Contact Druporia',
+    description:
+      'Start a project with Druporia for commerce technology, automation, analytics, and custom development.',
+    url: '/contact',
+    type: 'website',
+    images: [
+      {
+        url: '/icon.svg',
+        width: 64,
+        height: 64,
+        alt: 'Contact Druporia',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact Druporia',
+    description:
+      'Start a project with Druporia for commerce technology, automation, analytics, and custom development.',
+    images: ['/icon.svg'],
+  },
 }
 
 export default function ContactPage() {

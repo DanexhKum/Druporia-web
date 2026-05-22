@@ -27,7 +27,6 @@ import {
   CreateProductSchema,
   type ActionState,
 } from '@/lib/validations'
-import type { Product } from '@prisma/client'
 
 const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024 // 100 MB
 const MAX_THUMBNAIL_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
@@ -46,11 +45,57 @@ const ALLOWED_THUMBNAIL_MIME_TYPES = [
 ]
 const ALLOWED_THUMBNAIL_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
 
+type CreatedProductResult = {
+  id: string
+  slug: string
+  status: string
+}
+
+function parseGalleryUrls(value: string) {
+  return value
+    .split(/\r?\n|,/)
+    .map((url) => url.trim())
+    .filter(Boolean)
+}
+
+function getImageValidationError(file: File) {
+  const fileName = file.name.toLowerCase()
+  const hasValidExtension = ALLOWED_THUMBNAIL_EXTENSIONS.some((ext) =>
+    fileName.endsWith(ext)
+  )
+
+  if (!hasValidExtension) return 'Use a JPG, PNG, WebP, or GIF image.'
+  if (file.size > MAX_THUMBNAIL_SIZE_BYTES) return 'Image must be under 5 MB.'
+  if (file.type && !ALLOWED_THUMBNAIL_MIME_TYPES.includes(file.type)) {
+    return 'Use a JPG, PNG, WebP, or GIF image.'
+  }
+
+  return null
+}
+
+function getUploadErrorMessage(error: unknown, label: string) {
+  const message = error instanceof Error ? error.message : String(error)
+
+  if (message.includes('row-level security') || message.includes('Unauthorized')) {
+    return `${label} upload failed because Supabase storage permissions are blocking the request. Check the service role key and bucket policy.`
+  }
+
+  if (message.includes('Bucket not found') || message.includes('bucket')) {
+    return `${label} upload failed because the Supabase storage bucket is missing or unavailable.`
+  }
+
+  if (message.includes('payload') || message.includes('too large')) {
+    return `${label} upload failed because the file is too large. Try a smaller or compressed file.`
+  }
+
+  return `${label} upload failed: ${message}`
+}
+
 // ── Server Action ──────────────────────────────────────────────
 export async function createProduct(
-  _prevState: ActionState<Pick<Product, 'id' | 'slug'>>,
+  _prevState: ActionState<CreatedProductResult>,
   formData: FormData
-): Promise<ActionState<Pick<Product, 'id' | 'slug'>>> {
+): Promise<ActionState<CreatedProductResult>> {
 
   // ── STEP 1: Verify admin session ───────────────────────────
   let adminUserId: string
@@ -67,6 +112,9 @@ export async function createProduct(
   // ── STEP 2: Extract and validate file ─────────────────────
   const file = formData.get('zipFile') as File | null
   const thumbnailFile = formData.get('thumbnailFile') as File | null
+  const galleryFiles = formData
+    .getAll('galleryFiles')
+    .filter((item): item is File => item instanceof File && item.size > 0)
 
   if (!file || file.size === 0) {
     return {
@@ -116,40 +164,26 @@ export async function createProduct(
   }
 
   if (thumbnailFile && thumbnailFile.size > 0) {
-    const thumbnailName = thumbnailFile.name.toLowerCase()
-    const hasValidThumbnailExtension = ALLOWED_THUMBNAIL_EXTENSIONS.some((ext) =>
-      thumbnailName.endsWith(ext)
-    )
-
-    if (!hasValidThumbnailExtension) {
-      return {
-        status: 'error',
-        message: 'Invalid thumbnail image.',
-        fieldErrors: {
-          thumbnailFile: ['Use a JPG, PNG, WebP, or GIF image.'],
-        },
-      }
-    }
-
-    if (thumbnailFile.size > MAX_THUMBNAIL_SIZE_BYTES) {
-      return {
-        status: 'error',
-        message: 'Thumbnail image is too large.',
-        fieldErrors: {
-          thumbnailFile: ['Thumbnail must be under 5 MB.'],
-        },
-      }
-    }
-
-    if (
-      thumbnailFile.type &&
-      !ALLOWED_THUMBNAIL_MIME_TYPES.includes(thumbnailFile.type)
-    ) {
+    const error = getImageValidationError(thumbnailFile)
+    if (error) {
       return {
         status: 'error',
         message: 'Invalid thumbnail image type.',
         fieldErrors: {
-          thumbnailFile: ['Use a JPG, PNG, WebP, or GIF image.'],
+          thumbnailFile: [error],
+        },
+      }
+    }
+  }
+
+  for (const galleryFile of galleryFiles) {
+    const error = getImageValidationError(galleryFile)
+    if (error) {
+      return {
+        status: 'error',
+        message: 'Invalid gallery image.',
+        fieldErrors: {
+          galleryFiles: [error],
         },
       }
     }
@@ -164,6 +198,10 @@ export async function createProduct(
     category: formData.get('category'),
     version: formData.get('version') || undefined,
     thumbnailUrl: formData.get('thumbnailUrl') || '',
+    galleryImageUrls: formData.get('galleryImageUrls') || '',
+    changelog: formData.get('changelog') || '',
+    documentation: formData.get('documentation') || '',
+    status: formData.get('status') || 'DRAFT',
     isPublished: formData.get('isPublished') ?? 'false',
     isFeatured: formData.get('isFeatured') ?? 'false',
   }
@@ -184,8 +222,9 @@ export async function createProduct(
     }
   }
 
-  const { title, slug, description, price, category, version, isPublished, isFeatured } =
+  const { title, slug, description, price, category, version, changelog, documentation, status, isFeatured } =
     parsed.data
+  const isPublished = status === 'PUBLISHED'
 
   // ── STEP 4: Check slug uniqueness ─────────────────────────
   const existingProduct = await prisma.product.findUnique({
@@ -207,7 +246,9 @@ export async function createProduct(
   let storagePath: string
   let fileSize: string
   let thumbnailUrl = parsed.data.thumbnailUrl || ''
+  const galleryUrls = parseGalleryUrls(parsed.data.galleryImageUrls)
   let thumbnailStoragePath: string | null = null
+  const galleryStoragePaths: string[] = []
 
   try {
     const uploadResult = await uploadProductFile(file, slug)
@@ -217,7 +258,7 @@ export async function createProduct(
     console.error('[createProduct] Storage upload failed:', err)
     return {
       status: 'error',
-      message: 'File upload failed. Please try again or contact support.',
+      message: getUploadErrorMessage(err, 'Product file'),
     }
   }
 
@@ -235,13 +276,42 @@ export async function createProduct(
       }
       return {
         status: 'error',
-        message: 'Thumbnail upload failed. Please try another image.',
+        message: getUploadErrorMessage(err, 'Thumbnail'),
+      }
+    }
+  }
+
+  for (const galleryFile of galleryFiles) {
+    try {
+      const uploadResult = await uploadProductThumbnail(
+        galleryFile,
+        slug,
+        'product-gallery'
+      )
+      galleryUrls.push(uploadResult.publicUrl)
+      galleryStoragePaths.push(uploadResult.storagePath)
+    } catch (err) {
+      console.error('[createProduct] Gallery upload failed:', err)
+      try {
+        await deleteProductFile(storagePath)
+        if (thumbnailStoragePath) {
+          await deleteProductThumbnail(thumbnailStoragePath)
+        }
+        for (const galleryStoragePath of galleryStoragePaths) {
+          await deleteProductThumbnail(galleryStoragePath)
+        }
+      } catch {
+        // Non-fatal cleanup failure
+      }
+      return {
+        status: 'error',
+        message: getUploadErrorMessage(err, 'Gallery image'),
       }
     }
   }
 
   // ── STEP 6: Create DB record via Prisma ───────────────────
-  let product: Pick<Product, 'id' | 'slug'>
+  let product: CreatedProductResult
 
   try {
     product = await prisma.product.create({
@@ -253,14 +323,19 @@ export async function createProduct(
         category,
         downloadUrl: storagePath, // PRIVATE path — never exposed to client
         thumbnailUrl: thumbnailUrl || null,
+        galleryUrls,
         version,
         fileSize,
+        changelog: changelog || null,
+        documentation: documentation || null,
+        status,
         isPublished,
         isFeatured,
       },
       select: {
         id: true,
         slug: true,
+        status: true,
       },
     })
   } catch (err) {
@@ -270,6 +345,9 @@ export async function createProduct(
       await deleteProductFile(storagePath)
       if (thumbnailStoragePath) {
         await deleteProductThumbnail(thumbnailStoragePath)
+      }
+      for (const galleryStoragePath of galleryStoragePaths) {
+        await deleteProductThumbnail(galleryStoragePath)
       }
     } catch {
       // Non-fatal cleanup failure
@@ -295,6 +373,9 @@ export async function createProduct(
   return {
     status: 'success',
     data: product,
-    message: `"${title}" was published to the marketplace successfully.`,
+    message:
+      status === 'PUBLISHED'
+        ? `"${title}" was published to the marketplace successfully.`
+        : `"${title}" was saved as ${status.toLowerCase()}.`,
   }
 }

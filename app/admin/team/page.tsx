@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { createTeamMember, deleteTeamMember, updateTeamMember } from './actions'
+import { SubmitButton } from '@/components/admin/SubmitButton'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { Users, Trash2, Pencil } from 'lucide-react'
 import type { Metadata } from 'next'
 
@@ -20,7 +22,7 @@ export default async function AdminTeamPage() {
         Shown on the homepage team section. Add developers and specialists.
       </p>
 
-      <form action={createTeamMember} className="card mt-8 p-6 space-y-4" encType="multipart/form-data">
+      <form action={createTeamMember} className="card mt-8 p-6 space-y-4">
         <h2 className="text-sm font-semibold text-slate-900">Add member</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -75,35 +77,49 @@ export default async function AdminTeamPage() {
           <input type="checkbox" name="isPublished" defaultChecked className="rounded" />
           Published on site
         </label>
-        <button type="submit" className="btn-primary">
-          Add team member
-        </button>
+        <SubmitButton pendingText="Adding member...">Add team member</SubmitButton>
       </form>
 
       <ul className="mt-10 space-y-3">
         {members.length === 0 ? (
-          <li className="text-sm text-slate-400">No team members yet.</li>
+          <li className="card">
+            <EmptyState
+              icon={Users}
+              title="No team members yet"
+              description="Add developers, designers, and specialists to build trust on the homepage."
+            />
+          </li>
         ) : (
           members.map((m) => (
             <li key={m.id} className="card overflow-hidden">
               <div className="flex items-center justify-between gap-4 p-4">
-                <div>
-                  <p className="font-medium text-slate-900">{m.name}</p>
-                  <p className="text-xs text-slate-500">{m.role}</p>
-                  {!m.isPublished && (
-                    <span className="text-xs text-amber-600">Draft</span>
-                  )}
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 text-sm font-semibold text-slate-500">
+                    {m.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={m.avatarUrl}
+                        alt={`${m.name} avatar preview`}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      m.name.charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-slate-900">{m.name}</p>
+                    <p className="text-xs text-slate-500">{m.role}</p>
+                    {!m.isPublished && (
+                      <span className="text-xs text-amber-600">Draft</span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <form action={deleteTeamMember}>
                     <input type="hidden" name="id" value={m.id} />
-                    <button
-                      type="submit"
-                      className="btn-ghost text-red-600 p-2"
-                      aria-label="Delete"
-                    >
+                    <SubmitButton variant="danger" pendingText="..." className="p-2" aria-label="Delete">
                       <Trash2 className="h-4 w-4" />
-                    </button>
+                    </SubmitButton>
                   </form>
                 </div>
               </div>
@@ -112,7 +128,7 @@ export default async function AdminTeamPage() {
                   <Pencil className="h-3.5 w-3.5" />
                   Edit {m.name}
                 </summary>
-                <form action={updateTeamMember} className="grid gap-4 bg-slate-50/70 p-4 sm:grid-cols-2" encType="multipart/form-data">
+                <form action={updateTeamMember} className="grid gap-4 bg-slate-50/70 p-4 sm:grid-cols-2">
                   <input type="hidden" name="id" value={m.id} />
                   <div>
                     <label className="form-label" htmlFor={`name-${m.id}`}>Name</label>
@@ -175,7 +191,7 @@ export default async function AdminTeamPage() {
                       <input type="checkbox" name="isPublished" defaultChecked={m.isPublished} className="rounded" />
                       Published on site
                     </label>
-                    <button type="submit" className="btn-primary">Save changes</button>
+                    <SubmitButton pendingText="Saving...">Save changes</SubmitButton>
                   </div>
                 </form>
               </details>

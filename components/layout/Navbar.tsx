@@ -20,6 +20,7 @@ const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Marketplace', href: '/marketplace' },
   { label: 'Services', href: '/#services' },
+  { label: 'Insights', href: '/insights' },
   { label: 'Contact', href: '/contact' },
 ]
 

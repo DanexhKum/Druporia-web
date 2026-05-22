@@ -8,7 +8,8 @@ import { redirect } from 'next/navigation'
 import { ensureDbUser, isAdminRole } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { formatPrice, formatDate, CATEGORY_LABELS, CATEGORY_ICONS } from '@/lib/utils'
-import { Download, Package, Clock, User, ShieldAlert } from 'lucide-react'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { Download, Package, Clock, User, ShieldAlert, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -142,15 +143,13 @@ export default async function DashboardPage() {
               </h2>
             </div>
             {totalPurchased === 0 ? (
-              <div className="px-5 py-10 text-center">
-                <p className="text-sm text-slate-400">No purchases yet.</p>
-                <Link
-                  href="/marketplace"
-                  className="mt-3 inline-block text-sm font-medium text-slate-900 underline underline-offset-2"
-                >
-                  Browse the marketplace →
-                </Link>
-              </div>
+              <EmptyState
+                icon={ShoppingBag}
+                title="No purchases yet"
+                description="Browse the marketplace and your completed purchases will appear here for quick access."
+                actionHref="/marketplace"
+                actionLabel="Browse marketplace"
+              />
             ) : (
               <ul className="divide-y divide-slate-100">
                 {user.orders.flatMap((order) =>
@@ -204,9 +203,13 @@ export default async function DashboardPage() {
               </h2>
             </div>
             {user.downloads.length === 0 ? (
-              <div className="px-5 py-8 text-center text-sm text-slate-400">
-                No downloads yet.
-              </div>
+              <EmptyState
+                icon={Download}
+                title="No downloads yet"
+                description="Your generated download links and access history will show here."
+                actionHref="/marketplace"
+                actionLabel="Find products"
+              />
             ) : (
               <table className="w-full text-sm">
                 <thead>

@@ -37,6 +37,31 @@ function validateImageFile(file: File, label: string) {
   }
 }
 
+function parseGalleryUrls(value: string) {
+  return value
+    .split(/\r?\n|,/)
+    .map((url) => url.trim())
+    .filter(Boolean)
+}
+
+function getUploadErrorMessage(error: unknown, label: string) {
+  const message = error instanceof Error ? error.message : String(error)
+
+  if (message.includes('row-level security') || message.includes('Unauthorized')) {
+    return `${label} upload failed because Supabase storage permissions are blocking the request. Check the service role key and bucket policy.`
+  }
+
+  if (message.includes('Bucket not found') || message.includes('bucket')) {
+    return `${label} upload failed because the Supabase storage bucket is missing or unavailable.`
+  }
+
+  if (message.includes('payload') || message.includes('too large')) {
+    return `${label} upload failed because the file is too large. Try a smaller or compressed file.`
+  }
+
+  return `${label} upload failed: ${message}`
+}
+
 export async function updateProduct(formData: FormData) {
   await requireAdmin()
 
@@ -62,7 +87,11 @@ export async function updateProduct(formData: FormData) {
     category: formData.get('category'),
     version: formData.get('version') || undefined,
     thumbnailUrl: formData.get('thumbnailUrl') || '',
-    isPublished: formData.get('isPublished') === 'on' ? 'true' : 'false',
+    galleryImageUrls: formData.get('galleryImageUrls') || '',
+    changelog: formData.get('changelog') || '',
+    documentation: formData.get('documentation') || '',
+    status: formData.get('status') || 'DRAFT',
+    isPublished: formData.get('status') === 'PUBLISHED' ? 'true' : 'false',
     isFeatured: formData.get('isFeatured') === 'on' ? 'true' : 'false',
   })
 
@@ -83,15 +112,52 @@ export async function updateProduct(formData: FormData) {
   }
 
   const thumbnailFile = formData.get('thumbnailFile') as File | null
-  const data = { ...parsed.data }
+  const galleryFiles = formData
+    .getAll('galleryFiles')
+    .filter((item): item is File => item instanceof File && item.size > 0)
+  const galleryUrls = parseGalleryUrls(parsed.data.galleryImageUrls)
+  const removeThumbnail = formData.get('removeThumbnail') === 'on'
+  const data = {
+    title: parsed.data.title,
+    slug: parsed.data.slug,
+    description: parsed.data.description,
+    price: parsed.data.price,
+    category: parsed.data.category,
+    version: parsed.data.version,
+    thumbnailUrl: removeThumbnail ? null : parsed.data.thumbnailUrl || null,
+    galleryUrls,
+    changelog: parsed.data.changelog || null,
+    documentation: parsed.data.documentation || null,
+    status: parsed.data.status,
+    isPublished: parsed.data.status === 'PUBLISHED',
+    isFeatured: parsed.data.isFeatured,
+  }
 
   if (thumbnailFile && thumbnailFile.size > 0) {
     validateImageFile(thumbnailFile, 'Thumbnail')
-    const uploadResult = await uploadProductThumbnail(
-      thumbnailFile,
-      parsed.data.slug
-    )
-    data.thumbnailUrl = uploadResult.publicUrl
+    try {
+      const uploadResult = await uploadProductThumbnail(
+        thumbnailFile,
+        parsed.data.slug
+      )
+      data.thumbnailUrl = uploadResult.publicUrl
+    } catch (error) {
+      throw new Error(getUploadErrorMessage(error, 'Thumbnail'))
+    }
+  }
+
+  for (const galleryFile of galleryFiles) {
+    validateImageFile(galleryFile, 'Gallery image')
+    try {
+      const uploadResult = await uploadProductThumbnail(
+        galleryFile,
+        parsed.data.slug,
+        'product-gallery'
+      )
+      galleryUrls.push(uploadResult.publicUrl)
+    } catch (error) {
+      throw new Error(getUploadErrorMessage(error, 'Gallery image'))
+    }
   }
 
   const product = await prisma.product.update({

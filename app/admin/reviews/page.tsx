@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
-import { ReviewSource } from '@prisma/client'
+import { SubmitButton } from '@/components/admin/SubmitButton'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { ReviewApprovalStatus, ReviewSource } from '@prisma/client'
 import { createReview, deleteReview, updateReview } from './actions'
 import { MessageSquareQuote, Trash2, Star, Pencil } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -65,18 +67,26 @@ export default async function AdminReviewsPage() {
             <input id="sortOrder" name="sortOrder" type="number" defaultValue={0} min={0} />
           </div>
         </div>
-        <label className="flex items-center gap-2 text-sm text-slate-700">
-          <input type="checkbox" name="isPublished" defaultChecked className="rounded" />
-          Published on site
-        </label>
-        <button type="submit" className="btn-primary">
-          Add review
-        </button>
+        <div>
+          <label className="form-label" htmlFor="approvalStatus">Approval status</label>
+          <select id="approvalStatus" name="approvalStatus" defaultValue={ReviewApprovalStatus.APPROVED}>
+            <option value={ReviewApprovalStatus.PENDING}>Pending review</option>
+            <option value={ReviewApprovalStatus.APPROVED}>Approved - show on site</option>
+            <option value={ReviewApprovalStatus.REJECTED}>Rejected - hidden</option>
+          </select>
+        </div>
+        <SubmitButton pendingText="Adding review...">Add review</SubmitButton>
       </form>
 
       <ul className="mt-10 space-y-3">
         {reviews.length === 0 ? (
-          <li className="text-sm text-slate-400">No reviews yet.</li>
+          <li className="card">
+            <EmptyState
+              icon={MessageSquareQuote}
+              title="No reviews added yet"
+              description="Add client testimonials and approve them to display social proof on the homepage."
+            />
+          </li>
         ) : (
           reviews.map((r) => (
             <li key={r.id} className="card overflow-hidden">
@@ -90,14 +100,25 @@ export default async function AdminReviewsPage() {
                       ))}
                     </span>
                     <span className="badge text-[10px]">{r.source}</span>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                        r.approvalStatus === ReviewApprovalStatus.APPROVED
+                          ? 'bg-green-50 text-green-700'
+                          : r.approvalStatus === ReviewApprovalStatus.REJECTED
+                          ? 'bg-red-50 text-red-700'
+                          : 'bg-amber-50 text-amber-700'
+                      }`}
+                    >
+                      {r.approvalStatus.toLowerCase()}
+                    </span>
                   </div>
                   <p className="mt-2 text-sm text-slate-600 line-clamp-2">{r.comment}</p>
                 </div>
                 <form action={deleteReview}>
                   <input type="hidden" name="id" value={r.id} />
-                  <button type="submit" className="btn-ghost text-red-600 p-2">
+                  <SubmitButton variant="danger" pendingText="..." className="p-2">
                     <Trash2 className="h-4 w-4" />
-                  </button>
+                  </SubmitButton>
                 </form>
               </div>
               <details className="border-t border-slate-100">
@@ -143,12 +164,19 @@ export default async function AdminReviewsPage() {
                     <label className="form-label" htmlFor={`sort-${r.id}`}>Sort order</label>
                     <input id={`sort-${r.id}`} name="sortOrder" type="number" min={0} defaultValue={r.sortOrder} />
                   </div>
+                  <div className="sm:col-span-2">
+                    <label className="form-label" htmlFor={`approval-${r.id}`}>Approval status</label>
+                    <select id={`approval-${r.id}`} name="approvalStatus" defaultValue={r.approvalStatus}>
+                      <option value={ReviewApprovalStatus.PENDING}>Pending review</option>
+                      <option value={ReviewApprovalStatus.APPROVED}>Approved - show on site</option>
+                      <option value={ReviewApprovalStatus.REJECTED}>Rejected - hidden</option>
+                    </select>
+                  </div>
                   <div className="flex items-center justify-between gap-4 sm:col-span-2">
-                    <label className="flex items-center gap-2 text-sm text-slate-700">
-                      <input type="checkbox" name="isPublished" defaultChecked={r.isPublished} className="rounded" />
-                      Published on site
-                    </label>
-                    <button type="submit" className="btn-primary">Save changes</button>
+                    <p className="text-xs text-slate-500">
+                      Only approved reviews are shown on the homepage.
+                    </p>
+                    <SubmitButton pendingText="Saving...">Save changes</SubmitButton>
                   </div>
                 </form>
               </details>

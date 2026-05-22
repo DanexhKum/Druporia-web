@@ -1,6 +1,17 @@
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Privacy Policy' }
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description:
+    'Read how Druporia handles account data, contact submissions, marketplace orders, downloads, and technical logs.',
+  alternates: { canonical: '/privacy' },
+  openGraph: {
+    title: 'Privacy Policy — Druporia',
+    description:
+      'How Druporia handles account, contact, order, download, and technical data.',
+    url: '/privacy',
+  },
+}
 
 export default function PrivacyPage() {
   return (

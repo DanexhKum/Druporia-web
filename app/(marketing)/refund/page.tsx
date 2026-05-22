@@ -1,6 +1,17 @@
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Refund Policy' }
+export const metadata: Metadata = {
+  title: 'Refund Policy',
+  description:
+    'Review Druporia refund rules for digital products, custom development, consulting services, and support inquiries.',
+  alternates: { canonical: '/refund' },
+  openGraph: {
+    title: 'Refund Policy — Druporia',
+    description:
+      'Refund rules for Druporia digital products, custom development, and consulting services.',
+    url: '/refund',
+  },
+}
 
 export default function RefundPage() {
   return (
