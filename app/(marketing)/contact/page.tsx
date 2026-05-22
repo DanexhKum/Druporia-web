@@ -6,6 +6,7 @@
 import type { Metadata } from 'next'
 import { Mail, MessageSquare, Building } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
+import { TawkWidget } from '@/components/chat/TawkWidget'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -15,9 +16,10 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="bg-slate-50 min-h-screen">
+      <TawkWidget />
       {/* ── Page Header ─────────────────────────────────────── */}
       <div className="bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80"></div>
         <div className="container-page py-20 relative z-10 text-center max-w-3xl mx-auto">
           <p className="text-sm font-bold uppercase tracking-widest text-blue-400 mb-4">
             Contact Druporia
@@ -51,7 +53,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900">Email Us</p>
-                  <p className="text-sm text-slate-500">contact@druporia.com</p>
+                  <p className="text-sm text-slate-500">dhanesh.kumar15@gmail.com</p>
                 </div>
               </div>
               <div className="flex gap-4">

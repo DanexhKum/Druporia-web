@@ -59,7 +59,6 @@ export function Navbar() {
                 Dashboard
               </Link>
               <UserButton
-                afterSignOutUrl="/"
                 appearance={{
                   elements: {
                     avatarBox: 'w-7 h-7',

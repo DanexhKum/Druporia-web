@@ -50,12 +50,18 @@ function getS3Client() {
 }
 
 const SUPABASE_BUCKET = 'product-downloads' // Private Supabase bucket name
+const SUPABASE_THUMBNAIL_BUCKET = 'product-thumbnails' // Public Supabase bucket name
 const S3_BUCKET = process.env.AWS_S3_BUCKET_NAME ?? 'private-product-downloads'
 const SIGNED_URL_TTL_SECONDS = 60 * 15 // 15 minutes
 
 export type UploadResult = {
   storagePath: string // The private path stored in DB
   fileSize: string    // Human-readable file size
+}
+
+export type PublicUploadResult = {
+  publicUrl: string
+  storagePath: string
 }
 
 // ── Upload a product .zip file ────────────────────────────────
@@ -117,6 +123,65 @@ export async function uploadProductFile(
   return { storagePath, fileSize: fileSizeLabel }
 }
 
+// ── Upload a public product thumbnail image ─────────────────────
+export async function uploadProductThumbnail(
+  file: File,
+  slug: string,
+  folder = 'products'
+): Promise<PublicUploadResult> {
+  const supabase = getSupabaseAdmin()
+  const timestamp = Date.now()
+  const sanitizedSlug = slug.replace(/[^a-z0-9-]/gi, '-').toLowerCase()
+  const extension = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+  const sanitizedFolder = folder.replace(/[^a-z0-9-]/gi, '-').toLowerCase()
+  const storagePath = `${sanitizedFolder}/${sanitizedSlug}/${timestamp}.${extension}`
+  const buffer = await file.arrayBuffer()
+
+  await ensurePublicThumbnailBucket(supabase)
+
+  const { error } = await supabase.storage
+    .from(SUPABASE_THUMBNAIL_BUCKET)
+    .upload(storagePath, buffer, {
+      contentType: file.type || 'image/jpeg',
+      upsert: false,
+      metadata: {
+        originalName: file.name,
+        slug: sanitizedSlug,
+      },
+    })
+
+  if (error) {
+    throw new Error(`Supabase thumbnail upload failed: ${error.message}`)
+  }
+
+  const { data } = supabase.storage
+    .from(SUPABASE_THUMBNAIL_BUCKET)
+    .getPublicUrl(storagePath)
+
+  return { publicUrl: data.publicUrl, storagePath }
+}
+
+async function ensurePublicThumbnailBucket(
+  supabase: ReturnType<typeof getSupabaseAdmin>
+) {
+  const { data } = await supabase.storage.getBucket(SUPABASE_THUMBNAIL_BUCKET)
+
+  if (data) return
+
+  const { error } = await supabase.storage.createBucket(
+    SUPABASE_THUMBNAIL_BUCKET,
+    {
+      public: true,
+      fileSizeLimit: 5 * 1024 * 1024,
+      allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+    }
+  )
+
+  if (error && !error.message.toLowerCase().includes('already exists')) {
+    throw new Error(`Failed to create thumbnail bucket: ${error.message}`)
+  }
+}
+
 // ── Generate a short-lived signed download URL ─────────────────
 export async function generateSignedDownloadUrl(
   storagePath: string
@@ -162,6 +227,17 @@ export async function deleteProductFile(storagePath: string): Promise<void> {
     if (error) {
       throw new Error(`Supabase delete failed: ${error.message}`)
     }
+  }
+}
+
+export async function deleteProductThumbnail(storagePath: string): Promise<void> {
+  const supabase = getSupabaseAdmin()
+  const { error } = await supabase.storage
+    .from(SUPABASE_THUMBNAIL_BUCKET)
+    .remove([storagePath])
+
+  if (error) {
+    throw new Error(`Supabase thumbnail delete failed: ${error.message}`)
   }
 }
 

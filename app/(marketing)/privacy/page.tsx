@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <li>Technical logs for security and performance</li>
       </ul>
       <h2>Contact</h2>
-      <p>Questions: hello@druporia.com</p>
+      <p>Questions: dhanesh.kumar15@gmail.com</p>
     </div>
   )
 }

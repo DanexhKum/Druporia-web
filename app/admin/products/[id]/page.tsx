@@ -36,7 +36,7 @@ export default async function EditProductPage({ params }: PageProps) {
         </p>
       </div>
 
-      <form action={updateProduct} className="card space-y-5 p-6">
+      <form action={updateProduct} className="card space-y-5 p-6" encType="multipart/form-data">
         <input type="hidden" name="id" value={product.id} />
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -105,8 +105,31 @@ export default async function EditProductPage({ params }: PageProps) {
             placeholder="https://example.com/product-thumbnail.png"
           />
           <p className="mt-1 text-xs text-slate-400">
-            Used on marketplace cards and product detail pages.
+            Used on marketplace cards and product detail pages. Upload below overrides this URL.
           </p>
+        </div>
+
+        <div>
+          <label className="form-label" htmlFor="thumbnailFile">Upload thumbnail image</label>
+          <input
+            id="thumbnailFile"
+            name="thumbnailFile"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+          />
+          <p className="mt-1 text-xs text-slate-400">
+            Optional. JPG, PNG, WebP, or GIF. Best size: 1200x800. Max 5 MB.
+          </p>
+          {product.thumbnailUrl && (
+            <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={product.thumbnailUrl}
+                alt={`${product.title} current thumbnail`}
+                className="h-56 w-full object-cover"
+              />
+            </div>
+          )}
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">

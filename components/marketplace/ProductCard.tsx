@@ -80,7 +80,7 @@ export function ProductCard({
   const categoryStyle = getCategoryStyle(category)
 
   return (
-    <article className="group relative flex flex-col rounded-lg border border-slate-200 bg-white transition-shadow duration-200 hover:shadow-card-hover">
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
 
       {/* ── Featured ribbon ──────────────────────────────── */}
       {isFeatured && (
@@ -95,27 +95,28 @@ export function ProductCard({
       {/* ── Thumbnail ────────────────────────────────────── */}
       <Link
         href={`/marketplace/${slug}`}
-        className="block overflow-hidden rounded-t-lg border-b border-slate-200"
+        className="block overflow-hidden border-b border-slate-200"
         aria-label={`View ${title}`}
         tabIndex={-1}
       >
-        <div className="relative h-40 w-full bg-slate-50">
+        <div className="relative h-56 w-full bg-slate-100 sm:h-60">
           {thumbnailUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={thumbnailUrl}
               alt={`${title} thumbnail`}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />
           ) : (
             /* Placeholder — clean grid pattern, no gradients */
-            <div className="flex h-full w-full items-center justify-center">
-              <div className="text-4xl opacity-20 select-none">
+            <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.14),_transparent_42%),linear-gradient(135deg,_#f8fafc,_#e2e8f0)]">
+              <div className="text-5xl opacity-25 select-none">
                 {CATEGORY_ICONS[category]}
               </div>
             </div>
           )}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-white/10 opacity-80" />
         </div>
       </Link>
 

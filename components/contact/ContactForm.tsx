@@ -38,7 +38,7 @@ export function ContactForm() {
     } catch {
       setStatus('error')
       setMessage(
-        'Message could not be sent right now. Please email us directly at contact@druporia.com.'
+        'Message could not be sent right now. Please email us directly at dhanesh.kumar15@gmail.com.'
       )
     }
   }

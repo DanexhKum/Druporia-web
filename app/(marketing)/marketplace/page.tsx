@@ -151,7 +151,7 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
     <div className="bg-white">
       {/* ── Page header ──────────────────────────────────── */}
       <div className="bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80"></div>
         <div className="container-page py-16 relative z-10">
           <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">
             Druporia Marketplace

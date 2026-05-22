@@ -3,7 +3,38 @@
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { uploadProductThumbnail } from '@/lib/storage'
 import { z } from 'zod'
+
+const MAX_AVATAR_SIZE_BYTES = 5 * 1024 * 1024
+const ALLOWED_AVATAR_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+]
+const ALLOWED_AVATAR_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
+
+function validateAvatarFile(file: File) {
+  if (!file || file.size === 0) return
+
+  const fileName = file.name.toLowerCase()
+  const hasValidExtension = ALLOWED_AVATAR_EXTENSIONS.some((ext) =>
+    fileName.endsWith(ext)
+  )
+
+  if (!hasValidExtension) {
+    throw new Error('Avatar must be a JPG, PNG, WebP, or GIF image')
+  }
+
+  if (file.size > MAX_AVATAR_SIZE_BYTES) {
+    throw new Error('Avatar must be under 5 MB')
+  }
+
+  if (file.type && !ALLOWED_AVATAR_MIME_TYPES.includes(file.type)) {
+    throw new Error('Avatar must be a JPG, PNG, WebP, or GIF image')
+  }
+}
 
 const teamSchema = z.object({
   name: z.string().min(2).max(80),
@@ -32,12 +63,21 @@ export async function createTeamMember(formData: FormData) {
     throw new Error(parsed.error.errors[0]?.message ?? 'Invalid input')
   }
   const d = parsed.data
+  const avatarFile = formData.get('avatarFile') as File | null
+  let avatarUrl = d.avatarUrl || null
+
+  if (avatarFile && avatarFile.size > 0) {
+    validateAvatarFile(avatarFile)
+    const uploadResult = await uploadProductThumbnail(avatarFile, d.name, 'team')
+    avatarUrl = uploadResult.publicUrl
+  }
+
   await prisma.teamMember.create({
     data: {
       name: d.name,
       role: d.role,
       bio: d.bio,
-      avatarUrl: d.avatarUrl || null,
+      avatarUrl,
       linkedInUrl: d.linkedInUrl || null,
       githubUrl: d.githubUrl || null,
       sortOrder: d.sortOrder,
@@ -69,13 +109,22 @@ export async function updateTeamMember(formData: FormData) {
   }
 
   const d = parsed.data
+  const avatarFile = formData.get('avatarFile') as File | null
+  let avatarUrl = d.avatarUrl || null
+
+  if (avatarFile && avatarFile.size > 0) {
+    validateAvatarFile(avatarFile)
+    const uploadResult = await uploadProductThumbnail(avatarFile, d.name, 'team')
+    avatarUrl = uploadResult.publicUrl
+  }
+
   await prisma.teamMember.update({
     where: { id },
     data: {
       name: d.name,
       role: d.role,
       bio: d.bio,
-      avatarUrl: d.avatarUrl || null,
+      avatarUrl,
       linkedInUrl: d.linkedInUrl || null,
       githubUrl: d.githubUrl || null,
       sortOrder: d.sortOrder,

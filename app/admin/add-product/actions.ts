@@ -17,7 +17,12 @@
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { uploadProductFile } from '@/lib/storage'
+import {
+  deleteProductFile,
+  deleteProductThumbnail,
+  uploadProductFile,
+  uploadProductThumbnail,
+} from '@/lib/storage'
 import {
   CreateProductSchema,
   type ActionState,
@@ -25,6 +30,7 @@ import {
 import type { Product } from '@prisma/client'
 
 const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024 // 100 MB
+const MAX_THUMBNAIL_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
 const ALLOWED_MIME_TYPES = [
   'application/zip',
   'application/x-zip-compressed',
@@ -32,6 +38,13 @@ const ALLOWED_MIME_TYPES = [
   'application/x-zip',
 ]
 const ALLOWED_EXTENSIONS = ['.zip']
+const ALLOWED_THUMBNAIL_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+]
+const ALLOWED_THUMBNAIL_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
 
 // ── Server Action ──────────────────────────────────────────────
 export async function createProduct(
@@ -53,6 +66,7 @@ export async function createProduct(
 
   // ── STEP 2: Extract and validate file ─────────────────────
   const file = formData.get('zipFile') as File | null
+  const thumbnailFile = formData.get('thumbnailFile') as File | null
 
   if (!file || file.size === 0) {
     return {
@@ -101,6 +115,46 @@ export async function createProduct(
     }
   }
 
+  if (thumbnailFile && thumbnailFile.size > 0) {
+    const thumbnailName = thumbnailFile.name.toLowerCase()
+    const hasValidThumbnailExtension = ALLOWED_THUMBNAIL_EXTENSIONS.some((ext) =>
+      thumbnailName.endsWith(ext)
+    )
+
+    if (!hasValidThumbnailExtension) {
+      return {
+        status: 'error',
+        message: 'Invalid thumbnail image.',
+        fieldErrors: {
+          thumbnailFile: ['Use a JPG, PNG, WebP, or GIF image.'],
+        },
+      }
+    }
+
+    if (thumbnailFile.size > MAX_THUMBNAIL_SIZE_BYTES) {
+      return {
+        status: 'error',
+        message: 'Thumbnail image is too large.',
+        fieldErrors: {
+          thumbnailFile: ['Thumbnail must be under 5 MB.'],
+        },
+      }
+    }
+
+    if (
+      thumbnailFile.type &&
+      !ALLOWED_THUMBNAIL_MIME_TYPES.includes(thumbnailFile.type)
+    ) {
+      return {
+        status: 'error',
+        message: 'Invalid thumbnail image type.',
+        fieldErrors: {
+          thumbnailFile: ['Use a JPG, PNG, WebP, or GIF image.'],
+        },
+      }
+    }
+  }
+
   // ── STEP 3: Validate form fields via Zod ──────────────────
   const rawFields = {
     title: formData.get('title'),
@@ -130,7 +184,7 @@ export async function createProduct(
     }
   }
 
-  const { title, slug, description, price, category, version, thumbnailUrl, isPublished, isFeatured } =
+  const { title, slug, description, price, category, version, isPublished, isFeatured } =
     parsed.data
 
   // ── STEP 4: Check slug uniqueness ─────────────────────────
@@ -152,6 +206,8 @@ export async function createProduct(
   // ── STEP 5: Upload .zip to private storage ─────────────────
   let storagePath: string
   let fileSize: string
+  let thumbnailUrl = parsed.data.thumbnailUrl || ''
+  let thumbnailStoragePath: string | null = null
 
   try {
     const uploadResult = await uploadProductFile(file, slug)
@@ -162,6 +218,25 @@ export async function createProduct(
     return {
       status: 'error',
       message: 'File upload failed. Please try again or contact support.',
+    }
+  }
+
+  if (thumbnailFile && thumbnailFile.size > 0) {
+    try {
+      const uploadResult = await uploadProductThumbnail(thumbnailFile, slug)
+      thumbnailUrl = uploadResult.publicUrl
+      thumbnailStoragePath = uploadResult.storagePath
+    } catch (err) {
+      console.error('[createProduct] Thumbnail upload failed:', err)
+      try {
+        await deleteProductFile(storagePath)
+      } catch {
+        // Non-fatal cleanup failure
+      }
+      return {
+        status: 'error',
+        message: 'Thumbnail upload failed. Please try another image.',
+      }
     }
   }
 
@@ -192,8 +267,10 @@ export async function createProduct(
     console.error('[createProduct] DB insert failed:', err)
     // Best-effort: try to clean up the uploaded file
     try {
-      const { deleteProductFile } = await import('@/lib/storage')
       await deleteProductFile(storagePath)
+      if (thumbnailStoragePath) {
+        await deleteProductThumbnail(thumbnailStoragePath)
+      }
     } catch {
       // Non-fatal cleanup failure
     }

@@ -72,7 +72,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 <img
                   src={product.thumbnailUrl}
                   alt={product.title}
-                  className="w-full max-h-[420px] object-cover"
+                  className="h-[360px] w-full object-cover md:h-[460px]"
                 />
               </div>
             )}

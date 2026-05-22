@@ -47,7 +47,7 @@ export default async function AdminLayout({
               </span>
             </div>
           </div>
-          <UserButton afterSignOutUrl="/" />
+          <UserButton />
         </div>
       </header>
 

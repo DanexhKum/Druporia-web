@@ -17,7 +17,7 @@ export default function TermsPage() {
         then, purchases may be arranged directly with our team.
       </p>
       <h2>Support</h2>
-      <p>Contact hello@druporia.com for licensing and support inquiries.</p>
+      <p>Contact dhanesh.kumar15@gmail.com for licensing and support inquiries.</p>
     </div>
   )
 }

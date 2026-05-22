@@ -3,12 +3,13 @@
 // ============================================================
 
 import Link from 'next/link'
-import { ArrowRight, Box, Code2, Bot, Layers, CheckCircle2, Workflow } from 'lucide-react'
+import { ArrowRight, Box, Code2, Bot, Layers, CheckCircle2, Workflow, BarChart3 } from 'lucide-react'
 import { HeroSection } from '@/components/marketing/HeroSection'
 import { FeaturedProducts } from '@/components/marketing/FeaturedProducts'
 import { TeamSection } from '@/components/marketing/TeamSection'
 import { FiverrReviews } from '@/components/marketing/FiverrReviews'
 import { AnimateIn } from '@/components/marketing/AnimateIn'
+import { TawkWidget } from '@/components/chat/TawkWidget'
 
 const TECH_STACK = [
   'Next.js', 'n8n', 'Node.js', 'PostgreSQL',
@@ -52,11 +53,19 @@ const SERVICES = [
       'Connect your stack with custom n8n workflows and reliable data pipelines.',
     tags: ['n8n', 'Automation'],
   },
+  {
+    icon: BarChart3,
+    title: 'Data Analytics & Reporting',
+    description:
+      'Turn sales, customer, and marketing data into clear dashboards and actionable insights.',
+    tags: ['Data Analyst', 'Dashboards'],
+  },
 ]
 
 export default function HomePage() {
   return (
     <div className="bg-slate-50 min-h-screen">
+      <TawkWidget />
       <HeroSection />
 
       <section className="border-y border-slate-200 bg-white shadow-sm relative z-10">
@@ -80,7 +89,7 @@ export default function HomePage() {
       <FeaturedProducts />
 
       <section className="bg-slate-900 text-white relative overflow-hidden py-20 sm:py-28">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80" />
         <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
           <AnimateIn>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">

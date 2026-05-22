@@ -186,11 +186,151 @@ function FileDropZone({
   )
 }
 
+// ── Thumbnail image drop zone ──────────────────────────────────
+function ThumbnailDropZone({
+  file,
+  previewUrl,
+  onFile,
+  onClear,
+  error,
+}: {
+  file: File | null
+  previewUrl: string | null
+  onFile: (f: File) => void
+  onClear: () => void
+  error?: string
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    setIsDragging(false)
+    const dropped = e.dataTransfer.files[0]
+    if (dropped) {
+      onFile(dropped)
+      if (inputRef.current) {
+        inputRef.current.files = e.dataTransfer.files
+      }
+    }
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const chosen = e.target.files?.[0]
+    if (chosen) onFile(chosen)
+  }
+
+  const sizeLabel = file
+    ? file.size < 1024 * 1024
+      ? `${(file.size / 1024).toFixed(0)} KB`
+      : `${(file.size / 1024 / 1024).toFixed(1)} MB`
+    : null
+
+  return (
+    <div>
+      <label className="form-label">
+        Marketplace thumbnail{' '}
+        <span className="ml-1.5 text-xs text-slate-400 font-normal">
+          (optional)
+        </span>
+      </label>
+
+      <div
+        onDragOver={(e) => {
+          e.preventDefault()
+          setIsDragging(true)
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        onClick={() => inputRef.current?.click()}
+        className={cn(
+          'group relative flex min-h-[230px] cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed bg-slate-950 text-center transition-all duration-200',
+          isDragging
+            ? 'border-slate-500 ring-4 ring-slate-200'
+            : error
+            ? 'border-red-300'
+            : 'border-slate-200 hover:border-slate-300'
+        )}
+        role="button"
+        tabIndex={0}
+        aria-label="Upload product thumbnail image"
+        onKeyDown={(e) => e.key === 'Enter' && inputRef.current?.click()}
+      >
+        {previewUrl ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewUrl}
+              alt="Selected product thumbnail preview"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent" />
+            <div className="relative z-10 mt-auto flex w-full items-end justify-between gap-3 p-4 text-left">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-white">
+                  {file?.name}
+                </p>
+                <p className="text-xs text-slate-200">{sizeLabel}</p>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClear()
+                  if (inputRef.current) inputRef.current.value = ''
+                }}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-sm transition hover:bg-white hover:text-red-500"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="flex w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.14),_transparent_42%),linear-gradient(135deg,_#0f172a,_#1e293b)] px-6 py-10">
+            <Upload className="h-8 w-8 text-slate-300" />
+            <div>
+              <p className="text-sm font-semibold text-white">
+                Drop product image here or click to browse
+              </p>
+              <p className="mt-1 text-xs text-slate-300">
+                JPG, PNG, WebP, or GIF. Best size: 1200x800. Max 5 MB.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <input
+        ref={inputRef}
+        type="file"
+        name="thumbnailFile"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        onChange={handleChange}
+        className="sr-only"
+        aria-hidden="true"
+      />
+
+      {error ? (
+        <p className="form-error mt-1.5">
+          <Info className="h-3.5 w-3.5" />
+          {error}
+        </p>
+      ) : (
+        <p className="mt-1 text-xs text-slate-400">
+          This image will cover the full marketplace thumbnail area.
+        </p>
+      )}
+    </div>
+  )
+}
+
 // ── Main Page Component ────────────────────────────────────────
 export default function AddProductPage() {
   const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
   const [zipFile, setZipFile] = useState<File | null>(null)
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null)
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false)
 
   const [state, formAction, isPending] = useActionState(
@@ -219,6 +359,8 @@ export default function AddProductPage() {
       toast.success(state.message, { duration: 5000 })
       formRef.current?.reset()
       setZipFile(null)
+      setThumbnailFile(null)
+      setThumbnailPreviewUrl(null)
       setSlugManuallyEdited(false)
       // Navigate to the new product
       router.push(`/marketplace/${state.data.slug}`)
@@ -226,6 +368,18 @@ export default function AddProductPage() {
       toast.error(state.message)
     }
   }, [state, router])
+
+  useEffect(() => {
+    if (!thumbnailFile) {
+      setThumbnailPreviewUrl(null)
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(thumbnailFile)
+    setThumbnailPreviewUrl(objectUrl)
+
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [thumbnailFile])
 
   // ── Inject zipFile into FormData before submission ──────────
   const handleSubmit = useCallback(
@@ -357,7 +511,6 @@ export default function AddProductPage() {
             <FieldError errors={fieldErrors} field="version" state={state} />
           </div>
 
-          {/* Thumbnail URL */}
           <div>
             <label htmlFor="thumbnailUrl" className="form-label">
               Thumbnail image URL
@@ -377,10 +530,22 @@ export default function AddProductPage() {
               )}
             />
             <p className="mt-1 text-xs text-slate-400">
-              Used on marketplace cards and product detail pages.
+              Paste a URL or upload a file below. Uploaded file will be used first.
             </p>
             <FieldError errors={fieldErrors} field="thumbnailUrl" state={state} />
           </div>
+
+          <ThumbnailDropZone
+            file={thumbnailFile}
+            previewUrl={thumbnailPreviewUrl}
+            onFile={setThumbnailFile}
+            onClear={() => setThumbnailFile(null)}
+            error={
+              state.status === 'error'
+                ? fieldErrors?.thumbnailFile?.[0]
+                : undefined
+            }
+          />
         </section>
 
         {/* ── Section 2: Categorisation & Pricing ─────────── */}
