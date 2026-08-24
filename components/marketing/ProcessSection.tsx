@@ -40,7 +40,7 @@ const STEPS = [
 
 export function ProcessSection() {
   return (
-    <section id="process" className="bg-ink-900 py-20 sm:py-28">
+    <section id="process" className="bg-ink-900 py-16 sm:py-24">
       <div className="container-page">
         <AnimateIn className="mx-auto mb-16 max-w-2xl text-center">
           <p className="chip">02 · How we work</p>
@@ -74,7 +74,7 @@ export function ProcessSection() {
                   <h3 className="mt-6 text-lg font-bold tracking-tight text-white">
                     {step.title}
                   </h3>
-                  <p className="mt-2 text-sm font-light leading-relaxed text-white/55">
+                  <p className="mt-2 text-sm font-normal leading-relaxed text-white/65">
                     {step.description}
                   </p>
                 </div>

@@ -14,6 +14,7 @@
 // is reordered in /admin, the emphasis follows the order.
 // ============================================================
 
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import {
   Box,
@@ -56,12 +57,15 @@ function spanFor(index: number) {
 
 export function BentoGrid({ items }: { items: BentoItem[] }) {
   const reduceMotion = useReducedMotion()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const animate = mounted && !reduceMotion
 
   if (items.length === 0) return null
 
   return (
     <motion.div
-      initial="hidden"
+      initial={animate ? 'hidden' : false}
       whileInView="visible"
       viewport={{ once: true, margin: '-60px' }}
       variants={{
@@ -76,7 +80,7 @@ export function BentoGrid({ items }: { items: BentoItem[] }) {
           <motion.article
             key={item.title}
             variants={{
-              hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 26 },
+              hidden: { opacity: 0, y: 26 },
               visible: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.6, ease }}
@@ -96,7 +100,7 @@ export function BentoGrid({ items }: { items: BentoItem[] }) {
               <h3 className="mt-6 text-lg font-bold tracking-tight text-white">
                 {item.title}
               </h3>
-              <p className="mt-2.5 text-sm font-light leading-relaxed text-white/50">
+              <p className="mt-2.5 text-sm leading-relaxed text-white/60">
                 {item.description}
               </p>
 

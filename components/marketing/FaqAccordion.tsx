@@ -36,13 +36,13 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               {item.question}
             </h3>
             <ChevronDown
-              className="h-5 w-5 shrink-0 text-white/35 transition-transform duration-300 group-open:rotate-180 group-open:text-teal-400"
+              className="h-5 w-5 shrink-0 text-white/45 transition-transform duration-300 group-open:rotate-180 group-open:text-teal-400"
               aria-hidden
             />
           </summary>
 
           <div className="px-6 pb-5 pr-14">
-            <p className="text-sm font-light leading-relaxed text-white/55">
+            <p className="text-sm font-normal leading-relaxed text-white/65">
               {item.answer}
             </p>
           </div>

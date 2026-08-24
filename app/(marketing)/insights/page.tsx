@@ -53,10 +53,10 @@ export default function InsightsPage() {
         <StaggerGrid className="grid gap-6 md:grid-cols-2">
           {posts.map((post) => (
             <StaggerItem key={post.slug}>
-              <article className="card-dark-hover card h-full p-7">
+              <article className="card-dark-hover sweep-host h-full p-7">
                 <div className="mb-5 flex items-center justify-between gap-4">
-                  <span className="badge">{post.category}</span>
-                  <span className="text-xs font-medium text-white/35">
+                  <span className="chip">{post.category}</span>
+                  <span className="text-xs font-medium text-white/45">
                     {post.readingTime}
                   </span>
                 </div>

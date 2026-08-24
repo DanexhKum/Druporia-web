@@ -43,15 +43,22 @@ const COUNT_DURATION_MS = 1400
 
 function useCountUp(target: number, active: boolean, decimals: number) {
   const reduceMotion = useReducedMotion()
-  const [value, setValue] = useState(0)
+
+  // Seed with the REAL value, not 0. This is what the server
+  // renders and what a crawler or a JS-blocked visitor sees —
+  // starting at 0 meant the page advertised "0 products shipped"
+  // until an IntersectionObserver happened to fire.
+  const [value, setValue] = useState(target)
+
+  // Only drop to 0 to animate up, and only once we know we are
+  // on the client with motion allowed.
+  const [canAnimate, setCanAnimate] = useState(false)
+  useEffect(() => setCanAnimate(true), [])
 
   useEffect(() => {
-    if (!active) return
-
-    // Respect the user's motion preference — show the final
-    // figure immediately rather than animating to it.
-    if (reduceMotion) {
-      setValue(target)
+    if (!canAnimate || reduceMotion) return
+    if (!active) {
+      setValue(0)
       return
     }
 
@@ -71,7 +78,7 @@ function useCountUp(target: number, active: boolean, decimals: number) {
 
     frame = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frame)
-  }, [active, target, reduceMotion])
+  }, [active, target, reduceMotion, canAnimate])
 
   return value.toFixed(decimals)
 }

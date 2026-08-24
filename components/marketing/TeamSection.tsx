@@ -8,13 +8,13 @@ export async function TeamSection() {
   if (members.length === 0) return null
 
   return (
-    <section id="team" className="bg-ink-950 py-20 sm:py-28 border-t border-white/10">
+    <section id="team" className="bg-ink-950 py-16 sm:py-24 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
-          <p className="text-sm font-bold uppercase tracking-widest text-white/80 mb-3">
+          <p className="chip">
             Our team
           </p>
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">
+          <h2 className="heading-dark mt-5">
             Engineers behind Druporia
           </h2>
           <p className="mt-4 text-white/55">
@@ -26,11 +26,11 @@ export async function TeamSection() {
         <StaggerGrid className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
             <StaggerItem key={member.id}>
-              <article className="group card-hover overflow-hidden text-center">
-                <div className="relative bg-gradient-to-br from-ink-990 via-ink-950 to-ink-950 px-6 pb-16 pt-10">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.35),transparent_45%)] opacity-80" />
-                  <div className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border border-white/20 bg-white/10 p-1.5 shadow-2xl shadow-navy-950/40 backdrop-blur">
-                    <div className="h-full w-full overflow-hidden rounded-full bg-ink-950 ring-4 ring-white/90">
+              <article className="group card-dark-hover sweep-host overflow-hidden text-center">
+                <div className="relative bg-gradient-to-br from-ink-990 via-ink-950 to-ink-950 px-6 pb-8 pt-10">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.22),transparent_50%)] opacity-80" />
+                  <div className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border border-white/20 bg-white/10 p-1.5 shadow-2xl shadow-black/60 backdrop-blur">
+                    <div className="h-full w-full overflow-hidden rounded-full bg-ink-950 ring-4 ring-white/15">
                       {member.avatarUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -46,8 +46,7 @@ export async function TeamSection() {
                     </div>
                   </div>
                 </div>
-                <div className="-mt-10 p-6 pt-0">
-                  <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-transparent" />
+                <div className="p-6 pt-0">
                   <h3 className="text-lg font-bold text-white">{member.name}</h3>
                   <p className="mt-1 text-sm font-medium text-white/80">{member.role}</p>
                   <p className="mt-3 text-sm leading-relaxed text-white/55 line-clamp-4">
@@ -59,7 +58,7 @@ export async function TeamSection() {
                         href={member.linkedInUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full border border-white/10 p-2 text-white/45 hover:border-white/15 hover:text-white/80 transition-colors"
+                        className="rounded-full border border-white/10 p-2 text-white/55 hover:border-white/15 hover:text-white/80 transition-colors"
                         aria-label={`${member.name} on LinkedIn`}
                       >
                         <Linkedin className="h-4 w-4" />
@@ -70,7 +69,7 @@ export async function TeamSection() {
                         href={member.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full border border-white/10 p-2 text-white/45 hover:border-white/15 hover:text-white/80 transition-colors"
+                        className="rounded-full border border-white/10 p-2 text-white/55 hover:border-white/15 hover:text-white/80 transition-colors"
                         aria-label={`${member.name} on GitHub`}
                       >
                         <Github className="h-4 w-4" />

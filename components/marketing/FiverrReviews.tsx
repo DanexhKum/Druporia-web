@@ -32,7 +32,7 @@ export async function FiverrReviews() {
   if (reviews.length === 0) return null
 
   return (
-    <section className="bg-ink-900 py-20 sm:py-28 border-t border-white/10">
+    <section className="bg-ink-900 py-16 sm:py-24 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
           <p className="text-sm font-bold uppercase tracking-widest text-[#1dbf73] mb-3">
@@ -70,7 +70,7 @@ export async function FiverrReviews() {
                         {review.clientName}
                       </p>
                       {review.clientCountry && (
-                        <p className="text-xs text-white/45">{review.clientCountry}</p>
+                        <p className="text-xs text-white/55">{review.clientCountry}</p>
                       )}
                     </div>
                   </div>
@@ -84,7 +84,7 @@ export async function FiverrReviews() {
                 </p>
 
                 {review.projectTitle && (
-                  <p className="mt-4 text-xs font-medium text-white/35 border-t border-white/[0.07] pt-4">
+                  <p className="mt-4 text-xs font-medium text-white/45 border-t border-white/[0.07] pt-4">
                     Project: {review.projectTitle}
                   </p>
                 )}

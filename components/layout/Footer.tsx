@@ -30,11 +30,11 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <Logo href="/" imageClassName="h-15 w-auto sm:h-15" />
-            <p className="mt-5 text-sm leading-relaxed text-white/35 max-w-sm">
+            <p className="mt-5 text-sm leading-relaxed text-white/45 max-w-sm">
               Druporia builds enterprise-grade digital products, WooCommerce plugins,
               and automation for brands scaling in global commerce.
             </p>
-            <div className="mt-6 space-y-2 text-sm text-white/45">
+            <div className="mt-6 space-y-2 text-sm text-white/55">
               <p className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-teal-300 shrink-0" />
                 dhanesh.kum15@gmail.com
@@ -56,7 +56,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/35 hover:text-white transition-colors"
+                      className="text-sm text-white/45 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -73,7 +73,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/35 hover:text-white transition-colors"
+                      className="text-sm text-white/45 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -90,7 +90,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/35 hover:text-white transition-colors"
+                      className="text-sm text-white/45 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -102,7 +102,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 pt-8 border-t border-white/[0.07] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/45">
+          <p className="text-xs text-white/55">
             © {new Date().getFullYear()} Druporia Technologies. All rights reserved.
           </p>
           <p className="text-xs text-white/55">

@@ -63,7 +63,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
             Back to insights
           </Link>
           <AnimateIn className="mt-10 max-w-4xl">
-            <span className="badge border-teal-400/30/30 bg-white/10/10 text-white/70">
+            <span className="chip border-teal-400/30/30 bg-white/10/10 text-white/70">
               {post.category}
             </span>
             <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -72,7 +72,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
             <p className="mt-5 max-w-3xl text-lg leading-relaxed text-white/60">
               {post.excerpt}
             </p>
-            <div className="mt-6 flex flex-wrap gap-4 text-sm text-white/35">
+            <div className="mt-6 flex flex-wrap gap-4 text-sm text-white/45">
               <span className="inline-flex items-center gap-1">
                 <CalendarDays className="h-4 w-4" />
                 {new Date(post.publishedAt).toLocaleDateString('en-US', {
@@ -93,7 +93,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
       <main className="container-page py-14">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <AnimateIn>
-            <article className="card-dark p-8 prose prose-invert max-w-none prose-headings:font-semibold prose-a:text-white/80">
+            <article className="card-dark-hover sweep-host-dark p-8 prose prose-invert max-w-none prose-headings:font-semibold prose-a:text-white/80">
               <ReactMarkdown>{post.content}</ReactMarkdown>
             </article>
 
@@ -122,20 +122,20 @@ export default async function InsightDetailPage({ params }: PageProps) {
           </AnimateIn>
 
           <aside className="space-y-5">
-            <div className="card-dark p-5">
+            <div className="card-dark-hover sweep-host-dark p-5">
               <h2 className="text-sm font-semibold text-white">
                 Topics
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {post.keywords.map((keyword) => (
-                  <span key={keyword} className="badge">
+                  <span key={keyword} className="chip">
                     {keyword}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="card-dark p-5">
+            <div className="card-dark-hover sweep-host-dark p-5">
               <h2 className="text-sm font-semibold text-white">
                 More insights
               </h2>
@@ -149,7 +149,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
                     <span className="font-semibold text-white">
                       {relatedPost.title}
                     </span>
-                    <span className="mt-1 block text-xs text-white/45">
+                    <span className="mt-1 block text-xs text-white/55">
                       {relatedPost.category} · {relatedPost.readingTime}
                     </span>
                   </Link>

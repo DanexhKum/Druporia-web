@@ -251,7 +251,7 @@
     @apply pointer-events-none absolute inset-x-0 top-0 -z-0;
     height: 55%;
     background:
-      radial-gradient(50% 100% at 50% 0%, rgba(14,165,233,0.20) 0%, transparent 70%);
+      radial-gradient(55% 100% at 50% 0%, rgba(14,165,233,0.28) 0%, rgba(34,211,238,0.10) 40%, transparent 72%);
   }
 
   /* Hairline — the brief's `border border-white/10` */
@@ -300,14 +300,14 @@
   /* Display type — BOLD, high contrast */
   .display {
     @apply font-bold tracking-tight text-white;
-    font-size: clamp(2.35rem, 5.4vw, 4.5rem);
+    font-size: clamp(2.25rem, 4.8vw, 3.9rem);
     line-height: 1.05;
     letter-spacing: -0.028em;
     text-wrap: balance;
   }
 
   .display-muted {
-    @apply text-white/45;
+    @apply text-white/55;
   }
 
   .heading-dark {
@@ -317,7 +317,7 @@
   }
 
   .body-dark {
-    @apply text-base font-light leading-relaxed text-white/55;
+    @apply text-base font-normal leading-relaxed text-white/65;
     text-wrap: pretty;
   }
 

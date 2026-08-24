@@ -105,7 +105,7 @@ export function ProductFilters({
       <form onSubmit={handleSearch}>
         <label className="form-label">Search</label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/35" />
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/45" />
           <input
             type="text"
             value={searchValue}
@@ -117,7 +117,7 @@ export function ProductFilters({
             <button
               type="button"
               onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/55"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/45 hover:text-white/55"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -157,7 +157,7 @@ export function ProductFilters({
                       'rounded-full px-1.5 py-0.5 text-xs',
                       isActive
                         ? 'bg-white/20 text-white'
-                        : 'bg-white/[0.04] text-white/45'
+                        : 'bg-white/[0.04] text-white/55'
                     )}
                   >
                     {count}

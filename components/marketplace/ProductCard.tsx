@@ -199,7 +199,7 @@ export function ProductCard({
         </Link>
 
         {/* Description */}
-          <p className="mt-2 flex-1 text-xs leading-relaxed text-white/45">
+          <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
             {truncate(description, 110)}
           </p>
 
@@ -211,13 +211,13 @@ export function ProductCard({
         {(version || fileSize) && (
           <div className="mt-3 flex items-center gap-3">
             {version && (
-              <span className="flex items-center gap-1 text-xs text-white/35">
+              <span className="flex items-center gap-1 text-xs text-white/45">
                 <Tag className="h-3 w-3" />
                 v{version}
               </span>
             )}
             {fileSize && (
-              <span className="flex items-center gap-1 text-xs text-white/35">
+              <span className="flex items-center gap-1 text-xs text-white/45">
                 <Download className="h-3 w-3" />
                 {fileSize}
               </span>
@@ -241,7 +241,7 @@ export function ProductCard({
               <span className="text-base font-semibold text-white">
                 {formatPrice(priceNum)}
               </span>
-              <span className="text-xs text-white/35">USD</span>
+              <span className="text-xs text-white/45">USD</span>
             </>
           )}
         </div>
@@ -340,7 +340,7 @@ export function ProductCard({
                 </div>
 
                 {(version || fileSize) && (
-                  <div className="mt-5 flex flex-wrap gap-3 text-xs text-white/45">
+                  <div className="mt-5 flex flex-wrap gap-3 text-xs text-white/55">
                     {version && <span className="rounded-full bg-white/[0.04] px-3 py-1">v{version}</span>}
                     {fileSize && <span className="rounded-full bg-white/[0.04] px-3 py-1">{fileSize}</span>}
                   </div>

@@ -14,6 +14,7 @@
 // extra network request.
 // ============================================================
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Activity, Boxes, Download, TrendingUp } from 'lucide-react'
@@ -42,8 +43,14 @@ const BARS = [38, 62, 45, 78, 56, 91, 70]
 export function HeroSection() {
   const reduceMotion = useReducedMotion()
 
+  // Animate only after mount, so the server-rendered hero is
+  // fully visible rather than shipping at opacity:0.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const animate = mounted && !reduceMotion
+
   const rise = (delay: number) => ({
-    initial: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 26 },
+    initial: animate ? { opacity: 0, y: 26 } : false,
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
     transition: { duration: 0.75, ease, delay },
@@ -54,9 +61,9 @@ export function HeroSection() {
       <div aria-hidden className="glow-teal" />
       <div aria-hidden className="glow-top" />
 
-      <div className="container-page relative z-10 pb-20 pt-16 sm:pb-28 sm:pt-24">
+      <div className="container-page relative z-10 pb-16 pt-12 sm:pb-24 sm:pt-16">
         {/* ── Framed hero copy ──────────────────────────────── */}
-        <div className="relative mx-auto max-w-4xl">
+        <div className="relative mx-auto max-w-5xl">
           {/* The hairline frame from the reference */}
           <div
             aria-hidden
@@ -90,11 +97,11 @@ export function HeroSection() {
               {...rise(0.24)}
               className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
             >
-              <Link href="/contact" className="btn-dark-primary group">
+              <Link href="/contact" className="btn-dark-primary group w-full sm:w-auto">
                 Let&apos;s talk
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
-              <Link href="/marketplace" className="btn-dark-ghost">
+              <Link href="/marketplace" className="btn-dark-ghost w-full sm:w-auto">
                 Browse marketplace
               </Link>
             </motion.div>
@@ -104,7 +111,7 @@ export function HeroSection() {
         {/* ── Dashboard preview ─────────────────────────────── */}
         <motion.div
           {...rise(0.34)}
-          className="relative mx-auto mt-24 max-w-5xl sm:mt-28"
+          className="relative mx-auto mt-20 max-w-5xl sm:mt-24"
         >
           <div className="sweep-host card-dark overflow-hidden rounded-4xl p-2 sm:p-3">
             <div className="relative overflow-hidden rounded-3xl border border-white/[0.07] bg-ink-990">
@@ -119,7 +126,7 @@ export function HeroSection() {
                 <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                 <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                 <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                <span className="mono-label ml-3 text-white/30">
+                <span className="mono-label ml-3 text-white/40">
                   druporia — delivery overview
                 </span>
                 <span className="chip ml-auto hidden sm:inline-flex">
@@ -135,7 +142,7 @@ export function HeroSection() {
                     return (
                       <motion.div
                         key={m.label}
-                        initial={reduceMotion ? {} : { opacity: 0, x: -14 }}
+                        initial={animate ? { opacity: 0, x: -14 } : false}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, ease, delay: 0.45 + i * 0.1 }}
@@ -148,7 +155,7 @@ export function HeroSection() {
                           <span className="block text-lg font-bold tabular-nums text-white">
                             {m.value}
                           </span>
-                          <span className="mono-label block text-white/35">
+                          <span className="mono-label block text-white/45">
                             {m.label}
                           </span>
                         </span>
@@ -173,7 +180,7 @@ export function HeroSection() {
                     {BARS.map((h, i) => (
                       <motion.div
                         key={i}
-                        initial={reduceMotion ? { height: `${h}%` } : { height: 0 }}
+                        initial={animate ? { height: 0 } : false}
                         whileInView={{ height: `${h}%` }}
                         viewport={{ once: true }}
                         transition={{
@@ -192,8 +199,8 @@ export function HeroSection() {
         </motion.div>
 
         {/* ── Floating platform pills ───────────────────────── */}
-        <motion.div {...rise(0.5)} className="mt-20 sm:mt-24">
-          <p className="mono-label text-center text-white/30">
+        <motion.div {...rise(0.5)} className="mt-16 sm:mt-20">
+          <p className="mono-label text-center text-white/40">
             Built on the platforms your business runs on
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

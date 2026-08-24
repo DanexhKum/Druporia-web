@@ -30,11 +30,11 @@ export function ProductPurchase({ price, productId }: ProductPurchaseProps) {
             <span className="text-3xl font-bold text-white">
               {formatPrice(price)}
             </span>
-            <span className="text-sm text-white/45">USD</span>
+            <span className="text-sm text-white/55">USD</span>
           </>
         )}
       </div>
-      <p className="text-sm text-white/45">
+      <p className="text-sm text-white/55">
         Instant delivery after purchase. Stripe checkout coming in the next release.
       </p>
       <div className="flex flex-col gap-2 sm:flex-row">

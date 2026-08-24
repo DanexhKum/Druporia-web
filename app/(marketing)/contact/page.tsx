@@ -67,7 +67,7 @@ export default function ContactPage() {
           <div className="space-y-8 lg:col-span-1">
             <div>
               <h3 className="text-xl font-bold text-white">Reach Out Directly</h3>
-              <p className="mt-2 text-sm text-white/45">
+              <p className="mt-2 text-sm text-white/55">
                 We're always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">Email Us</p>
-                  <p className="text-sm text-white/45">dhanesh.kum15@gmail.com</p>
+                  <p className="text-sm text-white/55">dhanesh.kum15@gmail.com</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -88,7 +88,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">Support</p>
-                  <p className="text-sm text-white/45">support@druporia.com</p>
+                  <p className="text-sm text-white/55">support@druporia.com</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -97,7 +97,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">HQ</p>
-                  <p className="text-sm text-white/45">Global Remote Team</p>
+                  <p className="text-sm text-white/55">Global Remote Team</p>
                 </div>
               </div>
             </div>

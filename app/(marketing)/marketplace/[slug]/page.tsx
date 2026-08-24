@@ -225,7 +225,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold text-white">{badge.label}</h2>
-                    <p className="mt-1 text-xs leading-relaxed text-white/45">{badge.description}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-white/55">{badge.description}</p>
                   </div>
                 </div>
               </div>
@@ -263,7 +263,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                 <ul className="space-y-3">
                   {requirements.map((requirement) => (
                     <li key={requirement} className="flex gap-3 text-sm text-white/55">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-white/35" />
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-white/45" />
                       {requirement}
                     </li>
                   ))}
