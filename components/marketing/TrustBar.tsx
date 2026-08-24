@@ -12,10 +12,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 import { Boxes, Star, Users, Zap } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+
+// Icons live HERE, keyed by a plain string, because the server
+// component that builds the stat list cannot hand a React
+// component across the boundary — anything imported from a
+// 'use client' module arrives there as a client reference, not
+// the real value, so `SOME_ICONS.Boxes` would be undefined and
+// React would throw "Element type is invalid".
+// Only serializable data may cross. Hence: a string key.
+const ICONS = {
+  products: Boxes,
+  rating: Star,
+  reviews: Users,
+  tech: Zap,
+} as const
+
+export type TrustIconKey = keyof typeof ICONS
 
 export interface TrustStat {
-  icon: LucideIcon
+  iconKey: TrustIconKey
   value: number
   /** Rendered after the number, e.g. "+" */
   suffix?: string
@@ -62,7 +77,7 @@ function useCountUp(target: number, active: boolean, decimals: number) {
 }
 
 function Stat({ stat, active }: { stat: TrustStat; active: boolean }) {
-  const Icon = stat.icon
+  const Icon = ICONS[stat.iconKey]
   const display = useCountUp(stat.value, active, stat.decimals ?? 0)
 
   return (
@@ -104,7 +119,3 @@ export function TrustBar({ stats }: { stats: TrustStat[] }) {
     </section>
   )
 }
-
-// Icons re-exported so the server component can build the stat
-// list without importing lucide separately.
-export const TRUST_ICONS = { Boxes, Star, Users, Zap }

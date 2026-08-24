@@ -9,7 +9,7 @@ import { FeaturedProducts } from '@/components/marketing/FeaturedProducts'
 import { TeamSection } from '@/components/marketing/TeamSection'
 import { FiverrReviews } from '@/components/marketing/FiverrReviews'
 import { AnimateIn } from '@/components/marketing/AnimateIn'
-import { TrustBar, TRUST_ICONS, type TrustStat } from '@/components/marketing/TrustBar'
+import { TrustBar, type TrustStat } from '@/components/marketing/TrustBar'
 import { ProcessSection } from '@/components/marketing/ProcessSection'
 import { FaqAccordion } from '@/components/marketing/FaqAccordion'
 import { TawkWidget } from '@/components/chat/TawkWidget'
@@ -50,32 +50,33 @@ export default async function HomePage() {
 
   // Only surface figures that are actually non-zero — an empty
   // catalogue must never render "0 products shipped".
-  const trustStats: TrustStat[] = [
+  const allTrustStats: TrustStat[] = [
     {
-      icon: TRUST_ICONS.Boxes,
+      iconKey: 'products',
       value: trust.productCount,
       suffix: '+',
       label: 'Products shipped',
     },
     {
-      icon: TRUST_ICONS.Star,
+      iconKey: 'rating',
       value: trust.averageRating,
       decimals: 1,
       label: 'Average client rating',
     },
     {
-      icon: TRUST_ICONS.Users,
+      iconKey: 'reviews',
       value: trust.reviewCount,
       suffix: '+',
       label: 'Client reviews',
     },
     {
-      icon: TRUST_ICONS.Zap,
+      iconKey: 'tech',
       value: TECH_STACK.length,
       suffix: '+',
       label: 'Technologies supported',
     },
-  ].filter((stat) => stat.value > 0)
+  ]
+  const trustStats = allTrustStats.filter((stat) => stat.value > 0)
   const managedKeys = new Set(
     managedServices
       .map((service) => service.sourceKey)
