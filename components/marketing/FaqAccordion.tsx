@@ -24,25 +24,25 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
   if (items.length === 0) return null
 
   return (
-    <div className="mx-auto max-w-3xl divide-y divide-navy-100 overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card">
+    <div className="mx-auto max-w-3xl divide-y divide-white/[0.07] overflow-hidden rounded-2xl border border-white/[0.07] bg-ink-900 shadow-card-dark">
       {items.map((item) => (
         <details key={item.id} className="group">
           <summary
             className="flex w-full cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left
-                       transition-colors hover:bg-surface-50
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy-800"
+                       transition-colors hover:bg-ink-950
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-400/60"
           >
-            <h3 className="text-base font-bold tracking-tight text-navy-900">
+            <h3 className="text-base font-bold tracking-tight text-white">
               {item.question}
             </h3>
             <ChevronDown
-              className="h-5 w-5 shrink-0 text-navy-400 transition-transform duration-300 group-open:rotate-180 group-open:text-gold-600"
+              className="h-5 w-5 shrink-0 text-white/35 transition-transform duration-300 group-open:rotate-180 group-open:text-teal-400"
               aria-hidden
             />
           </summary>
 
           <div className="px-6 pb-5 pr-14">
-            <p className="text-sm font-light leading-relaxed text-navy-600">
+            <p className="text-sm font-light leading-relaxed text-white/55">
               {item.answer}
             </p>
           </div>

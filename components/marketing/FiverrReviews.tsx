@@ -19,7 +19,7 @@ function Stars({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`h-4 w-4 ${i < rating ? 'fill-amber-400 text-amber-400' : 'text-navy-200'}`}
+          className={`h-4 w-4 ${i < rating ? 'fill-amber-400 text-amber-400' : 'text-white/70'}`}
         />
       ))}
     </div>
@@ -32,16 +32,16 @@ export async function FiverrReviews() {
   if (reviews.length === 0) return null
 
   return (
-    <section className="bg-white py-20 sm:py-28 border-t border-navy-200">
+    <section className="bg-ink-900 py-20 sm:py-28 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
           <p className="text-sm font-bold uppercase tracking-widest text-[#1dbf73] mb-3">
             Client feedback
           </p>
-          <h2 className="text-3xl font-bold text-navy-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Trusted on Fiverr & beyond
           </h2>
-          <p className="mt-4 text-navy-600">
+          <p className="mt-4 text-white/55">
             Real reviews from freelance orders and enterprise projects — transparent,
             verified client experiences.
           </p>
@@ -50,7 +50,7 @@ export async function FiverrReviews() {
         <StaggerGrid className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {reviews.map((review) => (
             <StaggerItem key={review.id}>
-              <article className="card-hover flex h-full flex-col p-6">
+              <article className="card-dark-hover flex h-full flex-col p-6">
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex items-center gap-3 min-w-0">
                     {review.avatarUrl ? (
@@ -58,19 +58,19 @@ export async function FiverrReviews() {
                       <img
                         src={review.avatarUrl}
                         alt=""
-                        className="h-11 w-11 rounded-full border border-navy-200 object-cover"
+                        className="h-11 w-11 rounded-full border border-white/10 object-cover"
                       />
                     ) : (
-                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-navy-500 to-navy-800 text-sm font-bold text-white">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-electric-500/30 to-teal-400/20 text-sm font-bold text-white">
                         {review.clientName.charAt(0)}
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-navy-900 truncate">
+                      <p className="text-sm font-semibold text-white truncate">
                         {review.clientName}
                       </p>
                       {review.clientCountry && (
-                        <p className="text-xs text-navy-500">{review.clientCountry}</p>
+                        <p className="text-xs text-white/45">{review.clientCountry}</p>
                       )}
                     </div>
                   </div>
@@ -79,12 +79,12 @@ export async function FiverrReviews() {
 
                 <Stars rating={review.rating} />
 
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-navy-600">
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-white/55">
                   &ldquo;{review.comment}&rdquo;
                 </p>
 
                 {review.projectTitle && (
-                  <p className="mt-4 text-xs font-medium text-navy-400 border-t border-navy-100 pt-4">
+                  <p className="mt-4 text-xs font-medium text-white/35 border-t border-white/[0.07] pt-4">
                     Project: {review.projectTitle}
                   </p>
                 )}

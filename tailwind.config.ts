@@ -42,22 +42,34 @@ const config: Config = {
       colors: {
         // ── Dark grounds ────────────────────────────────────
         ink: {
-          950: '#050b12',
-          900: '#0a1420',
-          800: '#10202e',
-          700: '#17303f',
-          600: '#1f3f52',
+          990: '#03060a',
+          950: '#050a0f', // page ground
+          900: '#070d14',
+          850: '#0a121b',
+          800: '#0d1722',
+          700: '#132131',
+          600: '#1b2d40',
+          500: '#26405a',
         },
         // ── Teal accent (the glow) ──────────────────────────
         teal: {
           200: '#a5f3fc',
           300: '#67e8f9',
-          400: '#22d3ee',
+          400: '#22d3ee', // primary accent
           500: '#06b6d4',
           600: '#0891b2',
           700: '#0e7490',
           800: '#155e75',
           900: '#164e63',
+        },
+        // Deeper blue used in the ambient bloom and card gradients
+        electric: {
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          900: '#0c4a6e',
         },
         // ── Brand navy ──────────────────────────────────────
         navy: {
@@ -117,16 +129,37 @@ const config: Config = {
         navy: '0 10px 30px -12px rgba(30,58,95,0.45)',
         gold: '0 10px 30px -12px rgba(201,165,90,0.45)',
         teal: '0 10px 40px -12px rgba(6,182,212,0.35)',
-        'pill': '0 1px 0 0 rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.6)',
+        pill: '0 1px 0 0 rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.6)',
+        // Under-glow beneath the primary CTA, as in the reference
+        cta: '0 10px 30px -10px rgba(34,211,238,0.45), 0 0 0 1px rgba(255,255,255,0.10) inset',
+        'card-dark': '0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 60px -32px rgba(0,0,0,0.9)',
+        'glow-sm': '0 0 24px -6px rgba(34,211,238,0.35)',
       },
       borderRadius: {
         DEFAULT: '6px',
+        '4xl': '2rem',
+        '5xl': '2.5rem',
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',
         'slide-up': 'slideUp 0.25s ease-out',
+        float: 'float 7s ease-in-out infinite',
+        'float-slow': 'float 11s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 5s ease-in-out infinite',
       },
       keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-14px)' },
+        },
+        sweep: {
+          '0%': { transform: 'translateX(-120%)' },
+          '100%': { transform: 'translateX(120%)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { opacity: '0.35' },
+          '50%': { opacity: '0.7' },
+        },
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },

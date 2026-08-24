@@ -20,7 +20,7 @@ const LAST_UPDATED = 'August 24, 2026'
 
 export default function PrivacyPage() {
   return (
-    <div className="container-page py-16 max-w-3xl prose prose-slate">
+    <div className="container-page py-16 max-w-3xl prose prose-invert">
       <h1>Privacy Policy</h1>
       <p>Last updated: {LAST_UPDATED}</p>
       <p>

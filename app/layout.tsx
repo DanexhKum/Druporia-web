@@ -63,8 +63,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1e3a5f',
-  colorScheme: 'light',
+  themeColor: '#050a0f',
+  colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
 }
@@ -77,22 +77,31 @@ export default function RootLayout({
   return (
     <ClerkProvider
       appearance={{
+        // Dark, to match the marketing surfaces the modal opens over.
         variables: {
-          colorPrimary: '#1e3a5f',
-          colorBackground: '#ffffff',
-          colorInputBackground: '#ffffff',
-          colorInputText: '#172c47',
+          colorPrimary: '#22d3ee',
+          colorBackground: '#070d14',
+          colorInputBackground: '#0d1722',
+          colorInputText: '#ffffff',
+          colorText: '#ffffff',
+          colorTextSecondary: 'rgba(255,255,255,0.55)',
           fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
-          borderRadius: '6px',
+          borderRadius: '12px',
         },
         elements: {
           formButtonPrimary:
-            'bg-navy-800 hover:bg-navy-900 text-white text-sm font-semibold',
-          card: 'border border-navy-100 shadow-card',
-          headerTitle: 'text-navy-900 font-bold',
-          headerSubtitle: 'text-navy-500',
-          formFieldInput: 'border-navy-200 focus:ring-navy-800 text-sm',
-          footerActionLink: 'text-navy-800 font-semibold',
+            'bg-white hover:bg-white/90 text-ink-950 text-sm font-semibold',
+          card: 'border border-white/10 bg-ink-900 shadow-card-dark',
+          headerTitle: 'text-white font-bold',
+          headerSubtitle: 'text-white/55',
+          formFieldLabel: 'text-white/70',
+          formFieldInput:
+            'bg-ink-800 border-white/10 text-white focus:ring-teal-400/50 text-sm',
+          footerActionLink: 'text-teal-300 hover:text-teal-200 font-semibold',
+          socialButtonsBlockButton:
+            'border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]',
+          dividerLine: 'bg-white/10',
+          dividerText: 'text-white/40',
         },
       }}
     >
@@ -111,7 +120,7 @@ export default function RootLayout({
             rel="stylesheet"
           />
         </head>
-        <body className="min-h-screen bg-white text-navy-900">
+        <body className="min-h-screen bg-ink-950 text-white">
           {children}
           <Toaster
             position="bottom-right"

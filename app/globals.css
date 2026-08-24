@@ -19,13 +19,13 @@
   }
 
   html {
-    @apply text-navy-900 bg-white antialiased;
+    @apply bg-ink-950 text-white antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply min-h-screen bg-surface-50 text-navy-900;
+    @apply min-h-screen bg-ink-950 text-white;
     font-family: var(--font-sans);
   }
 
@@ -228,65 +228,136 @@
 
   /* ============================================================
      DARK SYSTEM — marketing surfaces
-     Emphasis comes from scale and the teal glow, never from
-     heavy weight. Display type sits at 300/400 deliberately.
+     Near-black ground, hairline borders, glass panels, and a
+     deep blue/cyan ambient bloom. Headings are BOLD; contrast
+     carries the hierarchy.
+     The light system above is untouched so /admin keeps working.
      ============================================================ */
 
-  /* Page ground for a dark marketing section */
   .dark-shell {
     @apply relative overflow-hidden bg-ink-950 text-white;
   }
 
-  /* The teal bloom. Positioned absolutely by the caller; this
-     only describes the light itself. Sits behind content, so it
-     must never intercept pointer events. */
+  /* Ambient bloom. Behind content, never intercepts pointers. */
   .glow-teal {
     @apply pointer-events-none absolute inset-x-0 bottom-0 -z-0;
-    height: 65%;
+    height: 70%;
     background:
-      radial-gradient(60% 100% at 50% 100%, rgba(6,182,212,0.45) 0%, rgba(6,182,212,0.14) 38%, transparent 72%),
-      radial-gradient(38% 80% at 18% 100%, rgba(34,211,238,0.22) 0%, transparent 68%);
+      radial-gradient(58% 100% at 50% 100%, rgba(14,165,233,0.30) 0%, rgba(34,211,238,0.10) 40%, transparent 74%),
+      radial-gradient(34% 74% at 14% 96%, rgba(34,211,238,0.16) 0%, transparent 66%);
   }
 
-  /* Display headline — large, light, slightly tightened */
+  .glow-top {
+    @apply pointer-events-none absolute inset-x-0 top-0 -z-0;
+    height: 55%;
+    background:
+      radial-gradient(50% 100% at 50% 0%, rgba(14,165,233,0.20) 0%, transparent 70%);
+  }
+
+  /* Hairline — the brief's `border border-white/10` */
+  .hairline {
+    @apply border border-white/10;
+  }
+
+  /* Glass panel */
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+  }
+
+  /* Dark card, 1.5rem radius per the brief */
+  .card-dark {
+    @apply rounded-3xl border border-white/10 bg-ink-900/70 backdrop-blur-sm shadow-card-dark;
+  }
+
+  /* Hover: lift + cyan border + inner bloom */
+  .card-dark-hover {
+    @apply card-dark transition-all duration-500;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card-dark-hover:hover {
+    @apply -translate-y-1.5 border-teal-400/40 bg-ink-850/80 shadow-glow-sm;
+  }
+
+  /* Glowing border sweep — a light bar travelling across the top
+     edge on hover. Requires .sweep-host on the parent. */
+  .sweep-host {
+    @apply relative overflow-hidden;
+  }
+
+  .sweep-host::before {
+    content: '';
+    @apply pointer-events-none absolute left-0 top-0 h-px w-1/2 opacity-0
+           transition-opacity duration-300;
+    background: linear-gradient(90deg, transparent, rgba(34,211,238,0.9), transparent);
+  }
+
+  .sweep-host:hover::before {
+    @apply opacity-100;
+    animation: sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Display type — BOLD, high contrast */
   .display {
-    @apply font-light tracking-tight text-white;
-    font-size: clamp(2.25rem, 5.6vw, 4.25rem);
-    line-height: 1.08;
+    @apply font-bold tracking-tight text-white;
+    font-size: clamp(2.35rem, 5.4vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.028em;
     text-wrap: balance;
   }
 
-  /* The second line of a headline, dropped to grey so the first
-     line reads as the emphasis without adding weight */
   .display-muted {
-    @apply text-white/55;
+    @apply text-white/45;
   }
 
-  /* Mono chrome — nav items, button labels, small caps labels */
+  .heading-dark {
+    @apply text-3xl font-bold tracking-tight text-white sm:text-4xl;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  .body-dark {
+    @apply text-base font-light leading-relaxed text-white/55;
+    text-wrap: pretty;
+  }
+
+  /* Mono chrome */
   .mono-label {
-    @apply font-mono text-[13px] font-normal tracking-tight;
+    @apply font-mono text-[12px] font-normal tracking-tight;
   }
 
-  /* Floating capsule nav */
-  .pill-nav {
-    @apply inline-flex items-center gap-1 rounded-full border border-white/10
-           bg-white/[0.06] px-2 py-1.5 backdrop-blur-xl shadow-pill;
+  /* Numbered / label chip, as in the reference's `01` and `INDUSTRIES` */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-lg border border-white/10
+           bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] uppercase
+           tracking-[0.14em] text-white/50;
   }
 
-  .pill-nav-item {
-    @apply mono-label rounded-full px-3.5 py-1.5 text-white/60
-           transition-colors duration-200 hover:text-white
+  .chip-accent {
+    @apply border-teal-400/25 bg-teal-400/10 text-teal-300;
+  }
+
+  /* Sticky blurred header */
+  .header-blur {
+    @apply sticky top-0 z-50 border-b border-white/[0.07] bg-ink-950/70 backdrop-blur-xl;
+  }
+
+  /* Nav chips — separate bordered pills, not one capsule */
+  .nav-chip {
+    @apply mono-label rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2
+           text-white/60 transition-all duration-200
+           hover:border-white/25 hover:bg-white/[0.07] hover:text-white
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60;
   }
 
-  .pill-nav-item[data-active='true'] {
-    @apply bg-white/10 text-white;
+  .nav-chip[data-active='true'] {
+    @apply border-white/25 bg-white/10 text-white;
   }
 
-  /* Pill buttons — ghost and solid, both fully rounded */
-  .btn-pill {
-    @apply mono-label inline-flex items-center justify-center gap-2 rounded-full
-           border px-6 py-3 transition-all duration-200
+  /* Buttons — rounded-rect with an under-glow */
+  .btn-dark {
+    @apply mono-label inline-flex items-center justify-center gap-2 rounded-xl border
+           px-6 py-3.5 transition-all duration-300
            focus-visible:outline-none focus-visible:ring-2
            focus-visible:ring-teal-400/60 focus-visible:ring-offset-2
            focus-visible:ring-offset-ink-950
@@ -294,26 +365,40 @@
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .btn-pill-ghost {
-    @apply btn-pill border-white/15 bg-white/[0.04] text-white/85 backdrop-blur-sm
-           hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.09] hover:text-white
-           active:translate-y-0;
+  .btn-dark-primary {
+    @apply btn-dark border-white/15 bg-white/[0.06] text-white shadow-cta backdrop-blur-sm
+           hover:scale-[1.03] hover:border-teal-400/50 hover:bg-white/[0.10]
+           active:scale-100;
   }
 
-  .btn-pill-solid {
-    @apply btn-pill border-white bg-white text-ink-950
-           hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-teal
-           active:translate-y-0;
+  .btn-dark-ghost {
+    @apply btn-dark border-white/10 bg-transparent text-white/70
+           hover:scale-[1.03] hover:border-white/25 hover:text-white active:scale-100;
   }
 
-  /* Hairline divider on dark */
+  .btn-dark-solid {
+    @apply btn-dark border-white bg-white text-ink-950
+           hover:scale-[1.03] hover:bg-white/90 active:scale-100;
+  }
+
+  /* Floating tech pill */
+  .tech-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10
+           bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/60
+           backdrop-blur-sm transition-all duration-300
+           hover:border-teal-400/40 hover:bg-white/[0.08] hover:text-white;
+  }
+
   .rule-teal {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-teal-400/30 to-transparent;
+    @apply h-px w-full bg-gradient-to-r from-transparent via-teal-400/25 to-transparent;
   }
 
-  /* Client logo wall — desaturated, brightened, lifts on hover */
-  .logo-mark {
-    @apply opacity-45 grayscale brightness-0 invert transition-opacity duration-300 hover:opacity-80;
+  /* Grid backdrop for panels */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 }
 

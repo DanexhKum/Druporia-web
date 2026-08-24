@@ -27,16 +27,16 @@ export default function RootError({
           <AlertTriangle className="h-6 w-6 text-amber-600" />
         </div>
 
-        <h1 className="mt-5 text-xl font-semibold text-navy-900">
+        <h1 className="mt-5 text-xl font-semibold text-white">
           Something went wrong
         </h1>
-        <p className="mt-2 text-sm text-navy-500">
+        <p className="mt-2 text-sm text-white/45">
           {error.message ||
             'The page could not be loaded. Trying again often resolves it.'}
         </p>
 
         {error.digest && (
-          <p className="mt-3 font-mono text-xs text-navy-400">
+          <p className="mt-3 font-mono text-xs text-white/35">
             Reference: {error.digest}
           </p>
         )}
@@ -45,12 +45,12 @@ export default function RootError({
           <button
             type="button"
             onClick={reset}
-            className="btn-primary justify-center gap-2"
+            className="btn-dark-primary justify-center gap-2"
           >
             <RotateCw className="h-4 w-4" />
             Try again
           </button>
-          <Link href="/" className="btn-secondary justify-center">
+          <Link href="/" className="btn-dark-ghost justify-center">
             Go home
           </Link>
         </div>

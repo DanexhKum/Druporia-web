@@ -105,7 +105,7 @@ export function ProductFilters({
       <form onSubmit={handleSearch}>
         <label className="form-label">Search</label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-navy-400" />
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/35" />
           <input
             type="text"
             value={searchValue}
@@ -117,7 +117,7 @@ export function ProductFilters({
             <button
               type="button"
               onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-navy-400 hover:text-navy-600"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/55"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -144,8 +144,8 @@ export function ProductFilters({
                   className={cn(
                     'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-colors duration-150',
                     isActive
-                      ? 'border-navy-900 bg-navy-900 text-white'
-                      : 'border-navy-200 bg-white text-navy-600 hover:bg-surface-50 hover:text-navy-900'
+                      ? 'border-teal-400/50 bg-teal-400/10 text-white'
+                      : 'border-white/10 bg-ink-900 text-white/55 hover:bg-ink-950 hover:text-white'
                   )}
                 >
                   <span className="flex items-center gap-2">
@@ -157,7 +157,7 @@ export function ProductFilters({
                       'rounded-full px-1.5 py-0.5 text-xs',
                       isActive
                         ? 'bg-white/20 text-white'
-                        : 'bg-navy-100 text-navy-500'
+                        : 'bg-white/[0.04] text-white/45'
                     )}
                   >
                     {count}
@@ -183,8 +183,8 @@ export function ProductFilters({
                 className={cn(
                   'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
                   isActive
-                    ? 'border-navy-900 bg-navy-900 text-white'
-                    : 'border-navy-200 bg-white text-navy-600 hover:bg-surface-50 hover:text-navy-900'
+                    ? 'border-teal-400/50 bg-teal-400/10 text-white'
+                    : 'border-white/10 bg-ink-900 text-white/55 hover:bg-ink-950 hover:text-white'
                 )}
               >
                 {option.label}

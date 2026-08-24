@@ -40,12 +40,12 @@ const STEPS = [
 
 export function ProcessSection() {
   return (
-    <section id="process" className="bg-white py-20 sm:py-28">
+    <section id="process" className="bg-ink-900 py-20 sm:py-28">
       <div className="container-page">
         <AnimateIn className="mx-auto mb-16 max-w-2xl text-center">
-          <p className="eyebrow">How we work</p>
-          <h2 className="section-title">From first call to launched product</h2>
-          <p className="section-lead">
+          <p className="chip">02 · How we work</p>
+          <h2 className="heading-dark mt-5">From first call to launched product</h2>
+          <p className="body-dark mt-4">
             Four steps, no surprises. You always know what happens next and
             what it costs.
           </p>
@@ -56,7 +56,7 @@ export function ProcessSection() {
               small screens where the cards stack vertically. */}
           <div
             aria-hidden
-            className="absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-navy-200 to-transparent lg:block"
+            className="absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:block"
           />
 
           {STEPS.map((step, index) => {
@@ -64,17 +64,17 @@ export function ProcessSection() {
             return (
               <StaggerItem key={step.title} className="relative">
                 <div className="flex flex-col items-start">
-                  <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border border-navy-100 bg-white shadow-card">
-                    <Icon className="h-6 w-6 text-navy-800" />
-                    <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-gold-500 text-[11px] font-extrabold tabular-nums text-navy-900">
+                  <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/[0.07] bg-ink-900 shadow-card-dark">
+                    <Icon className="h-6 w-6 text-white" />
+                    <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-teal-400 text-[11px] font-extrabold tabular-nums text-ink-950">
                       {index + 1}
                     </span>
                   </div>
 
-                  <h3 className="mt-6 text-lg font-bold tracking-tight text-navy-900">
+                  <h3 className="mt-6 text-lg font-bold tracking-tight text-white">
                     {step.title}
                   </h3>
-                  <p className="mt-2 text-sm font-light leading-relaxed text-navy-600">
+                  <p className="mt-2 text-sm font-light leading-relaxed text-white/55">
                     {step.description}
                   </p>
                 </div>

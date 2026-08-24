@@ -147,13 +147,13 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
   const requirements = getCategoryRequirements(product.category)
 
   return (
-    <div className="bg-surface-50 min-h-screen">
-      <div className="relative overflow-hidden bg-navy-950 text-white">
+    <div className="bg-ink-950 min-h-screen">
+      <div className="relative overflow-hidden bg-ink-990 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.32),transparent_34rem),radial-gradient(circle_at_bottom_right,rgba(201,165,90,0.18),transparent_28rem)]" />
         <div className="container-page relative z-10 py-10">
           <Link
             href="/marketplace"
-            className="inline-flex items-center gap-2 text-sm text-navy-300 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to marketplace
@@ -162,7 +162,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <AnimateIn>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full border border-gold-400/30 bg-navy-500/10 px-3 py-1 text-xs font-medium text-navy-200">
+                <span className="inline-flex items-center gap-1 rounded-full border border-teal-400/30/30 bg-white/10/10 px-3 py-1 text-xs font-medium text-white/70">
                   {CATEGORY_ICONS[product.category]} {CATEGORY_LABELS[product.category]}
                 </span>
                 {isPreview && (
@@ -174,12 +174,12 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
               <h1 className="mt-5 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl">
                 {product.title}
               </h1>
-              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-navy-300">
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/60">
                 {product.description.replace(/[#*_`>-]/g, '').slice(0, 180)}
                 {product.description.length > 180 ? '...' : ''}
               </p>
               {(product.version || product.fileSize) && (
-                <div className="mt-6 flex flex-wrap gap-4 text-sm text-navy-300">
+                <div className="mt-6 flex flex-wrap gap-4 text-sm text-white/60">
                   {product.version && (
                     <span className="flex items-center gap-1">
                       <Tag className="h-4 w-4" /> v{product.version}
@@ -218,14 +218,14 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
           {TRUST_BADGES.map((badge) => {
             const Icon = badge.icon
             return (
-              <div key={badge.label} className="card p-5">
+              <div key={badge.label} className="card-dark p-5">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-800">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.03] text-white">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-semibold text-navy-900">{badge.label}</h2>
-                    <p className="mt-1 text-xs leading-relaxed text-navy-500">{badge.description}</p>
+                    <h2 className="text-sm font-semibold text-white">{badge.label}</h2>
+                    <p className="mt-1 text-xs leading-relaxed text-white/45">{badge.description}</p>
                   </div>
                 </div>
               </div>
@@ -235,19 +235,19 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
 
         <div className="grid gap-10 lg:grid-cols-3">
           <AnimateIn className="lg:col-span-2 space-y-8">
-            <div className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-navy-700">
+            <div className="card-dark p-8 prose prose-invert max-w-none prose-headings:font-semibold prose-a:text-white/80">
               <ReactMarkdown>{product.description}</ReactMarkdown>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <section className="card p-6">
+              <section className="card-dark p-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-navy-700" />
-                  <h2 className="text-xl font-semibold text-navy-900">Key features</h2>
+                  <Sparkles className="h-5 w-5 text-white/80" />
+                  <h2 className="text-xl font-semibold text-white">Key features</h2>
                 </div>
                 <ul className="space-y-3">
                   {features.map((feature) => (
-                    <li key={feature} className="flex gap-3 text-sm text-navy-600">
+                    <li key={feature} className="flex gap-3 text-sm text-white/55">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
                       {feature}
                     </li>
@@ -255,15 +255,15 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                 </ul>
               </section>
 
-              <section className="card p-6">
+              <section className="card-dark p-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-navy-700" />
-                  <h2 className="text-xl font-semibold text-navy-900">Requirements</h2>
+                  <Zap className="h-5 w-5 text-white/80" />
+                  <h2 className="text-xl font-semibold text-white">Requirements</h2>
                 </div>
                 <ul className="space-y-3">
                   {requirements.map((requirement) => (
-                    <li key={requirement} className="flex gap-3 text-sm text-navy-600">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-navy-400" />
+                    <li key={requirement} className="flex gap-3 text-sm text-white/55">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-white/35" />
                       {requirement}
                     </li>
                   ))}
@@ -272,11 +272,11 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
             </div>
 
             {galleryUrls.length > 0 && (
-              <div className="card p-6">
-                <h2 className="text-xl font-semibold text-navy-900">Screenshots</h2>
+              <div className="card-dark p-6">
+                <h2 className="text-xl font-semibold text-white">Screenshots</h2>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
                   {galleryUrls.map((url) => (
-                    <div key={url} className="motion-thumb overflow-hidden rounded-2xl border border-navy-200 bg-surface-50">
+                    <div key={url} className="motion-thumb overflow-hidden rounded-2xl border border-white/10 bg-ink-950">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={url}
@@ -290,53 +290,53 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
             )}
 
             {product.documentation && (
-              <div className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-navy-700">
+              <div className="card-dark p-8 prose prose-invert max-w-none prose-headings:font-semibold prose-a:text-white/80">
                 <h2>Documentation</h2>
                 <ReactMarkdown>{product.documentation}</ReactMarkdown>
               </div>
             )}
 
             {product.changelog && (
-              <div className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-navy-700">
+              <div className="card-dark p-8 prose prose-invert max-w-none prose-headings:font-semibold prose-a:text-white/80">
                 <h2>Version history</h2>
                 <ReactMarkdown>{product.changelog}</ReactMarkdown>
               </div>
             )}
 
             {!product.changelog && (
-              <div className="card p-6">
-                <h2 className="text-xl font-semibold text-navy-900">Version history</h2>
-                <p className="mt-3 text-sm text-navy-600">
+              <div className="card-dark p-6">
+                <h2 className="text-xl font-semibold text-white">Version history</h2>
+                <p className="mt-3 text-sm text-white/55">
                   Current release: <span className="font-semibold">v{product.version ?? '1.0.0'}</span>. Detailed changelog can be added from the admin product editor.
                 </p>
               </div>
             )}
 
             <div className="grid gap-6 md:grid-cols-2">
-              <section className="card p-6">
+              <section className="card-dark p-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <HelpCircle className="h-5 w-5 text-navy-700" />
-                  <h2 className="text-xl font-semibold text-navy-900">FAQs</h2>
+                  <HelpCircle className="h-5 w-5 text-white/80" />
+                  <h2 className="text-xl font-semibold text-white">FAQs</h2>
                 </div>
                 <div className="space-y-4">
                   {FAQS.map((faq) => (
                     <div key={faq.question}>
-                      <h3 className="text-sm font-semibold text-navy-900">{faq.question}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-navy-600">{faq.answer}</p>
+                      <h3 className="text-sm font-semibold text-white">{faq.question}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-white/55">{faq.answer}</p>
                     </div>
                   ))}
                 </div>
               </section>
 
-              <section className="card p-6">
+              <section className="card-dark p-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <Headphones className="h-5 w-5 text-navy-700" />
-                  <h2 className="text-xl font-semibold text-navy-900">Support</h2>
+                  <Headphones className="h-5 w-5 text-white/80" />
+                  <h2 className="text-xl font-semibold text-white">Support</h2>
                 </div>
-                <p className="text-sm leading-relaxed text-navy-600">
+                <p className="text-sm leading-relaxed text-white/55">
                   Need installation help, customization, or a business-specific version? Contact Druporia and include your platform, current workflow, and deadline.
                 </p>
-                <Link href="/contact" className="btn-secondary mt-5 inline-flex">
+                <Link href="/contact" className="btn-dark-ghost mt-5 inline-flex">
                   Contact support
                 </Link>
               </section>
@@ -354,14 +354,14 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
           <AnimateIn className="mt-16">
             <div className="mb-6 flex items-end justify-between gap-4">
               <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-navy-700">
+                <p className="text-sm font-bold uppercase tracking-widest text-white/80">
                   More from Druporia
                 </p>
-                <h2 className="mt-2 text-2xl font-bold text-navy-900">
+                <h2 className="mt-2 text-2xl font-bold text-white">
                   Related products
                 </h2>
               </div>
-              <Link href="/marketplace" className="text-sm font-semibold text-navy-600 hover:text-navy-900">
+              <Link href="/marketplace" className="text-sm font-semibold text-white/55 hover:text-white">
                 View all
               </Link>
             </div>

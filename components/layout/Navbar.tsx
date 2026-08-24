@@ -1,28 +1,29 @@
 // ============================================================
 // components/layout/Navbar.tsx
-// Dark sticky header with a floating capsule nav.
+// Sticky blurred header with chip-style navigation.
 //
-// The reference floats a fully transparent nav over the hero.
-// This is a dark translucent bar instead, because the same
-// Navbar renders above marketplace/contact/insights, which are
-// still light — a transparent bar would vanish there. Once the
-// remaining pages go dark this can drop to fully transparent.
+// Direction reference: "Paradigm — Tech Consulting Landing Page"
+// by Phenomenon Studio. Borrowed: separate bordered nav chips
+// rather than one capsule, hairline underline on the header,
+// near-black translucent ground.
 //
-// The logo is forced white (brightness-0 invert) so it reads on
-// the dark ground regardless of the source PNG's own colours.
+// Includes a mobile drawer — the previous version simply hid the
+// links below md with no way to reach them.
 // ============================================================
 
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Menu, X } from 'lucide-react'
 import {
   SignInButton,
   SignUpButton,
   UserButton,
   useAuth,
 } from '@clerk/nextjs'
-import { cn } from '@/lib/utils'
 import { Logo } from '@/components/branding/Logo'
 
 const NAV_LINKS = [
@@ -36,30 +37,38 @@ const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname()
   const { isSignedIn } = useAuth()
+  const [open, setOpen] = useState(false)
+
+  // Close the drawer on navigation, and lock body scroll while open.
+  useEffect(() => setOpen(false), [pathname])
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-ink-950/80 backdrop-blur-xl">
-      <div className="container-page flex h-20 items-center justify-between gap-4">
+    <header className="header-blur">
+      <div className="container-page flex h-[72px] items-center justify-between gap-4">
         <Logo
           href="/"
-          imageClassName="h-11 w-auto brightness-0 invert sm:h-12"
+          imageClassName="h-10 w-auto brightness-0 invert sm:h-11"
         />
 
-        {/* Floating capsule — centred on wide viewports */}
-        <nav className="hidden md:absolute md:left-1/2 md:flex md:-translate-x-1/2">
-          <div className="pill-nav">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                data-active={pathname === link.href ? 'true' : undefined}
-                aria-current={pathname === link.href ? 'page' : undefined}
-                className="pill-nav-item"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+        {/* Desktop chips */}
+        <nav className="hidden items-center gap-2 lg:flex">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              data-active={pathname === link.href ? 'true' : undefined}
+              aria-current={pathname === link.href ? 'page' : undefined}
+              className="nav-chip"
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -67,35 +76,66 @@ export function Navbar() {
             <>
               <Link
                 href="/dashboard"
-                className="btn-pill-ghost px-4 py-2 text-[12px]"
+                className="nav-chip hidden sm:inline-flex"
               >
                 Dashboard
               </Link>
-              <UserButton
-                appearance={{ elements: { avatarBox: 'w-8 h-8' } }}
-              />
+              <UserButton appearance={{ elements: { avatarBox: 'w-8 h-8' } }} />
             </>
           ) : (
             <>
               <SignInButton mode="modal">
-                <button
-                  className={cn(
-                    'mono-label hidden rounded-full px-4 py-2 text-white/60',
-                    'transition-colors hover:text-white sm:inline-flex'
-                  )}
-                >
+                <button className="nav-chip hidden sm:inline-flex">
                   Sign in
                 </button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <button className="btn-pill-solid px-5 py-2 text-[12px]">
-                  Get Started
+                <button className="btn-dark-solid px-5 py-2.5 text-[12px]">
+                  Let&apos;s talk
                 </button>
               </SignUpButton>
             </>
           )}
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="nav-chip p-2.5 lg:hidden"
+          >
+            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {open && (
+          <motion.nav
+            id="mobile-nav"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-white/[0.07] bg-ink-950/95 backdrop-blur-xl lg:hidden"
+          >
+            <div className="container-page flex flex-col gap-2 py-5">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  data-active={pathname === link.href ? 'true' : undefined}
+                  className="nav-chip w-full justify-start px-4 py-3 text-left"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

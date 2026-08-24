@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function RefundPage() {
   return (
-    <div className="container-page py-16 max-w-3xl prose prose-slate">
+    <div className="container-page py-16 max-w-3xl prose prose-invert">
       <h1>Refund Policy</h1>
       <p>
         Digital products may be refunded within 14 days of purchase if the product is

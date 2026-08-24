@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="container-page py-16 max-w-3xl prose prose-slate">
+    <div className="container-page py-16 max-w-3xl prose prose-invert">
       <h1>Terms of Service</h1>
       <p>
         By using Druporia&apos;s website and purchasing digital products, you agree to

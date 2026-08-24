@@ -21,20 +21,20 @@ export function ProductPurchase({ price, productId }: ProductPurchaseProps) {
   }
 
   return (
-    <div id="purchase" className="card p-6 space-y-4 scroll-mt-24">
+    <div id="purchase" className="card-dark p-6 space-y-4 scroll-mt-24">
       <div className="flex items-baseline gap-2">
         {isFree ? (
           <span className="text-2xl font-bold text-green-700">Free</span>
         ) : (
           <>
-            <span className="text-3xl font-bold text-navy-900">
+            <span className="text-3xl font-bold text-white">
               {formatPrice(price)}
             </span>
-            <span className="text-sm text-navy-500">USD</span>
+            <span className="text-sm text-white/45">USD</span>
           </>
         )}
       </div>
-      <p className="text-sm text-navy-500">
+      <p className="text-sm text-white/45">
         Instant delivery after purchase. Stripe checkout coming in the next release.
       </p>
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -42,7 +42,7 @@ export function ProductPurchase({ price, productId }: ProductPurchaseProps) {
           <button
             type="button"
             onClick={handleBuySoon}
-            className="btn-primary flex-1 gap-2 justify-center"
+            className="btn-dark-primary flex-1 gap-2 justify-center"
           >
             <ShoppingCart className="h-4 w-4" />
             Buy Now
@@ -51,7 +51,7 @@ export function ProductPurchase({ price, productId }: ProductPurchaseProps) {
         {isFree ? (
           <Link
             href={`/api/download/${productId}`}
-            className="btn-primary flex-1 gap-2 justify-center"
+            className="btn-dark-primary flex-1 gap-2 justify-center"
           >
             <Download className="h-4 w-4" />
             Free download
@@ -60,13 +60,13 @@ export function ProductPurchase({ price, productId }: ProductPurchaseProps) {
           <button
             type="button"
             onClick={handleBuySoon}
-            className="btn-secondary flex-1 gap-2 justify-center"
+            className="btn-dark-ghost flex-1 gap-2 justify-center"
           >
             <Download className="h-4 w-4" />
             Preview download
           </button>
         )}
-        <Link href="/contact" className="btn-secondary flex-1 gap-2 justify-center">
+        <Link href="/contact" className="btn-dark-ghost flex-1 gap-2 justify-center">
           <Mail className="h-4 w-4" />
           Contact sales
         </Link>

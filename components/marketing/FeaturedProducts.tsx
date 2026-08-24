@@ -10,23 +10,23 @@ export async function FeaturedProducts() {
   if (products.length === 0) return null
 
   return (
-    <section className="py-20 sm:py-28 bg-white border-t border-navy-200">
+    <section className="py-20 sm:py-28 bg-ink-900 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
           <div>
-            <p className="text-sm font-bold uppercase tracking-widest text-navy-700 mb-3">
+            <p className="text-sm font-bold uppercase tracking-widest text-white/80 mb-3">
               Marketplace
             </p>
-            <h2 className="text-3xl font-bold text-navy-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">
               Featured digital products
             </h2>
-            <p className="mt-3 text-navy-600 max-w-lg">
+            <p className="mt-3 text-white/55 max-w-lg">
               Plugins, extensions, and tools — built for production stores.
             </p>
           </div>
           <Link
             href="/marketplace"
-            className="btn-secondary shrink-0 gap-2 self-start sm:self-auto"
+            className="btn-dark-ghost shrink-0 gap-2 self-start sm:self-auto"
           >
             View all products
             <ArrowRight className="h-4 w-4" />
