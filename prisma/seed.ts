@@ -65,6 +65,45 @@ async function main() {
     })
     console.log('Seeded team member')
   }
+
+  // ── FAQs ────────────────────────────────────────────────────
+  // The homepage FAQ accordion hides itself when this table is
+  // empty, which is why the section never appeared. These three
+  // mirror the hardcoded FAQS in the product detail page, so the
+  // answers stay consistent across the site. Edit or replace them
+  // from /admin/faqs — this only runs when the table is empty.
+  const faqCount = await prisma.faq.count()
+  if (faqCount === 0) {
+    await prisma.faq.createMany({
+      data: [
+        {
+          question: 'Can I request customization?',
+          answer:
+            'Yes. Contact the Druporia team with your exact workflow, platform, and timeline, and we will scope it as a fixed-price piece of work.',
+          category: 'Services',
+          sortOrder: 0,
+          isPublished: true,
+        },
+        {
+          question: 'How do downloads work?',
+          answer:
+            'Free products can be downloaded directly once you are signed in. Paid checkout and protected delivery are planned for the next release.',
+          category: 'Marketplace',
+          sortOrder: 1,
+          isPublished: true,
+        },
+        {
+          question: 'Is support included?',
+          answer:
+            'Basic product support is included. Custom development or setup work can be quoted separately.',
+          category: 'Support',
+          sortOrder: 2,
+          isPublished: true,
+        },
+      ],
+    })
+    console.log('Seeded FAQs')
+  }
 }
 
 main()
