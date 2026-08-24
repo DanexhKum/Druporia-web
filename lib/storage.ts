@@ -230,6 +230,50 @@ export async function deleteProductFile(storagePath: string): Promise<void> {
   }
 }
 
+// ── Recover a storage path from a public thumbnail URL ────────
+// The DB stores the public URL, not the path, so cleaning up a
+// replaced image means reversing getPublicUrl(). Returns null for
+// anything that is not a URL in our own thumbnail bucket — an
+// externally-hosted thumbnailUrl must never be treated as ours.
+export function thumbnailStoragePathFromUrl(
+  url: string | null | undefined
+): string | null {
+  if (!url) return null
+
+  const marker = `/storage/v1/object/public/${SUPABASE_THUMBNAIL_BUCKET}/`
+  const index = url.indexOf(marker)
+  if (index === -1) return null
+
+  const path = url.slice(index + marker.length).split('?')[0]
+  return path ? decodeURIComponent(path) : null
+}
+
+// ── Delete several thumbnails, never throwing ─────────────────
+// Cleanup is best-effort: a storage failure must not fail the
+// user's edit, which has already been persisted.
+export async function deleteThumbnailsByUrl(
+  urls: (string | null | undefined)[]
+): Promise<void> {
+  const paths = urls
+    .map(thumbnailStoragePathFromUrl)
+    .filter((path): path is string => Boolean(path))
+
+  if (paths.length === 0) return
+
+  try {
+    const supabase = getSupabaseAdmin()
+    const { error } = await supabase.storage
+      .from(SUPABASE_THUMBNAIL_BUCKET)
+      .remove(paths)
+
+    if (error) {
+      console.error('[storage] Thumbnail cleanup failed:', error.message)
+    }
+  } catch (err) {
+    console.error('[storage] Thumbnail cleanup failed:', err)
+  }
+}
+
 export async function deleteProductThumbnail(storagePath: string): Promise<void> {
   const supabase = getSupabaseAdmin()
   const { error } = await supabase.storage

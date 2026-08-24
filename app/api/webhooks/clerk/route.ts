@@ -15,7 +15,7 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Webhook } from 'svix'
 import { prisma } from '@/lib/prisma'
-import { Role } from '@prisma/client'
+import { resolveRoleForEmail } from '@/lib/auth'
 
 // Install svix: npm add svix
 // Clerk uses svix to sign webhooks
@@ -82,7 +82,6 @@ export async function POST(req: Request) {
           event.data
         const email = email_addresses[0]?.email_address ?? ''
         const name = [first_name, last_name].filter(Boolean).join(' ') || null
-        const isAdminEmail = email === process.env.ADMIN_EMAIL
 
         await prisma.user.upsert({
           where: { clerkId },
@@ -92,7 +91,7 @@ export async function POST(req: Request) {
             email,
             name,
             avatarUrl: image_url,
-            role: isAdminEmail ? Role.ADMIN : Role.USER,
+            role: resolveRoleForEmail(email),
           },
         })
         console.info(`[clerk-webhook] User created: ${clerkId} (${email})`)
@@ -117,7 +116,7 @@ export async function POST(req: Request) {
             email,
             name,
             avatarUrl: image_url,
-            role: email === process.env.ADMIN_EMAIL ? Role.ADMIN : Role.USER,
+            role: resolveRoleForEmail(email),
           },
         })
         console.info(`[clerk-webhook] User updated: ${clerkId}`)

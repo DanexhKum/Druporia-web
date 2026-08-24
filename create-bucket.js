@@ -1,11 +1,20 @@
-require('dotenv').config({ path: '.env.local' });
+// Run with:  npm run storage:init
+// (which is `node --env-file=.env.local create-bucket.js`)
+//
+// Previously this called require('dotenv'), which is not a dependency
+// of this project — the script crashed on line 1 from a clean install.
+// Node's built-in --env-file replaces it with no package needed.
 const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error("Missing Supabase credentials");
+  console.error(
+    "Missing Supabase credentials. Expected NEXT_PUBLIC_SUPABASE_URL and " +
+    "SUPABASE_SERVICE_ROLE_KEY — run via `npm run storage:init` so " +
+    ".env.local is loaded."
+  );
   process.exit(1);
 }
 

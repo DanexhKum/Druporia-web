@@ -55,10 +55,17 @@ export function ProductFilters({
   const updateParams = useCallback(
     (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams()
-      const nextCategory = updates.category ?? activeCategory
-      const nextQuery = updates.q ?? query
-      const nextPrice = updates.price ?? price
-      const nextSort = updates.sort ?? sort
+
+      // Test for key presence, not value: passing `q: undefined` means
+      // "clear this", and `??` would fall straight back to the current
+      // value — which is why the search X button used to do nothing.
+      const pick = (key: string, current: string | undefined) =>
+        key in updates ? updates[key] : current
+
+      const nextCategory = pick('category', activeCategory)
+      const nextQuery = pick('q', query)
+      const nextPrice = pick('price', price)
+      const nextSort = pick('sort', sort)
 
       if (nextCategory && nextCategory !== 'all') {
         params.set('category', nextCategory)

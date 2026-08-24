@@ -1,5 +1,5 @@
 {
-  "name": "devportfolio-marketplace",
+  "name": "druporia-web",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -12,7 +12,9 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "npx tsx prisma/seed.ts"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "storage:init": "node --env-file=.env.local create-bucket.js",
+    "typecheck": "tsc --noEmit"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

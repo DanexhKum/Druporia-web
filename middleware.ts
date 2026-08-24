@@ -7,10 +7,14 @@
 //   /marketplace/[slug] → public
 //   /sign-in, /sign-up  → public (Clerk-managed)
 //   /dashboard/*        → requires authentication
-//   /admin/*            → requires ADMIN role + 2FA (enforced
-//                         additionally in each Server Component)
+//   /admin/*            → requires authentication here; the ADMIN
+//                         role check happens in requireAdmin(), which
+//                         app/admin/layout.tsx calls before rendering.
+//                         No second factor is enforced anywhere.
 //   /api/webhooks/*     → public (Clerk & payment webhooks)
-//   /api/*              → requires authentication
+//   /api/admin/*        → not matched here; the route handler calls
+//                         requireAdmin() itself
+//   /api/download/*     → requires authentication
 // ============================================================
 
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
@@ -25,19 +29,20 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhooks(.*)',
 ])
 
-// Admin-only routes — additional role check is done in the
-// Server Component itself via requireAdmin() from lib/auth.ts
+// Admin pages. Signed-in check only here; the authoritative ADMIN
+// role check is requireAdmin() in lib/auth.ts.
+// /api/admin/* is intentionally absent — that handler calls
+// requireAdmin() itself, so adding it here would be redundant.
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
-// Dashboard routes requiring authentication
+// Routes requiring a signed-in user.
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/api/download(.*)',
-  '/api/products/create',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth()
+  const { userId } = await auth()
 
   // ── 1. Allow public routes through unconditionally ──────────
   if (isPublicRoute(req)) {
@@ -54,22 +59,18 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   // ── 3. Admin routes: abort immediately if not logged in ──────
-  // Deep role/2FA validation happens in requireAdmin() server-side.
-  if (isAdminRoute(req)) {
-    if (!userId) {
-      const signInUrl = new URL('/sign-in', req.url)
-      signInUrl.searchParams.set('redirect_url', req.nextUrl.pathname)
-      return NextResponse.redirect(signInUrl)
-    }
-
-    // Check role from Clerk session metadata (set via Clerk dashboard
-    // or webhooks). Provides fast edge-level rejection before the
-    // page even renders.
-    // const meta = sessionClaims?.metadata as { role?: string } | undefined
-    // // Skip strict metadata role check in local development (rely on requireAdmin() in auth.ts instead)
-    // if (process.env.NODE_ENV !== 'development' && meta?.role !== 'ADMIN') {
-    //   return NextResponse.redirect(new URL('/?error=unauthorized', req.url))
-    // }
+  // This is a signed-in check only. The authoritative ADMIN role check
+  // is requireAdmin(), called by app/admin/layout.tsx and by every
+  // admin Server Action — it reads the role from the database rather
+  // than from session metadata, so it cannot go stale.
+  //
+  // An edge-level role check would need the role mirrored into Clerk
+  // session claims and kept in sync on every change; the previous
+  // attempt at that is deliberately not restored.
+  if (isAdminRoute(req) && !userId) {
+    const signInUrl = new URL('/sign-in', req.url)
+    signInUrl.searchParams.set('redirect_url', req.nextUrl.pathname)
+    return NextResponse.redirect(signInUrl)
   }
 
   return NextResponse.next()

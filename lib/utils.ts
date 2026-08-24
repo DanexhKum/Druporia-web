@@ -48,6 +48,15 @@ export const CATEGORY_ICONS: Record<ProductCategory, string> = {
   [ProductCategory.CHROME_EXTENSION]: '🧩',
 }
 
+// ── Gallery URLs ──────────────────────────────────────────────
+// Product.galleryUrls is a Json column, so Prisma types it as
+// JsonValue. Narrow it to the string[] the app actually stores.
+export function getGalleryUrls(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : []
+}
+
 // ── Slug generation ───────────────────────────────────────────
 export function generateSlug(title: string): string {
   return title

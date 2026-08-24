@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle2, Send } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Send } from 'lucide-react'
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -26,8 +26,17 @@ export function ContactForm() {
         },
       })
 
+      const result = await response.json().catch(() => null)
+
       if (!response.ok) {
-        throw new Error('Form submission failed')
+        // The API returns a specific reason for validation failures
+        // and rate limiting — show it rather than a generic error.
+        setStatus('error')
+        setMessage(
+          result?.message ??
+            'Message could not be sent right now. Please email us directly at dhanesh.kum15@gmail.com.'
+        )
+        return
       }
 
       form.reset()
@@ -38,7 +47,7 @@ export function ContactForm() {
     } catch {
       setStatus('error')
       setMessage(
-        'Message could not be sent right now. Please email us directly at dhanesh.kumar15@gmail.com.'
+        'Message could not be sent right now. Please email us directly at dhanesh.kum15@gmail.com.'
       )
     }
   }
@@ -54,7 +63,11 @@ export function ContactForm() {
           }`}
           role="status"
         >
-          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+          {status === 'success' ? (
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+          ) : (
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          )}
           <p>{message}</p>
         </div>
       )}

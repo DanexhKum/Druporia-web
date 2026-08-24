@@ -98,16 +98,11 @@ export async function createProduct(
 ): Promise<ActionState<CreatedProductResult>> {
 
   // ── STEP 1: Verify admin session ───────────────────────────
-  let adminUserId: string
-  try {
-    const { userId } = await requireAdmin()
-    adminUserId = userId
-  } catch {
-    return {
-      status: 'error',
-      message: 'Unauthorized. Admin access required.',
-    }
-  }
+  // requireAdmin() signals rejection by calling redirect(), which throws
+  // NEXT_REDIRECT for the framework to catch. Swallowing that here — as
+  // this used to — turned every DB outage into "Unauthorized" and broke
+  // the redirect. Let it propagate; catch nothing else.
+  const { userId: adminUserId } = await requireAdmin()
 
   // ── STEP 2: Extract and validate file ─────────────────────
   const file = formData.get('zipFile') as File | null

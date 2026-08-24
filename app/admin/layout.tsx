@@ -1,7 +1,7 @@
 // ============================================================
 // app/admin/layout.tsx
 // Admin area layout — stripped, minimal, high-contrast.
-// Server-side role check via requireAdmin() before render.
+// Server-side ADMIN role check via requireAdmin() before render.
 // ============================================================
 
 import Link from 'next/link'
@@ -32,8 +32,9 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  // ── Enforce ADMIN role + 2FA on every admin page render ──────
+  // ── Enforce ADMIN role on every admin page render ────────────
   // If unauthorized, requireAdmin() calls redirect() internally.
+  // No second factor is enforced — see the note in lib/auth.ts.
   await requireAdmin()
 
   return (

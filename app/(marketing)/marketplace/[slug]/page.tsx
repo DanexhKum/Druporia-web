@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { getProductBySlug, getRelatedProducts } from '@/lib/site-data'
 import { requireAdmin } from '@/lib/auth'
-import { CATEGORY_LABELS, CATEGORY_ICONS } from '@/lib/utils'
+import { CATEGORY_LABELS, CATEGORY_ICONS, getGalleryUrls } from '@/lib/utils'
 import { ProductCard } from '@/components/marketplace/ProductCard'
 import { ProductPurchase } from '@/components/marketplace/ProductPurchase'
 import { AnimateIn } from '@/components/marketing/AnimateIn'
@@ -24,12 +24,6 @@ import type { Metadata } from 'next'
 interface PageProps {
   params: Promise<{ slug: string }>
   searchParams?: Promise<{ preview?: string }>
-}
-
-function getGalleryUrls(value: unknown) {
-  return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === 'string')
-    : []
 }
 
 function getCategoryFeatures(category: string) {

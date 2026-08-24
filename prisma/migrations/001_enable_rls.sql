@@ -1,4 +1,21 @@
 -- ============================================================
+-- ⚠ SUPERSEDED — DO NOT RUN. See 002_fix_rls.sql.
+--
+-- This file cannot apply. It references snake_case columns
+-- (clerk_id, is_published, user_id, order_id) but schema.prisma
+-- maps only table names, so Prisma created camelCase columns
+-- ("clerkId", "isPublished", "userId", "orderId"). Every
+-- CREATE POLICY below raises "column does not exist", which
+-- aborts the transaction and leaves RLS disabled everywhere.
+--
+-- Its policies were also keyed on auth.uid(), which is always
+-- NULL in this app because authentication is handled by Clerk,
+-- not Supabase Auth.
+--
+-- Kept for history only.
+-- ============================================================
+
+-- ============================================================
 -- Migration: 001_enable_rls.sql
 -- Purpose: Enable Row-Level Security on all application tables.
 -- Run this in your Supabase SQL Editor AFTER `prisma db push`.

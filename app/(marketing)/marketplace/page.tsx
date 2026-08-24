@@ -43,8 +43,12 @@ export const metadata: Metadata = {
   },
 }
 
-// Revalidate every 60 seconds (ISR)
-export const revalidate = 60
+// NOTE: no `export const revalidate` here — this page awaits
+// searchParams, which forces dynamic rendering and makes any ISR
+// directive dead code. Caching the filtered listing means caching
+// per query/category/price/sort combination; do it with unstable_cache
+// around getProducts() keyed on those params, not with a page-level
+// revalidate that silently does nothing.
 
 // ── Filter params ──────────────────────────────────────────────
 interface PageProps {

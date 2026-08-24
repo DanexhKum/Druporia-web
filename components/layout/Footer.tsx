@@ -37,7 +37,7 @@ export function Footer() {
             <div className="mt-6 space-y-2 text-sm text-slate-500">
               <p className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-blue-400 shrink-0" />
-                dhanesh.kumar15@gmail.com
+                dhanesh.kum15@gmail.com
               </p>
               <p className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-blue-400 shrink-0" />

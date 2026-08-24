@@ -3,21 +3,16 @@ import Link from 'next/link'
 import { ProductCategory, ProductStatus } from '@prisma/client'
 import { ArrowLeft, Save } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
-import { CATEGORY_LABELS } from '@/lib/utils'
-import { updateProduct } from './actions'
+import { CATEGORY_LABELS, getGalleryUrls } from '@/lib/utils'
+import { deleteProduct, updateProduct } from './actions'
 import { SubmitButton } from '@/components/admin/SubmitButton'
+import { DeleteProductForm } from '@/components/admin/DeleteProductForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Edit Product' }
 
 interface PageProps {
   params: Promise<{ id: string }>
-}
-
-function getGalleryUrls(value: unknown) {
-  return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === 'string')
-    : []
 }
 
 export default async function EditProductPage({ params }: PageProps) {
@@ -256,6 +251,12 @@ export default async function EditProductPage({ params }: PageProps) {
           Save product
         </SubmitButton>
       </form>
+
+      <DeleteProductForm
+        id={product.id}
+        title={product.title}
+        action={deleteProduct}
+      />
     </div>
   )
 }

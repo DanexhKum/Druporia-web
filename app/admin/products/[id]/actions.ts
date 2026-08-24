@@ -4,8 +4,13 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { uploadProductThumbnail } from '@/lib/storage'
+import {
+  deleteProductFile,
+  deleteThumbnailsByUrl,
+  uploadProductThumbnail,
+} from '@/lib/storage'
 import { CreateProductSchema } from '@/lib/validations'
+import { getGalleryUrls } from '@/lib/utils'
 
 const MAX_THUMBNAIL_SIZE_BYTES = 5 * 1024 * 1024
 const ALLOWED_THUMBNAIL_MIME_TYPES = [
@@ -72,7 +77,7 @@ export async function updateProduct(formData: FormData) {
 
   const current = await prisma.product.findUnique({
     where: { id },
-    select: { slug: true },
+    select: { slug: true, thumbnailUrl: true, galleryUrls: true },
   })
 
   if (!current) {
@@ -166,9 +171,77 @@ export async function updateProduct(formData: FormData) {
     select: { slug: true },
   })
 
+  // ── Clean up images this edit orphaned ────────────────────
+  // Only after the update commits, and only for files in our own
+  // bucket that the new record no longer references.
+  const previousUrls = [
+    current.thumbnailUrl,
+    ...getGalleryUrls(current.galleryUrls),
+  ]
+  const survivingUrls = new Set([data.thumbnailUrl, ...galleryUrls])
+  await deleteThumbnailsByUrl(
+    previousUrls.filter((url) => url && !survivingUrls.has(url))
+  )
+
   revalidatePath('/admin')
   revalidatePath('/marketplace')
   revalidatePath(`/marketplace/${current.slug}`)
+  revalidatePath(`/marketplace/${product.slug}`)
+  redirect('/admin')
+}
+
+// ── Delete a product and everything it owns ────────────────────
+export async function deleteProduct(formData: FormData) {
+  await requireAdmin()
+
+  const id = formData.get('id')
+  if (typeof id !== 'string') {
+    throw new Error('Invalid product id')
+  }
+
+  const product = await prisma.product.findUnique({
+    where: { id },
+    select: {
+      slug: true,
+      title: true,
+      downloadUrl: true,
+      thumbnailUrl: true,
+      galleryUrls: true,
+      _count: { select: { orderItems: true } },
+    },
+  })
+
+  if (!product) {
+    throw new Error('Product not found')
+  }
+
+  // OrderItem.product is onDelete: Restrict, so a sold product cannot
+  // be removed without destroying purchase history. Archive instead —
+  // buyers keep their downloads, and the storefront stops listing it.
+  if (product._count.orderItems > 0) {
+    throw new Error(
+      `"${product.title}" has been purchased and cannot be deleted. ` +
+        'Set its status to ARCHIVED instead.'
+    )
+  }
+
+  await prisma.product.delete({ where: { id } })
+
+  // Storage cleanup after the row is gone. Best-effort: a failure here
+  // leaves an orphaned file, which is better than a dangling record.
+  await deleteThumbnailsByUrl([
+    product.thumbnailUrl,
+    ...getGalleryUrls(product.galleryUrls),
+  ])
+
+  try {
+    await deleteProductFile(product.downloadUrl)
+  } catch (err) {
+    console.error('[deleteProduct] Archive cleanup failed:', err)
+  }
+
+  revalidatePath('/admin')
+  revalidatePath('/marketplace')
   revalidatePath(`/marketplace/${product.slug}`)
   redirect('/admin')
 }

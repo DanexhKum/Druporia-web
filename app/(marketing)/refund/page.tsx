@@ -20,7 +20,7 @@ export default function RefundPage() {
       <p>
         Digital products may be refunded within 14 days of purchase if the product is
         defective or not as described. Contact us with your order details at
-        dhanesh.kumar15@gmail.com.
+        dhanesh.kum15@gmail.com.
       </p>
       <p>
         Custom development and consulting services are governed by separate agreements.
