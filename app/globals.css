@@ -225,6 +225,96 @@
   .rule-gold {
     @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500/40 to-transparent;
   }
+
+  /* ============================================================
+     DARK SYSTEM — marketing surfaces
+     Emphasis comes from scale and the teal glow, never from
+     heavy weight. Display type sits at 300/400 deliberately.
+     ============================================================ */
+
+  /* Page ground for a dark marketing section */
+  .dark-shell {
+    @apply relative overflow-hidden bg-ink-950 text-white;
+  }
+
+  /* The teal bloom. Positioned absolutely by the caller; this
+     only describes the light itself. Sits behind content, so it
+     must never intercept pointer events. */
+  .glow-teal {
+    @apply pointer-events-none absolute inset-x-0 bottom-0 -z-0;
+    height: 65%;
+    background:
+      radial-gradient(60% 100% at 50% 100%, rgba(6,182,212,0.45) 0%, rgba(6,182,212,0.14) 38%, transparent 72%),
+      radial-gradient(38% 80% at 18% 100%, rgba(34,211,238,0.22) 0%, transparent 68%);
+  }
+
+  /* Display headline — large, light, slightly tightened */
+  .display {
+    @apply font-light tracking-tight text-white;
+    font-size: clamp(2.25rem, 5.6vw, 4.25rem);
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  /* The second line of a headline, dropped to grey so the first
+     line reads as the emphasis without adding weight */
+  .display-muted {
+    @apply text-white/55;
+  }
+
+  /* Mono chrome — nav items, button labels, small caps labels */
+  .mono-label {
+    @apply font-mono text-[13px] font-normal tracking-tight;
+  }
+
+  /* Floating capsule nav */
+  .pill-nav {
+    @apply inline-flex items-center gap-1 rounded-full border border-white/10
+           bg-white/[0.06] px-2 py-1.5 backdrop-blur-xl shadow-pill;
+  }
+
+  .pill-nav-item {
+    @apply mono-label rounded-full px-3.5 py-1.5 text-white/60
+           transition-colors duration-200 hover:text-white
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60;
+  }
+
+  .pill-nav-item[data-active='true'] {
+    @apply bg-white/10 text-white;
+  }
+
+  /* Pill buttons — ghost and solid, both fully rounded */
+  .btn-pill {
+    @apply mono-label inline-flex items-center justify-center gap-2 rounded-full
+           border px-6 py-3 transition-all duration-200
+           focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-teal-400/60 focus-visible:ring-offset-2
+           focus-visible:ring-offset-ink-950
+           disabled:pointer-events-none disabled:opacity-50;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-pill-ghost {
+    @apply btn-pill border-white/15 bg-white/[0.04] text-white/85 backdrop-blur-sm
+           hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.09] hover:text-white
+           active:translate-y-0;
+  }
+
+  .btn-pill-solid {
+    @apply btn-pill border-white bg-white text-ink-950
+           hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-teal
+           active:translate-y-0;
+  }
+
+  /* Hairline divider on dark */
+  .rule-teal {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-teal-400/30 to-transparent;
+  }
+
+  /* Client logo wall — desaturated, brightened, lifts on hover */
+  .logo-mark {
+    @apply opacity-45 grayscale brightness-0 invert transition-opacity duration-300 hover:opacity-80;
+  }
 }
 
 @layer utilities {

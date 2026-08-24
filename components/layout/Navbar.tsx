@@ -1,6 +1,15 @@
 // ============================================================
 // components/layout/Navbar.tsx
-// Top navigation — sticky, translucent, gold underline on links.
+// Dark sticky header with a floating capsule nav.
+//
+// The reference floats a fully transparent nav over the hero.
+// This is a dark translucent bar instead, because the same
+// Navbar renders above marketplace/contact/insights, which are
+// still light — a transparent bar would vanish there. Once the
+// remaining pages go dark this can drop to fully transparent.
+//
+// The logo is forced white (brightness-0 invert) so it reads on
+// the dark ground regardless of the source PNG's own colours.
 // ============================================================
 
 'use client'
@@ -29,55 +38,58 @@ export function Navbar() {
   const { isSignedIn } = useAuth()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/70 bg-white/80 shadow-sm shadow-navy-900/5 backdrop-blur-xl">
-      <div className="container-page flex h-20 items-center justify-between">
-        {/* Logo */}
-        <Logo href="/" imageClassName="h-15 w-auto sm:h-15" />
+    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-ink-950/80 backdrop-blur-xl">
+      <div className="container-page flex h-20 items-center justify-between gap-4">
+        <Logo
+          href="/"
+          imageClassName="h-11 w-auto brightness-0 invert sm:h-12"
+        />
 
-        {/* Nav links — desktop. Gold underline scales from the left
-            on hover, and stays extended on the current page. */}
-        <nav className="hidden items-center gap-7 md:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              data-active={pathname === link.href ? 'true' : undefined}
-              aria-current={pathname === link.href ? 'page' : undefined}
-              className={cn(
-                'nav-link',
-                pathname === link.href && 'text-navy-900'
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Floating capsule — centred on wide viewports */}
+        <nav className="hidden md:absolute md:left-1/2 md:flex md:-translate-x-1/2">
+          <div className="pill-nav">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-active={pathname === link.href ? 'true' : undefined}
+                aria-current={pathname === link.href ? 'page' : undefined}
+                className="pill-nav-item"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </nav>
 
-        {/* Auth controls */}
         <div className="flex items-center gap-2">
           {isSignedIn ? (
             <>
-              <Link href="/dashboard" className="btn-secondary text-xs px-3 py-1.5">
+              <Link
+                href="/dashboard"
+                className="btn-pill-ghost px-4 py-2 text-[12px]"
+              >
                 Dashboard
               </Link>
               <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: 'w-7 h-7',
-                  },
-                }}
+                appearance={{ elements: { avatarBox: 'w-8 h-8' } }}
               />
             </>
           ) : (
             <>
               <SignInButton mode="modal">
-                <button className="btn-ghost text-xs px-3 py-1.5">
+                <button
+                  className={cn(
+                    'mono-label hidden rounded-full px-4 py-2 text-white/60',
+                    'transition-colors hover:text-white sm:inline-flex'
+                  )}
+                >
                   Sign in
                 </button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <button className="btn-gold text-xs px-4 py-2">
-                  Get started
+                <button className="btn-pill-solid px-5 py-2 text-[12px]">
+                  Get Started
                 </button>
               </SignUpButton>
             </>

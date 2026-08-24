@@ -82,17 +82,15 @@ function Stat({ stat, active }: { stat: TrustStat; active: boolean }) {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gold-500/30 bg-gold-500/10 text-gold-400">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-teal-400/25 bg-teal-400/10 text-teal-300">
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0">
-        <p className="text-2xl font-extrabold tabular-nums tracking-tight text-white sm:text-3xl">
+        <p className="text-3xl font-light tabular-nums tracking-tight text-white sm:text-4xl">
           {display}
           {stat.suffix}
         </p>
-        <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-navy-200">
-          {stat.label}
-        </p>
+        <p className="mono-label mt-1 text-white/40">{stat.label}</p>
       </div>
     </div>
   )
@@ -105,8 +103,8 @@ export function TrustBar({ stats }: { stats: TrustStat[] }) {
   if (stats.length === 0) return null
 
   return (
-    <section className="relative z-10 border-y border-navy-700 bg-navy-800">
-      <div className="rule-gold" />
+    <section className="relative z-10 border-y border-white/[0.06] bg-ink-900">
+      <div className="rule-teal" />
       <div
         ref={ref}
         className="container-page grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4"
@@ -115,7 +113,7 @@ export function TrustBar({ stats }: { stats: TrustStat[] }) {
           <Stat key={stat.label} stat={stat} active={inView} />
         ))}
       </div>
-      <div className="rule-gold" />
+      <div className="rule-teal" />
     </section>
   )
 }

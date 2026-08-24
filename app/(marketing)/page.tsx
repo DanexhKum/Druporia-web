@@ -104,24 +104,6 @@ export default async function HomePage() {
 
       <TrustBar stats={trustStats} />
 
-      <section className="border-b border-navy-200 bg-white shadow-sm relative z-10">
-        <div className="container-page py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-navy-400 whitespace-nowrap">
-            Powered by
-          </p>
-          <div className="flex flex-wrap justify-center sm:justify-end gap-3 w-full">
-            {TECH_STACK.map((tech) => (
-              <span
-                key={tech}
-                className="px-3 py-1 text-sm font-medium text-navy-600 bg-navy-100 rounded-md border border-navy-200"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <FeaturedProducts />
 
       <section className="bg-navy-900 text-white relative overflow-hidden py-20 sm:py-28">

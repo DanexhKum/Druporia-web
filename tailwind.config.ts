@@ -3,14 +3,21 @@ import type { Config } from 'tailwindcss'
 // ============================================================
 // Druporia design tokens
 //
-// Brand navy  #1e3a5f  → navy-800
-// Brand gold  #c9a55a  → gold-500
+// DARK SYSTEM (marketing surfaces)
+//   ink-950 #050b12   page ground, near-black
+//   teal-500 #06b6d4  the accent, carried mostly as a glow
+//   Display type is LIGHT (300/400) and large — weight is not
+//   how emphasis is made here; scale and the glow are.
+//   Mono (JetBrains) carries all UI chrome: nav, buttons, labels.
 //
-// CONTRAST NOTE: gold-500 on white is ~2:1 — decorative only,
-// never body text. For gold text on a light surface use
-// gold-700 (#8f6f36, ~4.8:1). On navy-800+, gold-400/500 are
-// comfortably readable. The sweep through the marketing pages
-// follows that rule.
+// LIGHT SYSTEM (admin, forms, docs)
+//   navy-800 #1e3a5f + gold-500 #c9a55a retained so the admin
+//   panel and any light surface keep working unchanged.
+//
+// CONTRAST NOTES
+//   gold-500 on white is ~2:1 — decorative only; use gold-700
+//   for gold text on light. teal-400 on ink-950 is ~8:1 and is
+//   the safe accent-text pairing on dark.
 // ============================================================
 
 const config: Config = {
@@ -33,6 +40,25 @@ const config: Config = {
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       colors: {
+        // ── Dark grounds ────────────────────────────────────
+        ink: {
+          950: '#050b12',
+          900: '#0a1420',
+          800: '#10202e',
+          700: '#17303f',
+          600: '#1f3f52',
+        },
+        // ── Teal accent (the glow) ──────────────────────────
+        teal: {
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
+        },
         // ── Brand navy ──────────────────────────────────────
         navy: {
           50: '#f2f6fa',
@@ -90,6 +116,8 @@ const config: Config = {
         dropdown: '0 4px 16px 0 rgba(30,58,95,0.10)',
         navy: '0 10px 30px -12px rgba(30,58,95,0.45)',
         gold: '0 10px 30px -12px rgba(201,165,90,0.45)',
+        teal: '0 10px 40px -12px rgba(6,182,212,0.35)',
+        'pill': '0 1px 0 0 rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.6)',
       },
       borderRadius: {
         DEFAULT: '6px',
