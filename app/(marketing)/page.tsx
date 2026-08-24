@@ -9,8 +9,15 @@ import { FeaturedProducts } from '@/components/marketing/FeaturedProducts'
 import { TeamSection } from '@/components/marketing/TeamSection'
 import { FiverrReviews } from '@/components/marketing/FiverrReviews'
 import { AnimateIn } from '@/components/marketing/AnimateIn'
+import { TrustBar, TRUST_ICONS, type TrustStat } from '@/components/marketing/TrustBar'
+import { ProcessSection } from '@/components/marketing/ProcessSection'
+import { FaqAccordion } from '@/components/marketing/FaqAccordion'
 import { TawkWidget } from '@/components/chat/TawkWidget'
-import { getHomepageServices, getPublishedFaqs } from '@/lib/site-data'
+import {
+  getHomepageServices,
+  getPublishedFaqs,
+  getTrustStats,
+} from '@/lib/site-data'
 import { DEFAULT_SERVICES } from '@/lib/default-services'
 
 const TECH_STACK = [
@@ -35,10 +42,40 @@ function getTags(value: unknown) {
 }
 
 export default async function HomePage() {
-  const [managedServices, faqs] = await Promise.all([
+  const [managedServices, faqs, trust] = await Promise.all([
     getHomepageServices(),
     getPublishedFaqs(),
+    getTrustStats(),
   ])
+
+  // Only surface figures that are actually non-zero — an empty
+  // catalogue must never render "0 products shipped".
+  const trustStats: TrustStat[] = [
+    {
+      icon: TRUST_ICONS.Boxes,
+      value: trust.productCount,
+      suffix: '+',
+      label: 'Products shipped',
+    },
+    {
+      icon: TRUST_ICONS.Star,
+      value: trust.averageRating,
+      decimals: 1,
+      label: 'Average client rating',
+    },
+    {
+      icon: TRUST_ICONS.Users,
+      value: trust.reviewCount,
+      suffix: '+',
+      label: 'Client reviews',
+    },
+    {
+      icon: TRUST_ICONS.Zap,
+      value: TECH_STACK.length,
+      suffix: '+',
+      label: 'Technologies supported',
+    },
+  ].filter((stat) => stat.value > 0)
   const managedKeys = new Set(
     managedServices
       .map((service) => service.sourceKey)
@@ -60,20 +97,22 @@ export default async function HomePage() {
   ]
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="bg-surface-50 min-h-screen">
       <TawkWidget />
       <HeroSection />
 
-      <section className="border-y border-slate-200 bg-white shadow-sm relative z-10">
+      <TrustBar stats={trustStats} />
+
+      <section className="border-b border-navy-200 bg-white shadow-sm relative z-10">
         <div className="container-page py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-slate-400 whitespace-nowrap">
+          <p className="text-sm font-semibold uppercase tracking-widest text-navy-400 whitespace-nowrap">
             Powered by
           </p>
           <div className="flex flex-wrap justify-center sm:justify-end gap-3 w-full">
             {TECH_STACK.map((tech) => (
               <span
                 key={tech}
-                className="px-3 py-1 text-sm font-medium text-slate-600 bg-slate-100 rounded-md border border-slate-200"
+                className="px-3 py-1 text-sm font-medium text-navy-600 bg-navy-100 rounded-md border border-navy-200"
               >
                 {tech}
               </span>
@@ -84,14 +123,14 @@ export default async function HomePage() {
 
       <FeaturedProducts />
 
-      <section className="bg-slate-900 text-white relative overflow-hidden py-20 sm:py-28">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80" />
+      <section className="bg-navy-900 text-white relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.22),transparent_34rem)] opacity-80" />
         <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
           <AnimateIn>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Why partner with Druporia?
             </h2>
-            <p className="mt-6 text-lg leading-relaxed text-slate-300">
+            <p className="mt-6 text-lg leading-relaxed text-navy-300">
               End-to-end eCommerce technology for B2B and B2C — from plugins to
               automation, with measurable outcomes.
             </p>
@@ -100,9 +139,9 @@ export default async function HomePage() {
             {['Scalable Architecture', 'Enterprise Security', 'AI-Driven Innovation', 'Measurable ROI'].map(
               (benefit, i) => (
                 <AnimateIn key={benefit} delay={i * 0.08}>
-                  <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-800/50 border border-slate-700 backdrop-blur-sm">
-                    <CheckCircle2 className="h-6 w-6 text-blue-400 shrink-0" />
-                    <span className="text-lg font-medium text-slate-200">{benefit}</span>
+                  <div className="flex items-center gap-4 p-4 rounded-xl bg-navy-800/50 border border-navy-700 backdrop-blur-sm">
+                    <CheckCircle2 className="h-6 w-6 text-gold-400 shrink-0" />
+                    <span className="text-lg font-medium text-navy-200">{benefit}</span>
                   </div>
                 </AnimateIn>
               )
@@ -111,13 +150,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="services" className="bg-slate-50 py-20 sm:py-28">
+      <section id="services" className="bg-surface-50 py-20 sm:py-28">
         <div className="container-page">
           <AnimateIn className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-3">
-              Our expertise
-            </p>
-            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+            <p className="eyebrow">Our expertise</p>
+            <h2 className="section-title">
               Technology services for modern commerce
             </h2>
           </AnimateIn>
@@ -127,17 +164,17 @@ export default async function HomePage() {
               const Icon = service.icon
               return (
                 <AnimateIn key={service.title} delay={i * 0.06}>
-                  <div className="motion-card bg-white rounded-2xl p-8 border border-slate-200 shadow-sm group h-full">
-                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <div className="motion-card bg-white rounded-2xl p-8 border border-navy-200 shadow-sm group h-full">
+                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-navy-50 text-navy-700 group-hover:bg-navy-700 group-hover:text-white transition-colors">
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{service.title}</h3>
-                    <p className="text-sm leading-relaxed text-slate-600 mb-6">{service.description}</p>
+                    <h3 className="text-xl font-bold text-navy-900 mb-3">{service.title}</h3>
+                    <p className="text-sm leading-relaxed text-navy-600 mb-6">{service.description}</p>
                     <div className="flex flex-wrap gap-2">
                       {service.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded"
+                          className="text-xs font-semibold px-2.5 py-1 bg-navy-100 text-navy-600 rounded"
                         >
                           {tag}
                         </span>
@@ -151,6 +188,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <ProcessSection />
+
       <div id="reviews">
         <FiverrReviews />
       </div>
@@ -158,57 +197,34 @@ export default async function HomePage() {
       <TeamSection />
 
       {faqs.length > 0 && (
-        <section className="bg-slate-50 py-20 sm:py-28">
+        <section className="bg-surface-50 py-20 sm:py-28">
           <div className="container-page">
             <AnimateIn className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-3 text-sm font-bold uppercase tracking-widest text-blue-600">
-                FAQ
-              </p>
-              <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-                Frequently asked questions
-              </h2>
+              <p className="eyebrow">FAQ</p>
+              <h2 className="section-title">Frequently asked questions</h2>
             </AnimateIn>
 
-            <div className="mx-auto grid max-w-4xl gap-4">
-              {faqs.map((faq, i) => (
-                <AnimateIn key={faq.id} delay={i * 0.05}>
-                  <details className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-slate-900">
-                      {faq.question}
-                      <span className="text-xl text-slate-400 transition group-open:rotate-45">
-                        +
-                      </span>
-                    </summary>
-                    <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                      {faq.answer}
-                    </p>
-                    {faq.category && (
-                      <span className="mt-4 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
-                        {faq.category}
-                      </span>
-                    )}
-                  </details>
-                </AnimateIn>
-              ))}
-            </div>
+            <AnimateIn>
+              <FaqAccordion items={faqs} />
+            </AnimateIn>
           </div>
         </section>
       )}
 
-      <section className="border-t border-slate-200 bg-white">
+      <section className="border-t border-navy-200 bg-white">
         <div className="container-page py-20 sm:py-28 text-center max-w-3xl mx-auto">
           <AnimateIn>
-            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold text-navy-900 sm:text-4xl">
               Ready to transform your business?
             </h2>
-            <p className="mt-4 text-lg text-slate-600">
+            <p className="mt-4 text-lg text-navy-600">
               Let&apos;s engineer the right solution — products, plugins, or a full
               platform build.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
-                className="btn-primary inline-flex gap-2 text-lg px-10 py-5 shadow-lg shadow-blue-500/20"
+                className="btn-primary inline-flex gap-2 text-lg px-10 py-5 shadow-lg shadow-navy-500/20"
               >
                 Contact our team
                 <ArrowRight className="h-5 w-5" />

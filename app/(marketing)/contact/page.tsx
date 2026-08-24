@@ -41,19 +41,19 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="bg-surface-50 min-h-screen">
       <TawkWidget />
       {/* ── Page Header ─────────────────────────────────────── */}
-      <div className="bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80"></div>
+      <div className="bg-navy-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.22),transparent_34rem)] opacity-80"></div>
         <div className="container-page py-20 relative z-10 text-center max-w-3xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-widest text-blue-400 mb-4">
+          <p className="text-sm font-bold uppercase tracking-widest text-gold-400 mb-4">
             Contact Druporia
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Let's build something great together.
           </h1>
-          <p className="mt-6 text-lg text-slate-300">
+          <p className="mt-6 text-lg text-navy-300">
             Have a project in mind or a question about our products? Fill out the form below and our team will get back to you within 24 hours.
           </p>
         </div>
@@ -66,38 +66,38 @@ export default function ContactPage() {
           {/* Contact Info Sidebar */}
           <div className="space-y-8 lg:col-span-1">
             <div>
-              <h3 className="text-xl font-bold text-slate-900">Reach Out Directly</h3>
-              <p className="mt-2 text-sm text-slate-500">
+              <h3 className="text-xl font-bold text-navy-900">Reach Out Directly</h3>
+              <p className="mt-2 text-sm text-navy-500">
                 We're always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
               </p>
             </div>
 
             <div className="space-y-6">
               <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-navy-700">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">Email Us</p>
-                  <p className="text-sm text-slate-500">dhanesh.kum15@gmail.com</p>
+                  <p className="text-sm font-semibold text-navy-900">Email Us</p>
+                  <p className="text-sm text-navy-500">dhanesh.kum15@gmail.com</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-navy-700">
                   <MessageSquare className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">Support</p>
-                  <p className="text-sm text-slate-500">support@druporia.com</p>
+                  <p className="text-sm font-semibold text-navy-900">Support</p>
+                  <p className="text-sm text-navy-500">support@druporia.com</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-navy-700">
                   <Building className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">HQ</p>
-                  <p className="text-sm text-slate-500">Global Remote Team</p>
+                  <p className="text-sm font-semibold text-navy-900">HQ</p>
+                  <p className="text-sm text-navy-500">Global Remote Team</p>
                 </div>
               </div>
             </div>

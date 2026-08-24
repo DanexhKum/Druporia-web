@@ -16,14 +16,14 @@ export default function NotFound() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4 py-16">
       <div className="w-full max-w-md text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-          <FileQuestion className="h-6 w-6 text-slate-500" />
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-navy-100">
+          <FileQuestion className="h-6 w-6 text-navy-500" />
         </div>
 
-        <h1 className="mt-5 text-xl font-semibold text-slate-900">
+        <h1 className="mt-5 text-xl font-semibold text-navy-900">
           Page not found
         </h1>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-navy-500">
           This page may have been moved, or the product is no longer
           published.
         </p>

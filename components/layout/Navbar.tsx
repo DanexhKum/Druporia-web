@@ -1,6 +1,6 @@
 // ============================================================
 // components/layout/Navbar.tsx
-// Top navigation — clean, 1px bordered, no shadows or gradients.
+// Top navigation — sticky, translucent, gold underline on links.
 // ============================================================
 
 'use client'
@@ -29,22 +29,23 @@ export function Navbar() {
   const { isSignedIn } = useAuth()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/70 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/70 bg-white/80 shadow-sm shadow-navy-900/5 backdrop-blur-xl">
       <div className="container-page flex h-20 items-center justify-between">
         {/* Logo */}
         <Logo href="/" imageClassName="h-15 w-auto sm:h-15" />
 
-        {/* Nav links — desktop */}
-        <nav className="hidden items-center gap-1 md:flex">
+        {/* Nav links — desktop. Gold underline scales from the left
+            on hover, and stays extended on the current page. */}
+        <nav className="hidden items-center gap-7 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              data-active={pathname === link.href ? 'true' : undefined}
+              aria-current={pathname === link.href ? 'page' : undefined}
               className={cn(
-                'rounded-full px-3.5 py-2 text-sm font-semibold transition-all duration-200',
-                pathname === link.href
-                  ? 'bg-blue-50 text-blue-700 shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                'nav-link',
+                pathname === link.href && 'text-navy-900'
               )}
             >
               {link.label}
@@ -75,7 +76,7 @@ export function Navbar() {
                 </button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <button className="btn-primary text-xs px-3 py-1.5">
+                <button className="btn-gold text-xs px-4 py-2">
                   Get started
                 </button>
               </SignUpButton>

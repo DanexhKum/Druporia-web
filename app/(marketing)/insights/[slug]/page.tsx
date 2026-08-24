@@ -52,27 +52,27 @@ export default async function InsightDetailPage({ params }: PageProps) {
     .slice(0, 3)
 
   return (
-    <div className="bg-slate-50">
-      <section className="bg-slate-950 text-white">
+    <div className="bg-surface-50">
+      <section className="bg-navy-950 text-white">
         <div className="container-page py-10">
           <Link
             href="/insights"
-            className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white"
+            className="inline-flex items-center gap-2 text-sm text-navy-300 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to insights
           </Link>
           <AnimateIn className="mt-10 max-w-4xl">
-            <span className="badge border-blue-400/30 bg-blue-500/10 text-blue-100">
+            <span className="badge border-gold-400/30 bg-navy-500/10 text-navy-100">
               {post.category}
             </span>
             <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
               {post.title}
             </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
+            <p className="mt-5 max-w-3xl text-lg leading-relaxed text-navy-300">
               {post.excerpt}
             </p>
-            <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-400">
+            <div className="mt-6 flex flex-wrap gap-4 text-sm text-navy-400">
               <span className="inline-flex items-center gap-1">
                 <CalendarDays className="h-4 w-4" />
                 {new Date(post.publishedAt).toLocaleDateString('en-US', {
@@ -93,18 +93,18 @@ export default async function InsightDetailPage({ params }: PageProps) {
       <main className="container-page py-14">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <AnimateIn>
-            <article className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-blue-600">
+            <article className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-navy-700">
               <ReactMarkdown>{post.content}</ReactMarkdown>
             </article>
 
-            <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50 p-8">
-              <p className="text-sm font-bold uppercase tracking-widest text-blue-700">
+            <section className="mt-8 rounded-3xl border border-navy-100 bg-navy-50 p-8">
+              <p className="text-sm font-bold uppercase tracking-widest text-navy-800">
                 Build with Druporia
               </p>
-              <h2 className="mt-3 text-2xl font-bold text-slate-900">
+              <h2 className="mt-3 text-2xl font-bold text-navy-900">
                 Need this implemented for your business?
               </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-navy-600">
                 Druporia can help you build plugins, Shopify apps, automation
                 workflows, AI tools, and analytics dashboards tailored to your
                 commerce operations.
@@ -123,7 +123,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
 
           <aside className="space-y-5">
             <div className="card p-5">
-              <h2 className="text-sm font-semibold text-slate-900">
+              <h2 className="text-sm font-semibold text-navy-900">
                 Topics
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -136,7 +136,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
             </div>
 
             <div className="card p-5">
-              <h2 className="text-sm font-semibold text-slate-900">
+              <h2 className="text-sm font-semibold text-navy-900">
                 More insights
               </h2>
               <div className="mt-4 space-y-4">
@@ -144,12 +144,12 @@ export default async function InsightDetailPage({ params }: PageProps) {
                   <Link
                     key={relatedPost.slug}
                     href={`/insights/${relatedPost.slug}`}
-                    className="block rounded-xl border border-slate-100 p-3 text-sm transition hover:border-blue-200 hover:bg-slate-50"
+                    className="block rounded-xl border border-navy-100 p-3 text-sm transition hover:border-navy-200 hover:bg-surface-50"
                   >
-                    <span className="font-semibold text-slate-900">
+                    <span className="font-semibold text-navy-900">
                       {relatedPost.title}
                     </span>
-                    <span className="mt-1 block text-xs text-slate-500">
+                    <span className="mt-1 block text-xs text-navy-500">
                       {relatedPost.category} · {relatedPost.readingTime}
                     </span>
                   </Link>

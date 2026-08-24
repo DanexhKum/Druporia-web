@@ -52,6 +52,30 @@ export async function getPublishedFaqs(limit = 6) {
   })
 }
 
+// ── Trust-bar statistics ──────────────────────────────────────
+// Every figure here is counted from the database. Nothing is
+// hard-coded or estimated — a stat that would render as zero is
+// dropped by the component rather than shown, so an empty
+// catalogue never advertises "0 products".
+export async function getTrustStats() {
+  const [productCount, reviewAggregate, teamCount] = await Promise.all([
+    prisma.product.count({ where: { status: ProductStatus.PUBLISHED } }),
+    prisma.review.aggregate({
+      where: { isPublished: true, approvalStatus: 'APPROVED' },
+      _count: { _all: true },
+      _avg: { rating: true },
+    }),
+    prisma.teamMember.count({ where: { isPublished: true } }),
+  ])
+
+  return {
+    productCount,
+    reviewCount: reviewAggregate._count._all,
+    averageRating: reviewAggregate._avg.rating ?? 0,
+    teamCount,
+  }
+}
+
 export async function getProductBySlug(
   slug: string,
   options: { includeUnpublished?: boolean } = {}

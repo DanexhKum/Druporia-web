@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: '#1e3a5f',
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
@@ -78,22 +78,21 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: '#0f172a',
+          colorPrimary: '#1e3a5f',
           colorBackground: '#ffffff',
           colorInputBackground: '#ffffff',
-          colorInputText: '#0f172a',
-          fontFamily: 'Inter, -apple-system, sans-serif',
+          colorInputText: '#172c47',
+          fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
           borderRadius: '6px',
         },
         elements: {
           formButtonPrimary:
-            'bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium',
-          card: 'border border-slate-200 shadow-card',
-          headerTitle: 'text-slate-900 font-semibold',
-          headerSubtitle: 'text-slate-500',
-          formFieldInput:
-            'border-slate-200 focus:ring-slate-900 text-sm',
-          footerActionLink: 'text-slate-900 font-medium',
+            'bg-navy-800 hover:bg-navy-900 text-white text-sm font-semibold',
+          card: 'border border-navy-100 shadow-card',
+          headerTitle: 'text-navy-900 font-bold',
+          headerSubtitle: 'text-navy-500',
+          formFieldInput: 'border-navy-200 focus:ring-navy-800 text-sm',
+          footerActionLink: 'text-navy-800 font-semibold',
         },
       }}
     >
@@ -105,12 +104,14 @@ export default function RootLayout({
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />
+          {/* Plus Jakarta Sans 300–800: 300/400 body, 600 labels,
+              700/800 headlines. See tailwind.config.ts. */}
           <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
             rel="stylesheet"
           />
         </head>
-        <body className="min-h-screen bg-white text-slate-900">
+        <body className="min-h-screen bg-white text-navy-900">
           {children}
           <Toaster
             position="bottom-right"
@@ -118,12 +119,12 @@ export default function RootLayout({
               duration: 4000,
               style: {
                 background: '#ffffff',
-                color: '#0f172a',
-                border: '1px solid #e2e8f0',
+                color: '#172c47',
+                border: '1px solid #e4ecf4',
                 borderRadius: '6px',
                 fontSize: '14px',
                 fontWeight: '500',
-                boxShadow: '0 4px 16px 0 rgba(0,0,0,0.08)',
+                boxShadow: '0 10px 30px -12px rgba(30,58,95,0.35)',
                 padding: '12px 16px',
               },
               success: {

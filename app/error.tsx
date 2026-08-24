@@ -27,16 +27,16 @@ export default function RootError({
           <AlertTriangle className="h-6 w-6 text-amber-600" />
         </div>
 
-        <h1 className="mt-5 text-xl font-semibold text-slate-900">
+        <h1 className="mt-5 text-xl font-semibold text-navy-900">
           Something went wrong
         </h1>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-navy-500">
           {error.message ||
             'The page could not be loaded. Trying again often resolves it.'}
         </p>
 
         {error.digest && (
-          <p className="mt-3 font-mono text-xs text-slate-400">
+          <p className="mt-3 font-mono text-xs text-navy-400">
             Reference: {error.digest}
           </p>
         )}

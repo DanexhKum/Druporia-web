@@ -4,31 +4,38 @@
 
 /* ============================================================
    Global Base Styles
-   Design system: Linear/Tailwind UI inspired — white, clean,
-   structural. Zero gradients, zero glow effects.
+   Brand navy #1e3a5f (navy-800), warm gold #c9a55a (gold-500),
+   light blue-grey surfaces, Plus Jakarta Sans.
+
+   Gold is an ACCENT. On light surfaces use gold-700 for text
+   (gold-500 is ~2:1 on white — decorative only); gold-400/500
+   are for text on navy-800 and darker.
    ============================================================ */
 
 @layer base {
   :root {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   }
 
   html {
-    @apply text-slate-900 bg-white antialiased;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    @apply text-navy-900 bg-white antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply min-h-screen bg-slate-50 text-slate-900;
+    @apply min-h-screen bg-surface-50 text-navy-900;
     font-family: var(--font-sans);
   }
 
   /* Headings — tight, corporate weight */
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+  h1, h2 {
+    @apply font-extrabold tracking-tight;
+  }
+
+  h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
   }
 
   /* Inputs — clean, sharp borders */
@@ -39,11 +46,11 @@
   input[type='url'],
   select,
   textarea {
-    @apply w-full rounded border border-slate-200 bg-white px-3 py-2
-           text-sm text-slate-900 placeholder:text-slate-400
-           focus:border-slate-400 focus:outline-none focus:ring-2
-           focus:ring-slate-900 focus:ring-offset-0
-           disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60
+    @apply w-full rounded-lg border border-navy-200 bg-white px-3.5 py-2.5
+           text-sm text-navy-900 placeholder:text-navy-400
+           focus:border-navy-500 focus:outline-none focus:ring-2
+           focus:ring-navy-800/25 focus:ring-offset-0
+           disabled:cursor-not-allowed disabled:bg-surface-100 disabled:opacity-60
            transition-colors duration-150;
   }
 
@@ -62,28 +69,47 @@
   /* ── Button system ── */
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-lg border
-           px-4 py-2 text-sm font-semibold transition-all duration-200
+           px-5 py-2.5 text-sm font-semibold transition-all duration-200
            focus-visible:outline-none focus-visible:ring-2
-           focus-visible:ring-slate-900 focus-visible:ring-offset-2
+           focus-visible:ring-navy-800 focus-visible:ring-offset-2
            disabled:pointer-events-none disabled:opacity-50;
     transform: translateZ(0);
   }
 
   .btn-primary {
-    @apply btn bg-blue-700 text-white border-blue-700
-           hover:-translate-y-0.5 hover:bg-blue-800 active:translate-y-0 active:bg-blue-900 shadow-sm shadow-blue-700/20;
+    @apply btn bg-navy-800 text-white border-navy-800 shadow-sm
+           hover:-translate-y-0.5 hover:bg-navy-900 hover:border-navy-900 hover:shadow-navy
+           active:translate-y-0 active:bg-navy-950;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Gold CTA — reserve for the single most important action
+     on a section. Navy text on gold keeps contrast ~7:1. */
+  .btn-gold {
+    @apply btn bg-gold-500 text-navy-900 border-gold-500 shadow-sm
+           hover:-translate-y-0.5 hover:bg-gold-400 hover:border-gold-400 hover:shadow-gold
+           active:translate-y-0 active:bg-gold-600;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .btn-secondary {
-    @apply btn bg-white text-slate-700 border-slate-200
-           hover:-translate-y-0.5 hover:bg-slate-50 hover:border-slate-300 active:translate-y-0 active:bg-slate-100;
+    @apply btn bg-white text-navy-700 border-navy-200
+           hover:-translate-y-0.5 hover:bg-surface-50 hover:border-navy-300 hover:text-navy-900
+           active:translate-y-0 active:bg-surface-100;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-slate-600 border-transparent
-           hover:bg-slate-100 hover:text-slate-900;
+    @apply btn bg-transparent text-navy-600 border-transparent
+           hover:bg-navy-50 hover:text-navy-900;
+  }
+
+  /* On navy sections, where a white-bordered outline reads better */
+  .btn-on-navy {
+    @apply btn bg-white/10 text-white border-white/25 backdrop-blur-sm
+           hover:-translate-y-0.5 hover:bg-white/20 hover:border-white/40
+           active:translate-y-0;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .btn-danger {
@@ -93,16 +119,16 @@
 
   /* ── Card ── */
   .card {
-    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+    @apply rounded-2xl border border-navy-100 bg-white shadow-card;
   }
 
   .card-hover {
-    @apply card transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-card-hover;
+    @apply card transition-all duration-300 hover:-translate-y-1 hover:border-gold-300 hover:shadow-card-hover;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .motion-card {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-card-hover;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:border-gold-300 hover:shadow-card-hover;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     transform: translateZ(0);
   }
@@ -127,18 +153,18 @@
 
   /* ── Badge / tag ── */
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full border border-slate-200
-           bg-slate-50 px-2.5 py-0.5 text-xs font-medium text-slate-600;
+    @apply inline-flex items-center gap-1 rounded-full border border-navy-200
+           bg-navy-50 px-2.5 py-0.5 text-xs font-semibold text-navy-700;
   }
 
   /* ── Section divider ── */
   .section-divider {
-    @apply border-t border-slate-100 my-8;
+    @apply border-t border-navy-100 my-8;
   }
 
   /* ── Form label ── */
   .form-label {
-    @apply block text-sm font-medium text-slate-700 mb-1.5;
+    @apply block text-xs font-semibold uppercase tracking-wider text-navy-600 mb-1.5;
   }
 
   /* ── Form error ── */
@@ -150,12 +176,62 @@
   .container-page {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
+  /* ── Section eyebrow (600 uppercase, per the type scale) ── */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-700;
+  }
+
+  .eyebrow-on-navy {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-400;
+  }
+
+  /* ── Section heading pair ── */
+  .section-title {
+    @apply mt-3 text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl;
+    text-wrap: balance;
+  }
+
+  .section-lead {
+    @apply mt-4 text-lg font-light leading-relaxed text-navy-600;
+    text-wrap: pretty;
+  }
+
+  /* ── Nav link with gold underline that scales from the left ── */
+  .nav-link {
+    @apply relative py-1 text-sm font-semibold text-navy-700 transition-colors duration-200 hover:text-navy-900;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0
+           rounded-full bg-gold-500 transition-transform duration-300;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after,
+  .nav-link[data-active='true']::after {
+    @apply scale-x-100;
+  }
+
+  /* Safari still paints a disclosure triangle without this;
+     list-none alone only covers Firefox and Chrome. */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* ── Gold hairline used to separate navy sections ── */
+  .rule-gold {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500/40 to-transparent;
+  }
 }
 
 @layer utilities {
   .premium-surface {
     background:
-      radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32rem),
+      radial-gradient(circle at top left, rgba(30, 58, 95, 0.07), transparent 32rem),
+      radial-gradient(circle at bottom right, rgba(201, 165, 90, 0.06), transparent 28rem),
       linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   }
 
@@ -166,12 +242,12 @@
   /* Scrollbar */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.slate.200') transparent;
+    scrollbar-color: theme('colors.navy.200') transparent;
   }
 
   /* Focus ring */
   .focus-ring {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-navy-800 focus-visible:ring-offset-2;
   }
 
   .animate-soft-in {
@@ -204,5 +280,9 @@
   .btn,
   .cta-smooth {
     transform: none !important;
+  }
+
+  .nav-link::after {
+    transition: none !important;
   }
 }

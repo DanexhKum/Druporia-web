@@ -124,17 +124,17 @@ function ProductGridSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
-          className="animate-pulse rounded-lg border border-slate-200 bg-white"
+          className="animate-pulse rounded-lg border border-navy-200 bg-white"
         >
-          <div className="h-40 rounded-t-lg bg-slate-100" />
+          <div className="h-40 rounded-t-lg bg-navy-100" />
           <div className="p-5 space-y-3">
-            <div className="h-3 w-20 rounded bg-slate-100" />
-            <div className="h-4 w-3/4 rounded bg-slate-100" />
-            <div className="h-3 w-full rounded bg-slate-100" />
-            <div className="h-3 w-5/6 rounded bg-slate-100" />
+            <div className="h-3 w-20 rounded bg-navy-100" />
+            <div className="h-4 w-3/4 rounded bg-navy-100" />
+            <div className="h-3 w-full rounded bg-navy-100" />
+            <div className="h-3 w-5/6 rounded bg-navy-100" />
           </div>
-          <div className="border-t border-slate-100 px-5 py-4">
-            <div className="h-7 w-full rounded bg-slate-100" />
+          <div className="border-t border-navy-100 px-5 py-4">
+            <div className="h-7 w-full rounded bg-navy-100" />
           </div>
         </div>
       ))}
@@ -229,16 +229,16 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
   return (
     <div className="bg-white">
       {/* ── Page header ──────────────────────────────────── */}
-      <div className="bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80"></div>
+      <div className="bg-navy-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.22),transparent_34rem)] opacity-80"></div>
         <div className="container-page py-16 relative z-10">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-400 mb-2">
             Druporia Marketplace
           </p>
           <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Premium Digital Products
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-slate-300">
+          <p className="mt-4 max-w-xl text-lg text-navy-300">
             Browse our catalog of high-quality plugins, extensions, and digital assets designed to scale your business. Secure checkout and instant delivery.
           </p>
         </div>
@@ -262,11 +262,11 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
           <div className="flex-1 min-w-0">
             {/* Result count header */}
             <div className="mb-5 flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-navy-500">
                 {totalCount > 0 ? (
                   <>
                     Showing{' '}
-                    <span className="font-medium text-slate-900">{filteredCount}</span>{' '}
+                    <span className="font-medium text-navy-900">{filteredCount}</span>{' '}
                     product
                     {filteredCount !== 1 ? 's' : ''}
                   </>

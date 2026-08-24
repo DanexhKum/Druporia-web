@@ -25,22 +25,22 @@ const LEGAL_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 text-slate-300">
+    <footer className="border-t border-navy-800 bg-navy-950 text-navy-300">
       <div className="container-page py-16">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <Logo href="/" imageClassName="h-15 w-auto sm:h-15" />
-            <p className="mt-5 text-sm leading-relaxed text-slate-400 max-w-sm">
+            <p className="mt-5 text-sm leading-relaxed text-navy-400 max-w-sm">
               Druporia builds enterprise-grade digital products, WooCommerce plugins,
               and automation for brands scaling in global commerce.
             </p>
-            <div className="mt-6 space-y-2 text-sm text-slate-500">
+            <div className="mt-6 space-y-2 text-sm text-navy-500">
               <p className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-blue-400 shrink-0" />
+                <Mail className="h-4 w-4 text-gold-400 shrink-0" />
                 dhanesh.kum15@gmail.com
               </p>
               <p className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-blue-400 shrink-0" />
+                <MapPin className="h-4 w-4 text-gold-400 shrink-0" />
                 Remote-first · Worldwide
               </p>
             </div>
@@ -56,7 +56,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                      className="text-sm text-navy-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -73,7 +73,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                      className="text-sm text-navy-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -90,7 +90,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                      className="text-sm text-navy-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -101,11 +101,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-slate-500">
+        <div className="mt-14 pt-8 border-t border-navy-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-navy-500">
             © {new Date().getFullYear()} Druporia Technologies. All rights reserved.
           </p>
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-navy-600">
             Built with Next.js · Secured by Clerk · Hosted on Vercel
           </p>
         </div>

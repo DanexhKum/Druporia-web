@@ -53,7 +53,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
+    <div className="rounded-2xl border border-navy-200 bg-white p-8 shadow-sm sm:p-10">
       {message && (
         <div
           className={`mb-6 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${
@@ -75,7 +75,7 @@ export function ContactForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <label htmlFor="name" className="form-label text-slate-700">
+            <label htmlFor="name" className="form-label text-navy-700">
               Full Name
             </label>
             <input
@@ -83,12 +83,12 @@ export function ContactForm() {
               id="name"
               name="name"
               required
-              className="mt-1 block w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+              className="mt-1 block w-full rounded-lg border border-navy-300 bg-surface-50 px-4 py-3 text-sm transition-colors focus:border-navy-500 focus:bg-white focus:ring-navy-500"
               placeholder="John Doe"
             />
           </div>
           <div>
-            <label htmlFor="email" className="form-label text-slate-700">
+            <label htmlFor="email" className="form-label text-navy-700">
               Email Address
             </label>
             <input
@@ -96,20 +96,20 @@ export function ContactForm() {
               id="email"
               name="email"
               required
-              className="mt-1 block w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+              className="mt-1 block w-full rounded-lg border border-navy-300 bg-surface-50 px-4 py-3 text-sm transition-colors focus:border-navy-500 focus:bg-white focus:ring-navy-500"
               placeholder="john@example.com"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="subject" className="form-label text-slate-700">
+          <label htmlFor="subject" className="form-label text-navy-700">
             Subject / Inquiry Type
           </label>
           <select
             id="subject"
             name="subject"
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+            className="mt-1 block w-full rounded-lg border border-navy-300 bg-surface-50 px-4 py-3 text-sm transition-colors focus:border-navy-500 focus:bg-white focus:ring-navy-500"
           >
             <option value="Project Inquiry">Project Inquiry</option>
             <option value="Product Support">Product Support</option>
@@ -119,7 +119,7 @@ export function ContactForm() {
         </div>
 
         <div>
-          <label htmlFor="message" className="form-label text-slate-700">
+          <label htmlFor="message" className="form-label text-navy-700">
             Message
           </label>
           <textarea
@@ -127,7 +127,7 @@ export function ContactForm() {
             name="message"
             rows={6}
             required
-            className="mt-1 block w-full resize-y rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+            className="mt-1 block w-full resize-y rounded-lg border border-navy-300 bg-surface-50 px-4 py-3 text-sm transition-colors focus:border-navy-500 focus:bg-white focus:ring-navy-500"
             placeholder="How can we help you?"
           />
         </div>
@@ -135,7 +135,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="btn-primary w-full justify-center gap-2 py-4 text-base font-semibold shadow-lg shadow-blue-500/20"
+          className="btn-primary w-full justify-center gap-2 py-4 text-base font-semibold shadow-lg shadow-navy-500/20"
         >
           {status === 'submitting' ? 'Sending...' : 'Send Message'}
           <Send className="h-5 w-5" />

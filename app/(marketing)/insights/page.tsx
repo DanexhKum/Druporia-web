@@ -30,18 +30,18 @@ export default function InsightsPage() {
   const posts = getInsightPosts()
 
   return (
-    <div className="bg-slate-50">
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.32),transparent_34rem)]" />
+    <div className="bg-surface-50">
+      <section className="relative overflow-hidden bg-navy-950 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.32),transparent_34rem)]" />
         <div className="container-page relative z-10 py-20">
           <AnimateIn className="max-w-3xl">
-            <p className="mb-4 text-sm font-bold uppercase tracking-widest text-blue-300">
+            <p className="mb-4 text-sm font-bold uppercase tracking-widest text-navy-300">
               Druporia Insights
             </p>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Ideas for commerce, automation, AI, and analytics.
             </h1>
-            <p className="mt-6 text-lg leading-relaxed text-slate-300">
+            <p className="mt-6 text-lg leading-relaxed text-navy-300">
               Practical articles for businesses building better digital products,
               integrations, workflows, and reporting systems.
             </p>
@@ -56,22 +56,22 @@ export default function InsightsPage() {
               <article className="motion-card card h-full p-7">
                 <div className="mb-5 flex items-center justify-between gap-4">
                   <span className="badge">{post.category}</span>
-                  <span className="text-xs font-medium text-slate-400">
+                  <span className="text-xs font-medium text-navy-400">
                     {post.readingTime}
                   </span>
                 </div>
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-navy-50 text-navy-800">
                   <BookOpen className="h-5 w-5" />
                 </div>
-                <h2 className="text-xl font-bold text-slate-900">{post.title}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                <h2 className="text-xl font-bold text-navy-900">{post.title}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-navy-600">
                   {post.excerpt}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {post.keywords.map((keyword) => (
                     <span
                       key={keyword}
-                      className="rounded bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600"
+                      className="rounded bg-navy-100 px-2.5 py-1 text-xs font-semibold text-navy-600"
                     >
                       {keyword}
                     </span>

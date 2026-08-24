@@ -1,5 +1,18 @@
 import type { Config } from 'tailwindcss'
 
+// ============================================================
+// Druporia design tokens
+//
+// Brand navy  #1e3a5f  → navy-800
+// Brand gold  #c9a55a  → gold-500
+//
+// CONTRAST NOTE: gold-500 on white is ~2:1 — decorative only,
+// never body text. For gold text on a light surface use
+// gold-700 (#8f6f36, ~4.8:1). On navy-800+, gold-400/500 are
+// comfortably readable. The sweep through the marketing pages
+// follows that rule.
+// ============================================================
+
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -11,7 +24,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: [
-          'Inter',
+          'Plus Jakarta Sans',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',
@@ -20,6 +33,42 @@ const config: Config = {
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       colors: {
+        // ── Brand navy ──────────────────────────────────────
+        navy: {
+          50: '#f2f6fa',
+          100: '#e4ecf4',
+          200: '#c6d8e9',
+          300: '#9cbad6',
+          400: '#6b94bb',
+          500: '#4a74a0',
+          600: '#365a84',
+          700: '#294a6d',
+          800: '#1e3a5f', // brand
+          900: '#172c47',
+          950: '#0d1a2b',
+        },
+        // ── Brand gold ──────────────────────────────────────
+        gold: {
+          50: '#fbf8f1',
+          100: '#f7f0dd',
+          200: '#eedfb7',
+          300: '#e3c887',
+          400: '#d6b16b',
+          500: '#c9a55a', // brand
+          600: '#b08c42',
+          700: '#8f6f36', // text-safe on light surfaces
+          800: '#745a31',
+          900: '#604b2c',
+        },
+        // ── Light blue-grey surfaces ────────────────────────
+        surface: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e6edf4',
+          300: '#d4e0ea',
+        },
+        // Kept so the admin panel and existing utilities are
+        // unaffected by the marketing rebrand.
         slate: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -35,9 +84,12 @@ const config: Config = {
         },
       },
       boxShadow: {
-        'card': '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
-        'card-hover': '0 4px 12px 0 rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04)',
-        'dropdown': '0 4px 16px 0 rgba(0,0,0,0.08)',
+        card: '0 1px 3px 0 rgba(30,58,95,0.07), 0 1px 2px -1px rgba(30,58,95,0.05)',
+        'card-hover':
+          '0 8px 24px -8px rgba(30,58,95,0.16), 0 2px 6px -2px rgba(30,58,95,0.08)',
+        dropdown: '0 4px 16px 0 rgba(30,58,95,0.10)',
+        navy: '0 10px 30px -12px rgba(30,58,95,0.45)',
+        gold: '0 10px 30px -12px rgba(201,165,90,0.45)',
       },
       borderRadius: {
         DEFAULT: '6px',
@@ -59,13 +111,16 @@ const config: Config = {
       typography: {
         DEFAULT: {
           css: {
-            color: '#1e293b',
+            color: '#294a6d',
             maxWidth: 'none',
+            'h1, h2, h3, h4': { color: '#1e3a5f' },
             a: {
-              color: '#0f172a',
+              color: '#1e3a5f',
               textDecoration: 'underline',
-              textDecorationColor: '#cbd5e1',
+              textDecorationColor: '#c9a55a',
+              textUnderlineOffset: '3px',
             },
+            strong: { color: '#172c47' },
             code: {
               backgroundColor: '#f1f5f9',
               borderRadius: '4px',
