@@ -31,6 +31,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: [
+          'Sora',
           'Space Grotesk',
           'Plus Jakarta Sans',
           '-apple-system',
@@ -48,14 +49,14 @@ const config: Config = {
       colors: {
         // ── Dark grounds ────────────────────────────────────
         ink: {
-          990: '#05070D',
-          950: '#0B0F19', // deep slate — page ground
-          900: '#0F1421',
-          850: '#141A2A',
-          800: '#1A2133',
-          700: '#232B40',
-          600: '#2E374F',
-          500: '#3D4763',
+          990: '#060606',
+          950: '#0A0A0A', // page ground
+          900: '#0E0E0F',
+          850: '#131315',
+          800: '#18181B', // zinc-900
+          700: '#212124',
+          600: '#2A2A2E',
+          500: '#3F3F46', // zinc-700
         },
         // ── Teal accent (the glow) ──────────────────────────
         // Electric cyan — the primary accent

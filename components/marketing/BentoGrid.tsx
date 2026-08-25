@@ -46,7 +46,7 @@ export interface BentoItem {
   tags: string[]
 }
 
-const ease = [0.22, 1, 0.36, 1] as const
+const ease = [0.16, 1, 0.3, 1] as const
 
 // ── Span planning ─────────────────────────────────────────────
 // Hardcoded spans left an orphan: 6 items with one double-wide is

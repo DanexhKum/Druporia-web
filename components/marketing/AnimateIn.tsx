@@ -52,7 +52,7 @@ export function AnimateIn({
       initial={animate ? 'hidden' : false}
       whileInView="visible"
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay }}
       variants={fadeUp}
       className={className}
     >

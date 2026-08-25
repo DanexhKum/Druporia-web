@@ -3,209 +3,221 @@
 // ============================================================
 // components/marketing/HeroSection.tsx
 //
-// Composition:
-//   - animated aurora (three drifting blurred blobs + fading grid)
-//   - staggered word reveal on the headline
-//   - magnetic CTAs with shine sweep
-//   - floating glassmorphism widget with an animated chart
+// Asymmetrical hero: a 7/5 split on a 12-column grid, with the
+// mockup breaking out past the right gutter so the composition
+// reads off-centre rather than as two balanced halves.
 //
-// The widget floats on a CSS keyframe rather than a JS loop, so
-// it costs nothing on the main thread and stops dead under
-// prefers-reduced-motion without extra branching.
+// Ambience is a crisp radial wash plus film grain — the blurred
+// spheres are gone. Blur-sphere backdrops are the single most
+// recognisable tell of generated design, and both references
+// (Prolibu, Nash) let the product mockup carry the section
+// instead.
 //
-// Its figures are illustrative and the chrome says "Preview", so
-// they are never mistaken for live metrics.
+// The mockup is INTERACTIVE: hovering or focusing a pipeline row
+// promotes it, and the summary figures recompute from that row.
+// Values are derived from one PIPELINE constant, so the panel can
+// never drift out of sync with itself — and it is labelled a
+// preview so it is never read as live data.
+//
+// Every entrance uses ease [0.16, 1, 0.3, 1].
 // ============================================================
 
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Activity, Boxes, Rocket, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, TrendingUp } from 'lucide-react'
 import { RevealText } from '@/components/motion/RevealText'
 import { MagneticButton } from '@/components/motion/MagneticButton'
 
-const ease = [0.22, 1, 0.36, 1] as const
+const EASE = [0.16, 1, 0.3, 1] as const
 
-const WIDGET_ROWS = [
-  { icon: Boxes, label: 'Active builds', value: '12' },
-  { icon: Rocket, label: 'Deploys / wk', value: '38' },
-  { icon: ShieldCheck, label: 'Uptime', value: '99.9%' },
+// One source of truth for the panel. Summary figures are computed
+// from this, never hardcoded alongside it.
+const PIPELINE = [
+  { id: 'woo', label: 'WooCommerce plugin', stage: 'In build', pct: 72, days: 6 },
+  { id: 'ext', label: 'Chrome extension', stage: 'In review', pct: 94, days: 2 },
+  { id: 'n8n', label: 'n8n order sync', stage: 'Scoping', pct: 28, days: 14 },
+  { id: 'dash', label: 'Analytics dashboard', stage: 'In build', pct: 55, days: 9 },
 ]
-
-const BARS = [34, 58, 42, 74, 52, 88, 66, 94]
 
 export function HeroSection() {
   const reduceMotion = useReducedMotion()
   const [mounted, setMounted] = useState(false)
+  const [activeId, setActiveId] = useState(PIPELINE[0].id)
   useEffect(() => setMounted(true), [])
   const animate = mounted && !reduceMotion
 
+  const active = PIPELINE.find((p) => p.id === activeId) ?? PIPELINE[0]
+
   const rise = (delay: number) => ({
-    initial: animate ? { opacity: 0, y: 24 } : false,
+    initial: animate ? { opacity: 0, y: 28 } : false,
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, ease, delay },
+    transition: { duration: 0.9, ease: EASE, delay },
   })
 
   return (
     <section className="relative overflow-hidden bg-ink-950">
-      {/* ── Ambient aurora ─────────────────────────────────── */}
-      <div className="aurora">
-        <div
-          className="aurora-blob left-[8%] top-[-8%] h-[38rem] w-[38rem] bg-cyan-400/[0.22]"
-          style={{ animationDelay: '0s' }}
-        />
-        <div
-          className="aurora-blob right-[2%] top-[6%] h-[34rem] w-[34rem] bg-indigo-500/[0.28]"
-          style={{ animationDelay: '-6s' }}
-        />
-        <div
-          className="aurora-blob bottom-[-14%] left-[32%] h-[36rem] w-[36rem] bg-indigo-500/[0.16]"
-          style={{ animationDelay: '-11s' }}
-        />
-      </div>
+      {/* Crisp wash — no blurred spheres */}
+      <div aria-hidden className="wash-top" />
 
-      {/* Fine grid, fading out toward the bottom */}
+      {/* Hairline grid, fading downward */}
       <div
         aria-hidden
-        className="grid-backdrop pointer-events-none absolute inset-0 -z-10 opacity-[0.55] [mask-image:radial-gradient(ellipse_at_top,black,transparent_72%)]"
+        className="grid-backdrop pointer-events-none absolute inset-0 -z-10 opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_70%)]"
       />
 
-      <div className="container-page relative z-10 pb-20 pt-16 sm:pb-28 sm:pt-20">
-        <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
-          {/* ── Copy ─────────────────────────────────────── */}
-          <div>
-            <motion.div {...rise(0)} className="mb-8">
-              <span className="chip chip-accent">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-70 motion-reduce:hidden" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                </span>
-                Enterprise technology solutions
+      <div className="container-page relative z-10 pb-20 pt-14 sm:pb-28 sm:pt-20">
+        {/* 7/5 asymmetry, with the panel breaking the right gutter */}
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-8">
+          {/* ── Copy: 7 of 12 ─────────────────────────────── */}
+          <div className="lg:col-span-7 lg:pr-8">
+            <motion.div {...rise(0)} className="mb-9 flex items-center gap-3">
+              <span className="h-px w-10 bg-cyan-400/60" />
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+                Enterprise technology
               </span>
             </motion.div>
 
-            <h1 className="display">
-              <RevealText text="Custom commerce" delay={0.1} />
+            <h1 className="font-display text-[clamp(2.5rem,5.2vw,4.25rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-white">
+              <RevealText text="Commerce software," delay={0.12} />
               <br />
               <RevealText
-                text="software, engineered"
-                delay={0.24}
-                className="bg-gradient-to-r from-cyan-300 via-white to-indigo-300 bg-clip-text text-transparent"
+                text="engineered to last."
+                delay={0.28}
+                className="text-white/40"
               />
             </h1>
 
             <motion.p
-              {...rise(0.5)}
-              className="body-dark mt-7 max-w-lg sm:text-lg"
+              {...rise(0.52)}
+              className="mt-8 max-w-md text-base leading-relaxed text-white/55 sm:text-lg"
             >
-              From strategy to execution — plugins, extensions, automation, and
-              full-stack builds. Fixed price, documented, supported after launch.
+              Plugins, extensions, automation, and full-stack builds — scoped to
+              a fixed price, documented on handover, supported after launch.
             </motion.p>
 
             <motion.div
-              {...rise(0.62)}
-              className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
+              {...rise(0.64)}
+              className="mt-11 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <MagneticButton href="/contact" variant="primary">
-                Let&apos;s talk
+                Start a project
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </MagneticButton>
               <MagneticButton href="/marketplace" variant="glass">
                 Browse marketplace
               </MagneticButton>
             </motion.div>
-
-            <motion.p {...rise(0.74)} className="mono-label mt-7 text-white/40">
-              Free consultation · Fixed-price scoping · No obligation
-            </motion.p>
           </div>
 
-          {/* ── Floating glass widget ────────────────────── */}
+          {/* ── Mockup: 5 of 12, breaking the gutter ──────── */}
           <motion.div
             initial={animate ? { opacity: 0, y: 40 } : false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease, delay: 0.34 }}
-            className="relative"
+            transition={{ duration: 1, ease: EASE, delay: 0.34 }}
+            className="lg:col-span-5 lg:-mr-6 xl:-mr-16"
           >
-            <div className="animate-float motion-reduce:animate-none">
-              <div className="glass relative overflow-hidden rounded-4xl p-2.5 shadow-glow-lg">
-                <div className="relative overflow-hidden rounded-3xl border border-white/[0.07] bg-ink-990/80">
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-indigo-500/25 blur-3xl"
-                  />
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-900/60 backdrop-blur-sm">
+              {/* Chrome */}
+              <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
+                <span className="font-mono text-[11px] tracking-tight text-white/35">
+                  delivery pipeline
+                </span>
+                <span className="rounded border border-white/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
+                  Preview
+                </span>
+              </div>
 
-                  {/* Chrome */}
-                  <div className="relative flex items-center gap-2 border-b border-white/[0.07] px-5 py-3.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="mono-label ml-3 text-white/30">
-                      delivery overview
-                    </span>
-                    <span className="chip ml-auto hidden sm:inline-flex">
-                      Preview
-                    </span>
+              {/* Summary — recomputed from the active row */}
+              <div className="grid grid-cols-3 divide-x divide-white/10 border-b border-white/10">
+                {[
+                  { k: 'Stage', v: active.stage },
+                  { k: 'Complete', v: `${active.pct}%` },
+                  { k: 'Ships in', v: `${active.days}d` },
+                ].map((cell) => (
+                  <div key={cell.k} className="px-5 py-4">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
+                      {cell.k}
+                    </p>
+                    <motion.p
+                      key={`${cell.k}-${cell.v}`}
+                      initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                      className="mt-1.5 font-display text-lg font-bold tabular-nums text-white"
+                    >
+                      {cell.v}
+                    </motion.p>
                   </div>
+                ))}
+              </div>
 
-                  <div className="relative space-y-5 p-5 sm:p-6">
-                    {/* Chart */}
-                    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5">
-                      <div className="flex items-center justify-between">
-                        <span className="mono-label text-white/40">
-                          Throughput
-                        </span>
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-300">
-                          <Activity className="h-3.5 w-3.5" />
-                          +18%
-                        </span>
-                      </div>
+              {/* Interactive rows */}
+              <div className="divide-y divide-white/[0.06]">
+                {PIPELINE.map((row, i) => {
+                  const on = row.id === activeId
+                  return (
+                    <motion.button
+                      key={row.id}
+                      type="button"
+                      onMouseEnter={() => setActiveId(row.id)}
+                      onFocus={() => setActiveId(row.id)}
+                      onClick={() => setActiveId(row.id)}
+                      aria-pressed={on}
+                      initial={animate ? { opacity: 0, x: 18 } : false}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, ease: EASE, delay: 0.5 + i * 0.08 }}
+                      className={`group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-cyan-400/60 ${
+                        on ? 'bg-white/[0.04]' : 'hover:bg-white/[0.02]'
+                      }`}
+                    >
+                      <span
+                        aria-hidden
+                        className={`h-8 w-px transition-colors duration-300 ${
+                          on ? 'bg-cyan-400' : 'bg-white/15'
+                        }`}
+                      />
 
-                      <div className="mt-5 flex h-28 items-end gap-1.5 sm:gap-2">
-                        {BARS.map((h, i) => (
-                          <motion.div
-                            key={i}
-                            initial={animate ? { height: 0 } : false}
-                            animate={{ height: `${h}%` }}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-medium text-white/85">
+                          {row.label}
+                        </span>
+
+                        {/* Progress track */}
+                        <span className="mt-2 block h-px w-full bg-white/10">
+                          <motion.span
+                            className="block h-px bg-cyan-400"
+                            initial={animate ? { width: 0 } : false}
+                            animate={{ width: `${row.pct}%` }}
                             transition={{
-                              duration: 0.8,
-                              ease,
-                              delay: 0.7 + i * 0.06,
+                              duration: 0.9,
+                              ease: EASE,
+                              delay: 0.7 + i * 0.08,
                             }}
-                            className="flex-1 rounded-t-md bg-gradient-to-t from-indigo-500/50 to-cyan-400/90"
                           />
-                        ))}
-                      </div>
-                    </div>
+                        </span>
+                      </span>
 
-                    {/* Rows */}
-                    <div className="grid gap-2.5 sm:grid-cols-3">
-                      {WIDGET_ROWS.map((row, i) => {
-                        const Icon = row.icon
-                        return (
-                          <motion.div
-                            key={row.label}
-                            initial={animate ? { opacity: 0, y: 12 } : false}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                              duration: 0.5,
-                              ease,
-                              delay: 0.9 + i * 0.09,
-                            }}
-                            className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5"
-                          >
-                            <Icon className="h-4 w-4 text-cyan-300" />
-                            <p className="mt-2.5 font-display text-lg font-bold tabular-nums text-white">
-                              {row.value}
-                            </p>
-                            <p className="mono-label text-white/40">
-                              {row.label}
-                            </p>
-                          </motion.div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
+                      <span className="font-mono text-[11px] tabular-nums text-white/35">
+                        {row.pct}%
+                      </span>
+
+                      <ArrowUpRight
+                        className={`h-3.5 w-3.5 transition-all duration-300 ${
+                          on
+                            ? 'translate-x-0 text-cyan-400 opacity-100'
+                            : '-translate-x-1 text-white/30 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'
+                        }`}
+                      />
+                    </motion.button>
+                  )
+                })}
+              </div>
+
+              <div className="flex items-center gap-2 border-t border-white/10 px-5 py-3.5">
+                <TrendingUp className="h-3.5 w-3.5 text-cyan-400" />
+                <span className="font-mono text-[11px] text-white/40">
+                  4 active engagements
+                </span>
               </div>
             </div>
           </motion.div>

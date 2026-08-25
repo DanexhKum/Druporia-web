@@ -412,20 +412,31 @@
     cursor: auto !important;
   }
 
-  /* ── Ambient aurora ───────────────────────────────────────── */
-  .aurora {
-    @apply pointer-events-none absolute inset-0 -z-10 overflow-hidden;
+  /* ── Film grain ────────────────────────────────────────────
+     Replaces the blurred-sphere ambience, which reads as generic.
+     feTurbulence baked to a data URI: one tiny inline asset, no
+     network request, and it stays crisp at any DPR because it is
+     tiled rather than scaled.
+
+     Fixed positioning so the grain sits still while content
+     scrolls past — grain that scrolls with the page reads as a
+     texture ON the content instead of the surface behind it. */
+  .grain::after {
+    content: '';
+    @apply pointer-events-none fixed inset-0 z-[1] opacity-[0.045];
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
   }
 
-  .aurora-blob {
-    @apply absolute rounded-full blur-[90px] will-change-transform;
-    animation: aurora 18s ease-in-out infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .aurora-blob {
-      animation: none;
-    }
+  /* Crisp radial wash — a hard-edged gradient, not a blurred blob */
+  .wash-top {
+    @apply pointer-events-none absolute inset-x-0 top-0 -z-10 h-[38rem];
+    background: radial-gradient(
+      70% 100% at 50% 0%,
+      rgba(0, 240, 255, 0.07) 0%,
+      rgba(99, 102, 241, 0.05) 34%,
+      transparent 72%
+    );
   }
 
   /* Display face — Space Grotesk, for headlines only */

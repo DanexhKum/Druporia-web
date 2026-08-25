@@ -84,7 +84,7 @@ const TABS: Tab[] = [
   },
 ]
 
-const ease = [0.22, 1, 0.36, 1] as const
+const ease = [0.16, 1, 0.3, 1] as const
 
 export function TabbedShowcase() {
   const [active, setActive] = useState(0)
@@ -175,11 +175,12 @@ export function TabbedShowcase() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
               transition={{ duration: 0.4, ease }}
-              className="card-dark relative overflow-hidden p-8 sm:p-10"
+              className="relative overflow-hidden rounded-2xl border border-white/10 bg-ink-900/60 p-8 sm:p-10"
             >
+              {/* Crisp corner wash, not a blurred sphere */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-indigo-500/15 blur-3xl"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,rgba(99,102,241,0.10),transparent_65%)]"
               />
 
               <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
