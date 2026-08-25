@@ -16,6 +16,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { TiltCard } from '@/components/motion/TiltCard'
 import {
   Box,
   Layers,
@@ -118,10 +119,13 @@ export function BentoGrid({ items }: { items: BentoItem[] }) {
               visible: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.6, ease }}
-            className={`group sweep-host card-dark-hover relative p-7 ${
-              isWide ? 'lg:col-span-2 lg:flex lg:flex-col lg:justify-center' : ''
-            }`}
+            className={isWide ? 'lg:col-span-2' : ''}
           >
+            <TiltCard
+              className={`group sweep-host card-dark-hover relative p-7 ${
+                isWide ? 'lg:flex lg:flex-col lg:justify-center' : ''
+              }`}
+            >
             {/* Gradient fill that reveals on hover */}
             <div
               aria-hidden
@@ -155,6 +159,7 @@ export function BentoGrid({ items }: { items: BentoItem[] }) {
               )}
               </div>
             </div>
+            </TiltCard>
           </motion.article>
         )
       })}

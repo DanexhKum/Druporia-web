@@ -299,7 +299,7 @@
 
   /* Display type — BOLD, high contrast */
   .display {
-    @apply font-bold tracking-tight text-white;
+    @apply font-display font-bold tracking-tight text-white;
     font-size: clamp(2.25rem, 4.8vw, 3.9rem);
     line-height: 1.05;
     letter-spacing: -0.028em;
@@ -311,7 +311,7 @@
   }
 
   .heading-dark {
-    @apply text-3xl font-bold tracking-tight text-white sm:text-4xl;
+    @apply font-display text-3xl font-bold tracking-tight text-white sm:text-4xl;
     letter-spacing: -0.022em;
     text-wrap: balance;
   }
@@ -391,6 +391,46 @@
 
   .rule-teal {
     @apply h-px w-full bg-gradient-to-r from-transparent via-teal-400/25 to-transparent;
+  }
+
+  /* ── Custom cursor ─────────────────────────────────────────
+     Only hides the native cursor once CustomCursor has actually
+     mounted and added this class. If that component bails (touch
+     device, reduced motion, or an error) the real cursor stays. */
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: none !important;
+  }
+
+  /* Native cursor always returns for text entry and disabled
+     controls, where losing the caret would be genuinely harmful. */
+  .has-custom-cursor input,
+  .has-custom-cursor textarea,
+  .has-custom-cursor select,
+  .has-custom-cursor [contenteditable='true'],
+  .has-custom-cursor :disabled {
+    cursor: auto !important;
+  }
+
+  /* ── Ambient aurora ───────────────────────────────────────── */
+  .aurora {
+    @apply pointer-events-none absolute inset-0 -z-10 overflow-hidden;
+  }
+
+  .aurora-blob {
+    @apply absolute rounded-full blur-[90px] will-change-transform;
+    animation: aurora 18s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-blob {
+      animation: none;
+    }
+  }
+
+  /* Display face — Space Grotesk, for headlines only */
+  .font-display {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
   }
 
   /* Grid backdrop for panels */

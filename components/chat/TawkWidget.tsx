@@ -16,6 +16,11 @@ const TAWK_SRC = 'https://embed.tawk.to/69b930092e21981c396ad079/1jjtm79q5'
 // page, which is a far worse failure mode than the console noise
 // they existed to hide.
 //
+// No crossOrigin attribute here on purpose: Tawk does not send
+// CORS headers, so 'anonymous' makes the browser refuse the
+// script outright. An earlier pass set it and silently broke the
+// widget.
+//
 // Expect some noise back: dropping cdn.jsdelivr.net from the CSP
 // means Tawk's optional emojione script is refused, and the
 // browser logs that refusal. Tawk's performance beacon still
@@ -48,7 +53,6 @@ export function TawkWidget() {
           s1.async = true;
           s1.src = '${TAWK_SRC}';
           s1.charset = 'UTF-8';
-          s1.crossOrigin = 'anonymous';
           s0.parentNode.insertBefore(s1, s0);
         })();
       `}

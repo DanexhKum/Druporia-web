@@ -2,8 +2,7 @@
 // app/(marketing)/page.tsx — Home / Landing Page
 // ============================================================
 
-import Link from 'next/link'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { HeroSection } from '@/components/marketing/HeroSection'
 import { FeaturedProducts } from '@/components/marketing/FeaturedProducts'
 import { TeamSection } from '@/components/marketing/TeamSection'
@@ -13,6 +12,9 @@ import { TrustBar, type TrustStat } from '@/components/marketing/TrustBar'
 import { ProcessSection } from '@/components/marketing/ProcessSection'
 import { FaqAccordion } from '@/components/marketing/FaqAccordion'
 import { BentoGrid, type BentoItem } from '@/components/marketing/BentoGrid'
+import { LogoMarquee } from '@/components/motion/LogoMarquee'
+import { TabbedShowcase } from '@/components/marketing/TabbedShowcase'
+import { ParticleCTA } from '@/components/marketing/ParticleCTA'
 import { TawkWidget } from '@/components/chat/TawkWidget'
 import {
   getHomepageServices,
@@ -96,6 +98,8 @@ export default async function HomePage() {
       <TawkWidget />
       <HeroSection />
 
+      <LogoMarquee label="Built on the platforms your business runs on" />
+
       <TrustBar stats={trustStats} />
 
       <FeaturedProducts />
@@ -139,6 +143,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <TabbedShowcase />
+
       <ProcessSection />
 
       <div id="reviews">
@@ -162,27 +168,8 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="dark-shell border-t border-white/[0.07]">
-        <div aria-hidden className="glow-teal" />
-        <div className="container-page relative z-10 mx-auto max-w-3xl py-20 text-center sm:py-28">
-          <AnimateIn>
-            <h2 className="heading-dark">Ready to transform your business?</h2>
-            <p className="body-dark mt-4 text-lg">
-              Let&apos;s engineer the right solution — products, plugins, or a full
-              platform build.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="btn-dark-primary group px-8 py-4">
-                Contact our team
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-              <Link href="/marketplace" className="btn-dark-ghost px-8 py-4">
-                Browse marketplace
-              </Link>
-            </div>
-          </AnimateIn>
-        </div>
-      </section>
+      <ParticleCTA />
+
     </div>
   )
 }

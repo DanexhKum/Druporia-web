@@ -30,6 +30,12 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
+        display: [
+          'Space Grotesk',
+          'Plus Jakarta Sans',
+          '-apple-system',
+          'sans-serif',
+        ],
         sans: [
           'Plus Jakarta Sans',
           '-apple-system',
@@ -42,34 +48,55 @@ const config: Config = {
       colors: {
         // ── Dark grounds ────────────────────────────────────
         ink: {
-          990: '#03060a',
-          950: '#050a0f', // page ground
-          900: '#070d14',
-          850: '#0a121b',
-          800: '#0d1722',
-          700: '#132131',
-          600: '#1b2d40',
-          500: '#26405a',
+          990: '#05070D',
+          950: '#0B0F19', // deep slate — page ground
+          900: '#0F1421',
+          850: '#141A2A',
+          800: '#1A2133',
+          700: '#232B40',
+          600: '#2E374F',
+          500: '#3D4763',
         },
         // ── Teal accent (the glow) ──────────────────────────
+        // Electric cyan — the primary accent
+        cyan: {
+          200: '#B3FBFF',
+          300: '#66F6FF',
+          400: '#00F0FF', // brand accent
+          500: '#00C4D4',
+          600: '#0098A8',
+          700: '#00707D',
+          800: '#064E58',
+          900: '#083942',
+        },
+        // Alias kept so existing teal-* utilities keep resolving
         teal: {
-          200: '#a5f3fc',
-          300: '#67e8f9',
-          400: '#22d3ee', // primary accent
-          500: '#06b6d4',
-          600: '#0891b2',
-          700: '#0e7490',
-          800: '#155e75',
-          900: '#164e63',
+          200: '#B3FBFF',
+          300: '#66F6FF',
+          400: '#00F0FF',
+          500: '#00C4D4',
+          600: '#0098A8',
+          700: '#00707D',
+          800: '#064E58',
+          900: '#083942',
         },
         // Deeper blue used in the ambient bloom and card gradients
+        // Indigo — secondary accent, used in gradients opposite cyan
+        indigo: {
+          300: '#A5B4FC',
+          400: '#818CF8',
+          500: '#6366F1', // brand accent
+          600: '#4F46E5',
+          700: '#4338CA',
+          900: '#312E81',
+        },
         electric: {
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          900: '#0c4a6e',
+          300: '#A5B4FC',
+          400: '#818CF8',
+          500: '#6366F1',
+          600: '#4F46E5',
+          700: '#4338CA',
+          900: '#312E81',
         },
         // ── Brand navy ──────────────────────────────────────
         navy: {
@@ -128,12 +155,14 @@ const config: Config = {
         dropdown: '0 4px 16px 0 rgba(30,58,95,0.10)',
         navy: '0 10px 30px -12px rgba(30,58,95,0.45)',
         gold: '0 10px 30px -12px rgba(201,165,90,0.45)',
-        teal: '0 10px 40px -12px rgba(6,182,212,0.35)',
+        teal: '0 10px 40px -12px rgba(0,240,255,0.30)',
+        cyan: '0 10px 40px -12px rgba(0,240,255,0.35)',
+        'glow-lg': '0 0 60px -12px rgba(0,240,255,0.40)',
         pill: '0 1px 0 0 rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.6)',
         // Under-glow beneath the primary CTA, as in the reference
-        cta: '0 10px 30px -10px rgba(34,211,238,0.45), 0 0 0 1px rgba(255,255,255,0.10) inset',
+        cta: '0 10px 30px -10px rgba(0,240,255,0.40), 0 0 0 1px rgba(255,255,255,0.10) inset',
         'card-dark': '0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 60px -32px rgba(0,0,0,0.9)',
-        'glow-sm': '0 0 24px -6px rgba(34,211,238,0.35)',
+        'glow-sm': '0 0 24px -6px rgba(0,240,255,0.35)',
       },
       borderRadius: {
         DEFAULT: '6px',
@@ -143,11 +172,27 @@ const config: Config = {
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',
         'slide-up': 'slideUp 0.25s ease-out',
+        marquee: 'marquee 38s linear infinite',
+        'marquee-slow': 'marquee 60s linear infinite',
+        aurora: 'aurora 18s ease-in-out infinite',
         float: 'float 7s ease-in-out infinite',
         'float-slow': 'float 11s ease-in-out infinite',
         'pulse-glow': 'pulseGlow 5s ease-in-out infinite',
       },
       keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        aurora: {
+          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+          '33%': { transform: 'translate(6%,-4%) scale(1.12)' },
+          '66%': { transform: 'translate(-5%,3%) scale(0.94)' },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-150%) skewX(-18deg)' },
+          '100%': { transform: 'translateX(250%) skewX(-18deg)' },
+        },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-14px)' },

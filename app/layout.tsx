@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#050a0f',
+  themeColor: '#0B0F19',
   colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
@@ -79,9 +79,9 @@ export default function RootLayout({
       appearance={{
         // Dark, to match the marketing surfaces the modal opens over.
         variables: {
-          colorPrimary: '#22d3ee',
-          colorBackground: '#070d14',
-          colorInputBackground: '#0d1722',
+          colorPrimary: '#00F0FF',
+          colorBackground: '#0F1421',
+          colorInputBackground: '#1A2133',
           colorInputText: '#ffffff',
           colorText: '#ffffff',
           colorTextSecondary: 'rgba(255,255,255,0.55)',
@@ -116,7 +116,7 @@ export default function RootLayout({
           {/* Plus Jakarta Sans 300–800: 300/400 body, 600 labels,
               700/800 headlines. See tailwind.config.ts. */}
           <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
             rel="stylesheet"
           />
         </head>
