@@ -162,7 +162,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <AnimateIn>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full border border-teal-400/30/30 bg-white/10/10 px-3 py-1 text-xs font-medium text-white/70">
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/30/30 bg-white/10/10 px-3 py-1 text-xs font-medium text-white/70">
                   {CATEGORY_ICONS[product.category]} {CATEGORY_LABELS[product.category]}
                 </span>
                 {isPreview && (

@@ -15,7 +15,7 @@ export async function TeamSection() {
           <p className="chip">
             Our team
           </p>
-          <h2 className="heading-dark mt-5">
+          <h2 className="heading-dark title-fill mt-5">
             Engineers behind Druporia
           </h2>
           <p className="mt-4 text-white/55">

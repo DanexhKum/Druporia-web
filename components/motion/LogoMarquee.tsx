@@ -62,7 +62,7 @@ export function LogoMarquee({ label }: { label?: string }) {
                 key={`${copy}-${name}`}
                 className={cn(
                   'whitespace-nowrap font-display text-lg font-medium tracking-tight',
-                  'text-white/35 transition-colors duration-300 hover:text-cyan-300 sm:text-xl'
+                  'text-white/35 transition-colors duration-300 hover:text-white/80 sm:text-xl'
                 )}
               >
                 {name}

@@ -2,210 +2,252 @@
 
 // ============================================================
 // components/marketing/ScrollBuildSection.tsx
-// Pinned scroll-to-build showcase, driven by GSAP ScrollTrigger.
+// 3D software pipeline — pinned scroll-to-build.
 //
-// Four stages mapped to scroll progress:
-//   0.00–0.25  central card tilts in on rotateX / rotateY
-//   0.25–0.50  card unfolds — sub-panels fly into an
-//              asymmetrical bento grid
-//   0.50–0.75  active panel gets a line-draw border
-//              (stroke-dashoffset) and the step label updates
-//   0.75–1.00  stage settles and unpins into the next section
+// Three stages scrubbed to scroll progress:
+//   0.00–0.33  01. Raw code & syntax
+//              Three IDE cards float in 3D; their syntax lines
+//              draw in left-to-right via clip-path.
+//   0.33–0.66  02. Architecture & languages
+//              Cards recede; an SVG graph assembles — runtime,
+//              API and database nodes joined by vector edges
+//              that draw via stroke-dashoffset.
+//   0.66–1.00  03. Complete product assembly
+//              The graph folds away and a perspective dashboard
+//              resolves, then unpins.
 //
 // ── Why it is built this way ────────────────────────────────
 //
-// ANIMATE FROM, NOT TO. The panels sit at their FINAL grid
-// positions in the DOM and GSAP animates them *from* a collapsed
-// state. So the resting layout is pure CSS: without JS, on
-// mobile, or under reduced motion, the finished bento renders
-// correctly with no timeline involved. Animating *to* the layout
-// would leave a pile of stacked panels whenever the timeline
-// doesn't run.
+// THREE LAYERS, ONE STACK. Each stage is an absolutely positioned
+// layer in the same cell. The timeline cross-fades and transforms
+// between them, so nothing reflows during the scrub — reflow
+// mid-pin is what makes these sections judder.
 //
-// STATE UPDATES ARE THROTTLED BY STEP, NOT FRAME. onUpdate fires
-// every scroll frame; calling setState there would re-render the
-// tree ~60x/sec and undo Lenis's smoothing. React state changes
-// only when the step INDEX changes (4 times total). The
-// continuous progress bar is written straight to the DOM via a
-// ref, bypassing React entirely.
+// MOBILE RENDERS ALL THREE STACKED, STATICALLY. Below lg the
+// layers drop out of absolute positioning, stay at opacity 1 with
+// no transforms, and the pin never initialises. gsap.matchMedia()
+// reverts everything when the breakpoint is crossed.
 //
-// gsap.matchMedia() confines the pin to >=1024px and reverts it
-// automatically below that — pinning a viewport on a phone traps
-// the user mid-scroll. Cleanup is one mm.revert() call.
+// SYNTAX COLOUR IS WEIGHT AND ALPHA, NOT HUE. The theme is
+// monochrome; keywords are heavier and brighter, punctuation
+// recedes. No highlighter library ships for three snippets.
+//
+// The dashboard figures come from one STATS constant and are
+// labelled a preview, never presented as live telemetry.
 // ============================================================
 
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Boxes, Code2, GitBranch, ShieldCheck } from 'lucide-react'
+import { Boxes, Database, Server, Workflow } from 'lucide-react'
 
-const STEPS = [
+const STAGES = [
   {
     n: '01',
-    title: 'Scope',
-    body: 'We map the workflow, agree deliverables, and fix the price before anyone writes code.',
+    title: 'Raw code & syntax',
+    body: 'It starts as source — components, handlers, queries. Reviewed line by line before anything is wired together.',
   },
   {
     n: '02',
-    title: 'Build',
-    body: 'Work lands in short cycles against a staging link you can click through.',
+    title: 'Architecture & languages',
+    body: 'Modules resolve into a system: runtimes, API surfaces, and data stores, with the contracts between them made explicit.',
   },
   {
     n: '03',
-    title: 'Verify',
-    body: 'Every module reviewed, tested, and documented against the agreed scope.',
-  },
-  {
-    n: '04',
-    title: 'Ship',
-    body: 'Deployed, handed over, and supported — with the docs your team needs.',
+    title: 'Complete product assembly',
+    body: 'The pieces fold into a running product — deployed, instrumented, and documented for the team that inherits it.',
   },
 ]
 
-const PANELS = [
+const SNIPPETS = [
   {
-    id: 'repo',
-    icon: GitBranch,
-    label: 'Repository',
-    meta: 'main · 42 commits',
-    // Asymmetrical spans — the bento is deliberately uneven
-    span: 'lg:col-span-7 lg:row-span-2',
-    from: { x: -70, y: -50, rotate: -6 },
+    lang: 'tsx',
+    file: 'ProductCard.tsx',
+    lines: [
+      [['export', 'kw'], [' function ', 'p'], ['ProductCard', 'fn'], ['() {', 'p']],
+      [['  const', 'kw'], [' { data } = ', 'p'], ['useProduct', 'fn'], ['()', 'p']],
+      [['  return', 'kw'], [' <', 'p'], ['article', 'tag'], [' />', 'p']],
+      [['}', 'p']],
+    ],
   },
   {
-    id: 'modules',
-    icon: Boxes,
-    label: 'Modules',
-    meta: '6 packages',
-    span: 'lg:col-span-5',
-    from: { x: 70, y: -60, rotate: 5 },
+    lang: 'ts',
+    file: 'orders.route.ts',
+    lines: [
+      [['router', 'fn'], ['.', 'p'], ['post', 'kw'], ["('/orders', ", 'str'], ['async', 'kw'], [' (req) => {', 'p']],
+      [['  const', 'kw'], [' order = ', 'p'], ['await', 'kw'], [' db.', 'p'], ['insert', 'fn'], ['(body)', 'p']],
+      [['  return', 'kw'], [' order', 'p']],
+      [['})', 'p']],
+    ],
   },
   {
-    id: 'tests',
-    icon: ShieldCheck,
-    label: 'Checks',
-    meta: '128 passing',
-    span: 'lg:col-span-5',
-    from: { x: 80, y: 50, rotate: -4 },
-  },
-  {
-    id: 'deploy',
-    icon: Code2,
-    label: 'Deploy',
-    meta: 'production',
-    span: 'lg:col-span-12',
-    from: { x: -60, y: 70, rotate: 3 },
+    lang: 'py',
+    file: 'sync_worker.py',
+    lines: [
+      [['def', 'kw'], [' ', 'p'], ['sync_orders', 'fn'], ['(since):', 'p']],
+      [['    rows = ', 'p'], ['fetch', 'fn'], ['(since)', 'p']],
+      [['    return', 'kw'], [' ', 'p'], ['upsert', 'fn'], ['(rows)', 'p']],
+    ],
   },
 ]
+
+const TONE: Record<string, string> = {
+  kw: 'text-white font-semibold',
+  fn: 'text-white/85',
+  str: 'text-white/55',
+  tag: 'text-white/70',
+  p: 'text-white/35',
+}
+
+const NODES = [
+  { id: 'runtime', icon: Server, label: 'Runtime', meta: 'Node · Python', x: 18, y: 26 },
+  { id: 'api', icon: Workflow, label: 'API', meta: 'REST · webhooks', x: 50, y: 13 },
+  { id: 'db', icon: Database, label: 'Database', meta: 'PostgreSQL', x: 82, y: 34 },
+  { id: 'app', icon: Boxes, label: 'Client', meta: 'Next.js', x: 50, y: 76 },
+]
+
+const EDGES = [
+  ['runtime', 'api'],
+  ['api', 'db'],
+  ['runtime', 'app'],
+  ['api', 'app'],
+  ['db', 'app'],
+] as const
+
+const STATS = [
+  { k: 'Modules', v: '24' },
+  { k: 'Checks', v: '128' },
+  { k: 'Coverage', v: '94%' },
+  { k: 'Deploys', v: '38' },
+]
+
+const BARS = [38, 55, 44, 70, 58, 82, 66, 91, 74, 88]
+
+function nodeById(id: string) {
+  return NODES.find((n) => n.id === id)!
+}
 
 export function ScrollBuildSection() {
   const rootRef = useRef<HTMLElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
-  const cardRef = useRef<HTMLDivElement>(null)
-  const panelsRef = useRef<HTMLDivElement>(null)
+  const s1Ref = useRef<HTMLDivElement>(null)
+  const s2Ref = useRef<HTMLDivElement>(null)
+  const s3Ref = useRef<HTMLDivElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
-  const [step, setStep] = useState(0)
+  const [stage, setStage] = useState(0)
 
   useEffect(() => {
     const root = rootRef.current
     const pin = pinRef.current
-    const card = cardRef.current
-    const panels = panelsRef.current
-    if (!root || !pin || !card || !panels) return
+    const s1 = s1Ref.current
+    const s2 = s2Ref.current
+    const s3 = s3Ref.current
+    if (!root || !pin || !s1 || !s2 || !s3) return
 
     gsap.registerPlugin(ScrollTrigger)
-
     const mm = gsap.matchMedia()
 
-    // Pinned timeline: desktop only, motion allowed.
     mm.add(
       '(min-width: 1024px) and (prefers-reduced-motion: no-preference)',
       () => {
-        const panelEls = gsap.utils.toArray<HTMLElement>(
-          panels.querySelectorAll('[data-panel]')
-        )
-        const outlines = gsap.utils.toArray<SVGRectElement>(
-          panels.querySelectorAll('[data-outline]')
-        )
+        const cards = gsap.utils.toArray<HTMLElement>(s1.querySelectorAll('[data-code]'))
+        const codeLines = gsap.utils.toArray<HTMLElement>(s1.querySelectorAll('[data-line]'))
+        const edges = gsap.utils.toArray<SVGPathElement>(s2.querySelectorAll('[data-edge]'))
+        const nodes = gsap.utils.toArray<HTMLElement>(s2.querySelectorAll('[data-node]'))
+        const tiles = gsap.utils.toArray<HTMLElement>(s3.querySelectorAll('[data-tile]'))
 
-        // Normalised via pathLength="1", so dasharray/offset are
-        // 0..1 regardless of each rect's actual perimeter.
-        gsap.set(outlines, { strokeDasharray: 1, strokeDashoffset: 1 })
+        gsap.set([s2, s3], { opacity: 0, pointerEvents: 'none' })
+        gsap.set(s1, { opacity: 1 })
+        gsap.set(edges, { strokeDasharray: 1, strokeDashoffset: 1 })
+        gsap.set(codeLines, { clipPath: 'inset(0 100% 0 0)' })
 
-        let lastStep = -1
+        let last = -1
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root,
             start: 'top top',
-            end: '+=320%',
-            pin: pin,
+            end: '+=340%',
+            pin,
             pinSpacing: true,
             scrub: 1,
             anticipatePin: 1,
             onUpdate: (self) => {
-              // Continuous value written straight to the DOM.
               if (barRef.current) {
                 barRef.current.style.transform = `scaleY(${self.progress})`
               }
-              // React only hears about discrete step changes.
-              const next = Math.min(3, Math.floor(self.progress * 4))
-              if (next !== lastStep) {
-                lastStep = next
-                setStep(next)
+              const next = Math.min(2, Math.floor(self.progress * 3))
+              if (next !== last) {
+                last = next
+                setStage(next)
               }
             },
           },
         })
 
-        // ── Stage 1: card tilts in ─────────────────────────
+        // ── 01: cards float in, syntax draws ───────────────
         tl.fromTo(
-          card,
-          { rotateX: 26, rotateY: -20, scale: 0.9, opacity: 0 },
-          { rotateX: 6, rotateY: -4, scale: 1, opacity: 1, duration: 1 },
+          cards,
+          {
+            opacity: 0,
+            y: 60,
+            rotateX: 24,
+            rotateY: (i: number) => (i - 1) * 14,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 8,
+            rotateY: (i: number) => (i - 1) * 7,
+            scale: 1,
+            duration: 0.85,
+            stagger: 0.12,
+            ease: 'power3.out',
+          },
           0
         )
-
-        // ── Stage 2: card unfolds into the bento ───────────
-        tl.to(card, { opacity: 0, scale: 0.94, duration: 0.6 }, 1)
-        panelEls.forEach((el, i) => {
-          const from = PANELS[i]?.from ?? { x: 0, y: 0, rotate: 0 }
-          tl.fromTo(
-            el,
-            {
-              opacity: 0,
-              scale: 0.86,
-              xPercent: from.x,
-              yPercent: from.y,
-              rotate: from.rotate,
-            },
-            {
-              opacity: 1,
-              scale: 1,
-              xPercent: 0,
-              yPercent: 0,
-              rotate: 0,
-              duration: 0.75,
-              ease: 'power3.out',
-            },
-            1 + i * 0.12
-          )
-        })
-
-        // ── Stage 3: line-draw the active outlines ─────────
         tl.to(
-          outlines,
+          codeLines,
           {
-            strokeDashoffset: 0,
-            duration: 0.9,
-            stagger: 0.12,
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 0.5,
+            stagger: 0.035,
             ease: 'none',
           },
-          2
+          0.4
         )
 
-        // ── Stage 4: settle, then unpin ────────────────────
-        tl.to(panels, { scale: 0.985, duration: 1 }, 3)
+        // ── 02: cards recede, graph assembles ──────────────
+        tl.to(s1, { opacity: 0, scale: 0.92, duration: 0.5 }, 1)
+        tl.to(s2, { opacity: 1, duration: 0.5 }, 1.15)
+        tl.fromTo(
+          nodes,
+          { opacity: 0, scale: 0.7 },
+          { opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)' },
+          1.25
+        )
+        tl.to(
+          edges,
+          { strokeDashoffset: 0, duration: 0.6, stagger: 0.09, ease: 'none' },
+          1.5
+        )
+
+        // ── 03: fold into the product ──────────────────────
+        tl.to(s2, { opacity: 0, scale: 0.94, duration: 0.5 }, 2)
+        tl.to(s3, { opacity: 1, duration: 0.5 }, 2.15)
+        tl.fromTo(
+          s3,
+          { rotateX: 18, y: 50, scale: 0.92 },
+          { rotateX: 0, y: 0, scale: 1, duration: 0.8, ease: 'power3.out' },
+          2.15
+        )
+        tl.fromTo(
+          tiles,
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' },
+          2.4
+        )
 
         return () => {
           tl.scrollTrigger?.kill()
@@ -214,205 +256,238 @@ export function ScrollBuildSection() {
       }
     )
 
-    // Below lg, or reduced motion: no pin, no timeline. The CSS
-    // resting layout is already the finished state, so there is
-    // nothing to reset — only the step label needs a value.
     mm.add('(max-width: 1023px), (prefers-reduced-motion: reduce)', () => {
-      setStep(0)
+      setStage(0)
     })
 
     return () => mm.revert()
   }, [])
 
-  const activeStep = STEPS[step] ?? STEPS[0]
+  const active = STAGES[stage] ?? STAGES[0]
 
   return (
     <section
       ref={rootRef}
       id="how-we-build"
-      // overflow-clip stops any in-flight transform from creating
-      // a horizontal scrollbar mid-animation.
       className="relative overflow-x-clip border-t border-white/10 bg-ink-950"
     >
       <div ref={pinRef} className="relative">
         <div className="container-page py-16 sm:py-24 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-0">
-          {/* ── Header ─────────────────────────────────── */}
           <div className="mb-10 flex items-center gap-3 lg:mb-12">
-            <span className="h-px w-10 bg-cyan-400/60" />
+            <span className="h-px w-10 bg-white/40" />
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
-              03 · How we build
+              03 · Pipeline
             </span>
           </div>
 
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-            {/* ── Progress rail + step copy ────────────── */}
+            {/* ── Rail + stage copy ──────────────────────── */}
             <div className="lg:col-span-4">
               <div className="flex gap-6">
-                {/* Vertical rail (desktop) */}
                 <div className="relative hidden w-px shrink-0 bg-white/10 lg:block">
                   <span
                     ref={barRef}
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-full origin-top bg-cyan-400"
+                    className="absolute inset-x-0 top-0 h-full origin-top bg-white"
                     style={{ transform: 'scaleY(0)' }}
                   />
                 </div>
 
-                <div className="min-w-0 flex-1">
-                  <ol className="space-y-4 lg:space-y-5">
-                    {STEPS.map((s, i) => {
-                      const on = i === step
-                      return (
-                        <li key={s.n} className="flex items-start gap-4">
-                          <span
-                            className={`mt-0.5 font-mono text-[11px] tabular-nums transition-colors duration-500 ${
-                              on ? 'text-cyan-400' : 'text-white/25'
+                <ol className="min-w-0 flex-1 space-y-6">
+                  {STAGES.map((s, i) => {
+                    const on = i === stage
+                    return (
+                      <li key={s.n} className="flex items-start gap-4">
+                        <span
+                          className={`mt-1 font-mono text-[11px] tabular-nums transition-colors duration-500 ${
+                            on ? 'text-white' : 'text-white/25'
+                          }`}
+                        >
+                          {s.n}
+                        </span>
+                        <div className="min-w-0">
+                          <p
+                            className={`font-display text-xl font-bold tracking-tight transition-colors duration-500 ${
+                              on ? 'title-fill' : 'text-white/30'
                             }`}
                           >
-                            {s.n}
-                          </span>
-                          <div className="min-w-0">
-                            <p
-                              className={`font-display text-lg font-bold tracking-tight transition-colors duration-500 ${
-                                on ? 'text-white' : 'text-white/35'
-                              }`}
-                            >
-                              {s.title}
-                            </p>
-                            {/* Body only for the active step on
-                                desktop; all shown when stacked. */}
-                            <p
-                              className={`mt-1.5 text-sm leading-relaxed text-white/55 transition-opacity duration-500 ${
-                                on ? 'lg:opacity-100' : 'lg:opacity-0'
-                              }`}
-                            >
-                              {s.body}
-                            </p>
-                          </div>
-                        </li>
-                      )
-                    })}
-                  </ol>
-                </div>
+                            {s.title}
+                          </p>
+                          <p
+                            className={`mt-2 text-sm leading-relaxed text-white/55 transition-opacity duration-500 ${
+                              on ? 'lg:opacity-100' : 'lg:opacity-0'
+                            }`}
+                          >
+                            {s.body}
+                          </p>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ol>
               </div>
 
-              {/* Horizontal rail (mobile) */}
-              <div
-                aria-hidden
-                className="mt-8 flex gap-1.5 lg:hidden"
-              >
-                {STEPS.map((s, i) => (
+              <div aria-hidden className="mt-8 flex gap-1.5 lg:hidden">
+                {STAGES.map((s, i) => (
                   <span
                     key={s.n}
                     className={`h-px flex-1 transition-colors duration-500 ${
-                      i <= step ? 'bg-cyan-400' : 'bg-white/15'
+                      i <= stage ? 'bg-white' : 'bg-white/15'
                     }`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* ── Stage ────────────────────────────────── */}
-            <div className="relative lg:col-span-8">
-              <div className="[perspective:1400px]">
-                {/* Central card — overlays the bento on desktop
-                    while the timeline runs; hidden when stacked,
-                    where the bento is the whole story. */}
+            {/* ── Stage layers ───────────────────────────── */}
+            <div className="lg:col-span-8">
+              <div className="relative space-y-6 [perspective:1600px] lg:h-[30rem] lg:space-y-0">
+                {/* ── 01 · Code ──────────────────────────── */}
                 <div
-                  ref={cardRef}
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 z-10 hidden transform-gpu items-center justify-center [transform-style:preserve-3d] lg:flex"
-                  style={{ opacity: 0 }}
+                  ref={s1Ref}
+                  className="lg:absolute lg:inset-0 lg:flex lg:items-center"
                 >
-                  <div className="w-full max-w-md rounded-2xl border border-white/10 bg-ink-900/90 p-6 shadow-card-dark backdrop-blur-sm">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                      <span className="font-mono text-[11px] text-white/35">
-                        druporia · build
-                      </span>
-                      <span className="rounded border border-white/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
-                        Preview
-                      </span>
-                    </div>
-                    <p className="mt-5 font-display text-2xl font-bold tracking-tight text-white">
-                      One engagement,
-                      <br />
-                      four moving parts.
-                    </p>
-                    <p className="mt-3 text-sm text-white/55">
-                      Scroll to see how a project comes together.
-                    </p>
+                  <div className="grid w-full gap-4 sm:grid-cols-3 [transform-style:preserve-3d]">
+                    {SNIPPETS.map((snip) => (
+                      <div
+                        key={snip.file}
+                        data-code
+                        className="transform-gpu overflow-hidden rounded-xl border border-white/10 bg-ink-900"
+                      >
+                        <div className="flex items-center justify-between border-b border-white/10 px-3.5 py-2">
+                          <span className="truncate font-mono text-[10px] text-white/40">
+                            {snip.file}
+                          </span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/25">
+                            {snip.lang}
+                          </span>
+                        </div>
+                        <pre className="overflow-x-auto px-3.5 py-3">
+                          <code className="font-mono text-[10.5px] leading-[1.9]">
+                            {snip.lines.map((line, li) => (
+                              <span key={li} data-line className="block whitespace-pre">
+                                {line.map(([txt, tone], ti) => (
+                                  <span key={ti} className={TONE[tone]}>
+                                    {txt}
+                                  </span>
+                                ))}
+                              </span>
+                            ))}
+                          </code>
+                        </pre>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Bento — the resting layout, CSS-driven */}
+                {/* ── 02 · Architecture ──────────────────── */}
                 <div
-                  ref={panelsRef}
-                  className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-[repeat(3,minmax(0,1fr))]"
+                  ref={s2Ref}
+                  className="lg:absolute lg:inset-0 lg:flex lg:items-center"
                 >
-                  {PANELS.map((panel, i) => {
-                    const Icon = panel.icon
-                    const lit = i <= step
-                    return (
-                      <div
-                        key={panel.id}
-                        data-panel
-                        className={`relative overflow-hidden rounded-2xl border border-white/10 bg-ink-900/60 p-5 transition-colors duration-500 ${panel.span} ${
-                          lit ? 'bg-white/[0.045]' : ''
-                        }`}
-                      >
-                        {/* Line-draw outline. pathLength="1"
-                            normalises the perimeter so the same
-                            dash values work at any card size. */}
-                        <svg
-                          aria-hidden
-                          className="pointer-events-none absolute inset-0 h-full w-full"
-                          preserveAspectRatio="none"
-                        >
-                          <rect
-                            data-outline
-                            x="0.5"
-                            y="0.5"
-                            width="99%"
-                            height="99%"
-                            rx="15"
+                  <div className="relative h-[19rem] w-full rounded-xl border border-white/10 bg-ink-900 sm:h-[21rem]">
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                      className="absolute inset-0 h-full w-full"
+                    >
+                      {EDGES.map(([a, b]) => {
+                        const from = nodeById(a)
+                        const to = nodeById(b)
+                        return (
+                          <path
+                            key={`${a}-${b}`}
+                            data-edge
+                            d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}
                             fill="none"
-                            stroke="#00F0FF"
+                            stroke="#FFFFFF"
+                            strokeOpacity="0.3"
                             strokeWidth="1"
                             pathLength="1"
                             strokeDasharray="1"
                             strokeDashoffset="1"
+                            vectorEffect="non-scaling-stroke"
                           />
-                        </svg>
+                        )
+                      })}
+                    </svg>
 
-                        <div className="relative flex h-full flex-col">
-                          <div className="flex items-center justify-between">
-                            <span
-                              className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border transition-colors duration-500 ${
-                                lit
-                                  ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-300'
-                                  : 'border-white/10 bg-white/[0.03] text-white/45'
-                              }`}
-                            >
-                              <Icon className="h-4 w-4" />
-                            </span>
-                            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/30">
-                              {panel.meta}
-                            </span>
+                    {NODES.map((node) => {
+                      const Icon = node.icon
+                      return (
+                        <div
+                          key={node.id}
+                          data-node
+                          style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                          className="absolute -translate-x-1/2 -translate-y-1/2"
+                        >
+                          <div className="flex items-center gap-2.5 rounded-lg border border-white/15 bg-ink-850 px-3 py-2 shadow-card-dark">
+                            <Icon className="h-3.5 w-3.5 shrink-0 text-white/70" />
+                            <div className="min-w-0">
+                              <p className="whitespace-nowrap text-xs font-semibold text-white">
+                                {node.label}
+                              </p>
+                              <p className="whitespace-nowrap font-mono text-[9px] text-white/35">
+                                {node.meta}
+                              </p>
+                            </div>
                           </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
 
-                          <p className="mt-auto pt-6 font-display text-base font-bold tracking-tight text-white">
-                            {panel.label}
+                {/* ── 03 · Product ───────────────────────── */}
+                <div
+                  ref={s3Ref}
+                  className="transform-gpu lg:absolute lg:inset-0 lg:flex lg:items-center"
+                >
+                  <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-ink-900">
+                    <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+                      <span className="font-mono text-[11px] text-white/40">
+                        druporia · production
+                      </span>
+                      <span className="rounded border border-white/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-white/35">
+                        Preview
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 divide-x divide-white/10 sm:grid-cols-4">
+                      {STATS.map((s) => (
+                        <div key={s.k} data-tile className="px-5 py-5">
+                          <p className="font-display text-2xl font-bold tabular-nums text-white">
+                            {s.v}
+                          </p>
+                          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
+                            {s.k}
                           </p>
                         </div>
+                      ))}
+                    </div>
+
+                    <div className="border-t border-white/10 p-5">
+                      <div className="flex h-24 items-end justify-between gap-1.5">
+                        {BARS.map((h, i) => (
+                          <span
+                            key={i}
+                            data-tile
+                            style={{ height: `${h}%` }}
+                            className="w-full max-w-[1.75rem] rounded-t-sm bg-white/25"
+                          />
+                        ))}
                       </div>
-                    )
-                  })}
+                      <p className="mt-3 font-mono text-[10px] text-white/30">
+                        throughput · last 10 weeks
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Active-step caption, desktop only */}
               <p className="mt-6 hidden font-mono text-[11px] text-white/35 lg:block">
-                {activeStep.n} · {activeStep.title}
+                {active.n} · {active.title}
               </p>
             </div>
           </div>

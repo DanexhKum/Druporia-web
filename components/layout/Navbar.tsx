@@ -101,7 +101,7 @@ export function Navbar() {
                 <span
                   aria-hidden
                   className={cn(
-                    'absolute -bottom-0.5 left-0 h-px w-full origin-left bg-cyan-400 transition-transform duration-500',
+                    'absolute -bottom-0.5 left-0 h-px w-full origin-left bg-white transition-transform duration-500',
                     active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                   )}
                   style={{ transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)' }}

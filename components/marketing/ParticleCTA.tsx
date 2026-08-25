@@ -84,7 +84,7 @@ export function ParticleCTA() {
           const dy = particles[i].y - particles[j].y
           const d = Math.hypot(dx, dy)
           if (d < LINK_DISTANCE) {
-            ctx!.strokeStyle = `rgba(0,240,255,${(1 - d / LINK_DISTANCE) * 0.16})`
+            ctx!.strokeStyle = `rgba(255,255,255,${(1 - d / LINK_DISTANCE) * 0.16})`
             ctx!.lineWidth = 1
             ctx!.beginPath()
             ctx!.moveTo(particles[i].x, particles[i].y)
@@ -95,7 +95,7 @@ export function ParticleCTA() {
       }
 
       for (const p of particles) {
-        ctx!.fillStyle = `rgba(0,240,255,${p.a})`
+        ctx!.fillStyle = `rgba(255,255,255,${p.a})`
         ctx!.beginPath()
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2)
         ctx!.fill()
@@ -165,7 +165,7 @@ export function ParticleCTA() {
 
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(60%_100%_at_50%_100%,rgba(99,102,241,0.20),transparent_72%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(60%_100%_at_50%_100%,rgba(255,255,255,0.20),transparent_72%)]"
       />
 
       <div className="container-page relative z-10 py-24 text-center sm:py-32">
@@ -175,7 +175,7 @@ export function ParticleCTA() {
           <h2 className="display mt-6">
             Ready to build
             <br />
-            <span className="bg-gradient-to-r from-cyan-300 via-white to-indigo-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
               something serious?
             </span>
           </h2>

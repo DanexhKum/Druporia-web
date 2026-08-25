@@ -51,53 +51,52 @@ const config: Config = {
         ink: {
           990: '#060606',
           950: '#0A0A0A', // page ground
-          900: '#0E0E0F',
-          850: '#131315',
+          900: '#121212', // card surface
+          850: '#161616',
           800: '#18181B', // zinc-900
           700: '#212124',
           600: '#2A2A2E',
           500: '#3F3F46', // zinc-700
         },
         // ── Teal accent (the glow) ──────────────────────────
-        // Electric cyan — the primary accent
+        // Neutral ramp. Named cyan/teal only so existing utility
+        // classes resolve — every value is achromatic.
         cyan: {
-          200: '#B3FBFF',
-          300: '#66F6FF',
-          400: '#00F0FF', // brand accent
-          500: '#00C4D4',
-          600: '#0098A8',
-          700: '#00707D',
-          800: '#064E58',
-          900: '#083942',
+          200: '#FFFFFF',
+          300: '#F4F4F5',
+          400: '#E4E4E7',
+          500: '#A1A1AA',
+          600: '#71717A',
+          700: '#52525B',
+          800: '#3F3F46',
+          900: '#27272A',
         },
-        // Alias kept so existing teal-* utilities keep resolving
         teal: {
-          200: '#B3FBFF',
-          300: '#66F6FF',
-          400: '#00F0FF',
-          500: '#00C4D4',
-          600: '#0098A8',
-          700: '#00707D',
-          800: '#064E58',
-          900: '#083942',
+          200: '#FFFFFF',
+          300: '#F4F4F5',
+          400: '#E4E4E7',
+          500: '#A1A1AA',
+          600: '#71717A',
+          700: '#52525B',
+          800: '#3F3F46',
+          900: '#27272A',
         },
         // Deeper blue used in the ambient bloom and card gradients
-        // Indigo — secondary accent, used in gradients opposite cyan
         indigo: {
-          300: '#A5B4FC',
-          400: '#818CF8',
-          500: '#6366F1', // brand accent
-          600: '#4F46E5',
-          700: '#4338CA',
-          900: '#312E81',
+          300: '#D4D4D8',
+          400: '#A1A1AA',
+          500: '#71717A',
+          600: '#52525B',
+          700: '#3F3F46',
+          900: '#27272A',
         },
         electric: {
-          300: '#A5B4FC',
-          400: '#818CF8',
-          500: '#6366F1',
-          600: '#4F46E5',
-          700: '#4338CA',
-          900: '#312E81',
+          300: '#D4D4D8',
+          400: '#A1A1AA',
+          500: '#71717A',
+          600: '#52525B',
+          700: '#3F3F46',
+          900: '#27272A',
         },
         // ── Brand navy ──────────────────────────────────────
         navy: {
@@ -154,16 +153,16 @@ const config: Config = {
         'card-hover':
           '0 8px 24px -8px rgba(30,58,95,0.16), 0 2px 6px -2px rgba(30,58,95,0.08)',
         dropdown: '0 4px 16px 0 rgba(30,58,95,0.10)',
-        navy: '0 10px 30px -12px rgba(30,58,95,0.45)',
-        gold: '0 10px 30px -12px rgba(201,165,90,0.45)',
-        teal: '0 10px 40px -12px rgba(0,240,255,0.30)',
-        cyan: '0 10px 40px -12px rgba(0,240,255,0.35)',
-        'glow-lg': '0 0 60px -12px rgba(0,240,255,0.40)',
+        navy: '0 10px 30px -18px rgba(0,0,0,0.9)',
+        gold: '0 10px 30px -18px rgba(0,0,0,0.9)',
+        teal: '0 10px 40px -18px rgba(0,0,0,0.9)',
+        cyan: '0 10px 40px -18px rgba(0,0,0,0.9)',
+        'glow-lg': '0 24px 70px -30px rgba(0,0,0,0.95)',
         pill: '0 1px 0 0 rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.6)',
         // Under-glow beneath the primary CTA, as in the reference
-        cta: '0 10px 30px -10px rgba(0,240,255,0.40), 0 0 0 1px rgba(255,255,255,0.10) inset',
+        cta: '0 1px 0 0 rgba(255,255,255,0.10) inset, 0 12px 30px -16px rgba(0,0,0,0.9)',
         'card-dark': '0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 60px -32px rgba(0,0,0,0.9)',
-        'glow-sm': '0 0 24px -6px rgba(0,240,255,0.35)',
+        'glow-sm': '0 0 0 1px rgba(255,255,255,0.14) inset',
       },
       borderRadius: {
         DEFAULT: '6px',

@@ -251,7 +251,7 @@ export function ProductCard({
             <button
               type="button"
               onClick={() => setIsQuickViewOpen(true)}
-              className="rounded border border-white/10 bg-ink-900 px-3 py-1.5 text-xs font-medium text-white/55 transition-all duration-150 hover:border-white/15 hover:bg-ink-950 active:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60 focus-visible:ring-offset-1"
+              className="rounded border border-white/10 bg-ink-900 px-3 py-1.5 text-xs font-medium text-white/55 transition-all duration-150 hover:border-white/15 hover:bg-ink-950 active:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-1"
               title="Quick product view"
             >
               <Eye className="h-3.5 w-3.5" />
@@ -261,7 +261,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={handleSubscriptionClick}
-            className="rounded border border-white/10 bg-ink-900 px-3 py-1.5 text-xs font-medium text-white/55 transition-all duration-150 hover:border-white/15 hover:bg-ink-950 active:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60 focus-visible:ring-offset-1"
+            className="rounded border border-white/10 bg-ink-900 px-3 py-1.5 text-xs font-medium text-white/55 transition-all duration-150 hover:border-white/15 hover:bg-ink-950 active:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-1"
             title="Subscription tiers coming soon"
           >
             Subscribe
@@ -270,7 +270,7 @@ export function ProductCard({
           {/* Buy Now */}
             <Link
               href={`/marketplace/${slug}#purchase`}
-              className="inline-flex items-center gap-1.5 rounded border border-white/15 bg-ink-950 px-3 py-1.5 text-xs font-medium text-white transition-all duration-150 hover:bg-ink-900 active:bg-ink-990 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60 focus-visible:ring-offset-1"
+              className="inline-flex items-center gap-1.5 rounded border border-white/15 bg-ink-950 px-3 py-1.5 text-xs font-medium text-white transition-all duration-150 hover:bg-ink-900 active:bg-ink-990 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-1"
             >
               <ShoppingCart className="h-3 w-3" />
               Buy Now

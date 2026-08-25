@@ -71,7 +71,7 @@ export function HeroSection() {
           {/* ── Copy: 7 of 12 ─────────────────────────────── */}
           <div className="lg:col-span-7 lg:pr-8">
             <motion.div {...rise(0)} className="mb-9 flex items-center gap-3">
-              <span className="h-px w-10 bg-cyan-400/60" />
+              <span className="h-px w-10 bg-white/60" />
               <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
                 Enterprise technology
               </span>
@@ -166,14 +166,14 @@ export function HeroSection() {
                       initial={animate ? { opacity: 0, x: 18 } : false}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, ease: EASE, delay: 0.5 + i * 0.08 }}
-                      className={`group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-cyan-400/60 ${
+                      className={`group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-white/60 ${
                         on ? 'bg-white/[0.04]' : 'hover:bg-white/[0.02]'
                       }`}
                     >
                       <span
                         aria-hidden
                         className={`h-8 w-px transition-colors duration-300 ${
-                          on ? 'bg-cyan-400' : 'bg-white/15'
+                          on ? 'bg-white' : 'bg-white/15'
                         }`}
                       />
 
@@ -185,7 +185,7 @@ export function HeroSection() {
                         {/* Progress track */}
                         <span className="mt-2 block h-px w-full bg-white/10">
                           <motion.span
-                            className="block h-px bg-cyan-400"
+                            className="block h-px bg-white"
                             initial={animate ? { width: 0 } : false}
                             animate={{ width: `${row.pct}%` }}
                             transition={{
@@ -204,7 +204,7 @@ export function HeroSection() {
                       <ArrowUpRight
                         className={`h-3.5 w-3.5 transition-all duration-300 ${
                           on
-                            ? 'translate-x-0 text-cyan-400 opacity-100'
+                            ? 'translate-x-0 text-white opacity-100'
                             : '-translate-x-1 text-white/30 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'
                         }`}
                       />
@@ -214,7 +214,7 @@ export function HeroSection() {
               </div>
 
               <div className="flex items-center gap-2 border-t border-white/10 px-5 py-3.5">
-                <TrendingUp className="h-3.5 w-3.5 text-cyan-400" />
+                <TrendingUp className="h-3.5 w-3.5 text-white" />
                 <span className="font-mono text-[11px] text-white/40">
                   4 active engagements
                 </span>

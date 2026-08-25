@@ -144,7 +144,7 @@ export function ProductFilters({
                   className={cn(
                     'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-colors duration-150',
                     isActive
-                      ? 'border-teal-400/50 bg-teal-400/10 text-white'
+                      ? 'border-white/50 bg-white/10 text-white'
                       : 'border-white/10 bg-ink-900 text-white/55 hover:bg-ink-950 hover:text-white'
                   )}
                 >
@@ -183,7 +183,7 @@ export function ProductFilters({
                 className={cn(
                   'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
                   isActive
-                    ? 'border-teal-400/50 bg-teal-400/10 text-white'
+                    ? 'border-white/50 bg-white/10 text-white'
                     : 'border-white/10 bg-ink-900 text-white/55 hover:bg-ink-950 hover:text-white'
                 )}
               >

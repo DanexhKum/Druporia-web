@@ -63,7 +63,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
             Back to insights
           </Link>
           <AnimateIn className="mt-10 max-w-4xl">
-            <span className="chip border-teal-400/30/30 bg-white/10/10 text-white/70">
+            <span className="chip border-white/30/30 bg-white/10/10 text-white/70">
               {post.category}
             </span>
             <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">

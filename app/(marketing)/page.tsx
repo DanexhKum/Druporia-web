@@ -109,7 +109,7 @@ export default async function HomePage() {
         <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
           <AnimateIn>
             <p className="chip mb-5">Why Druporia</p>
-            <h2 className="heading-dark">Why partner with Druporia?</h2>
+            <h2 className="heading-dark title-fill">Why partner with Druporia?</h2>
             <p className="body-dark mt-6 text-lg">
               End-to-end eCommerce technology for B2B and B2C — from plugins to
               automation, with measurable outcomes.
@@ -119,8 +119,8 @@ export default async function HomePage() {
             {['Scalable Architecture', 'Enterprise Security', 'AI-Driven Innovation', 'Measurable ROI'].map(
               (benefit, i) => (
                 <AnimateIn key={benefit} delay={i * 0.08}>
-                  <div className="sweep-host flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm transition-colors duration-500 hover:border-teal-400/30 hover:bg-white/[0.06]">
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-teal-300" />
+                  <div className="sweep-host flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm transition-colors duration-500 hover:border-white/30 hover:bg-white/[0.06]">
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-white/80" />
                     <span className="font-medium text-white/80">{benefit}</span>
                   </div>
                 </AnimateIn>
@@ -134,7 +134,7 @@ export default async function HomePage() {
         <div className="container-page">
           <AnimateIn className="text-center max-w-2xl mx-auto mb-16">
             <p className="chip">01 · Our expertise</p>
-            <h2 className="heading-dark mt-5">
+            <h2 className="heading-dark title-fill mt-5">
               Technology services for modern commerce
             </h2>
           </AnimateIn>
@@ -158,7 +158,7 @@ export default async function HomePage() {
           <div className="container-page">
             <AnimateIn className="mx-auto mb-12 max-w-2xl text-center">
               <p className="chip">FAQ</p>
-              <h2 className="heading-dark mt-5">Frequently asked questions</h2>
+              <h2 className="heading-dark title-fill mt-5">Frequently asked questions</h2>
             </AnimateIn>
 
             <AnimateIn>

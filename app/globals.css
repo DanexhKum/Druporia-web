@@ -4,12 +4,17 @@
 
 /* ============================================================
    Global Base Styles
-   Brand navy #1e3a5f (navy-800), warm gold #c9a55a (gold-500),
-   light blue-grey surfaces, Plus Jakarta Sans.
+   TWO SYSTEMS LIVE HERE.
 
-   Gold is an ACCENT. On light surfaces use gold-700 for text
-   (gold-500 is ~2:1 on white — decorative only); gold-400/500
-   are for text on navy-800 and darker.
+   DARK (marketing) — monochrome. #0A0A0A ground, #121212 cards,
+   border-white/10, Sora display. No chromatic accent: emphasis is
+   white at varying alpha, weight, and scale.
+
+   LIGHT (admin) — navy #1e3a5f + gold #c9a55a, Plus Jakarta Sans.
+   Untouched by the marketing work; /admin depends on it. The
+   gold-* and navy-* rules below belong to this system only. On
+   light surfaces use gold-700 for text — gold-500 is ~2:1 on
+   white and is decorative only.
    ============================================================ */
 
 @layer base {
@@ -179,11 +184,11 @@
 
   /* ── Section eyebrow (600 uppercase, per the type scale) ── */
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-700;
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-white/50;
   }
 
   .eyebrow-on-navy {
-    @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-400;
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-white/60;
   }
 
   /* ── Section heading pair ── */
@@ -205,7 +210,7 @@
   .nav-link::after {
     content: '';
     @apply absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0
-           rounded-full bg-gold-500 transition-transform duration-300;
+           rounded-full bg-white transition-transform duration-300;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -276,7 +281,7 @@
   }
 
   .card-dark-hover:hover {
-    @apply -translate-y-1.5 border-teal-400/40 bg-ink-850/80 shadow-glow-sm;
+    @apply -translate-y-1.5 border-white/25 bg-ink-850 shadow-glow-sm;
   }
 
   /* Glowing border sweep — a light bar travelling across the top
@@ -289,7 +294,7 @@
     content: '';
     @apply pointer-events-none absolute left-0 top-0 h-px w-1/2 opacity-0
            transition-opacity duration-300;
-    background: linear-gradient(90deg, transparent, rgba(34,211,238,0.9), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
   }
 
   .sweep-host:hover::before {
@@ -300,6 +305,8 @@
   /* Display type — BOLD, high contrast */
   .display {
     @apply font-display font-bold tracking-tight text-white;
+    /* Sharper optical weight at display sizes */
+    letter-spacing: -0.032em;
     font-size: clamp(2.25rem, 4.8vw, 3.9rem);
     line-height: 1.05;
     letter-spacing: -0.028em;
@@ -334,7 +341,7 @@
   }
 
   .chip-accent {
-    @apply border-teal-400/25 bg-teal-400/10 text-teal-300;
+    @apply border-white/25 bg-white/[0.07] text-white/80;
   }
 
   /* Sticky blurred header */
@@ -347,7 +354,7 @@
     @apply mono-label rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2
            text-white/60 transition-all duration-200
            hover:border-white/25 hover:bg-white/[0.07] hover:text-white
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
   }
 
   .nav-chip[data-active='true'] {
@@ -359,7 +366,7 @@
     @apply mono-label inline-flex items-center justify-center gap-2 rounded-xl border
            px-6 py-3.5 transition-all duration-300
            focus-visible:outline-none focus-visible:ring-2
-           focus-visible:ring-teal-400/60 focus-visible:ring-offset-2
+           focus-visible:ring-white/40 focus-visible:ring-offset-2
            focus-visible:ring-offset-ink-950
            disabled:pointer-events-none disabled:opacity-50;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -367,7 +374,7 @@
 
   .btn-dark-primary {
     @apply btn-dark border-white/15 bg-white/[0.06] text-white shadow-cta backdrop-blur-sm
-           hover:scale-[1.03] hover:border-teal-400/50 hover:bg-white/[0.10]
+           hover:scale-[1.03] hover:border-white/30 hover:bg-white/[0.10]
            active:scale-100;
   }
 
@@ -386,11 +393,11 @@
     @apply inline-flex items-center gap-2 rounded-full border border-white/10
            bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/60
            backdrop-blur-sm transition-all duration-300
-           hover:border-teal-400/40 hover:bg-white/[0.08] hover:text-white;
+           hover:border-white/30 hover:bg-white/[0.08] hover:text-white;
   }
 
   .rule-teal {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-teal-400/25 to-transparent;
+    @apply h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent;
   }
 
   /* ── Custom cursor ─────────────────────────────────────────
@@ -423,7 +430,7 @@
      texture ON the content instead of the surface behind it. */
   .grain::after {
     content: '';
-    @apply pointer-events-none fixed inset-0 z-[1] opacity-[0.045];
+    @apply pointer-events-none fixed inset-0 z-[1] opacity-[0.06];
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
@@ -433,10 +440,23 @@
     @apply pointer-events-none absolute inset-x-0 top-0 -z-10 h-[38rem];
     background: radial-gradient(
       70% 100% at 50% 0%,
-      rgba(0, 240, 255, 0.07) 0%,
-      rgba(99, 102, 241, 0.05) 34%,
+      rgba(255, 255, 255, 0.055) 0%,
+      rgba(255, 255, 255, 0.02) 36%,
       transparent 72%
     );
+  }
+
+  /* ── Multi-tone heading fill ────────────────────────────────
+     White through slate, top-to-bottom. background-clip:text needs
+     an explicit transparent fill, and a solid `color` fallback
+     first so the text is never invisible if clipping is
+     unsupported. */
+  .title-fill {
+    color: #fafafa;
+    background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 45%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   /* Display face — Space Grotesk, for headlines only */

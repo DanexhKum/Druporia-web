@@ -86,7 +86,7 @@ export function CustomCursor() {
       {/* Ring — springs behind the pointer, grows over magnets */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] rounded-full border border-cyan-400/70 mix-blend-difference"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] rounded-full border border-white/70 mix-blend-difference"
         style={{ x: ringX, y: ringY, translateX: '-50%', translateY: '-50%' }}
         animate={{
           width: hovering ? 62 : 30,
@@ -100,7 +100,7 @@ export function CustomCursor() {
       {/* Dot — tracks exactly, hides while over a magnet */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-1.5 w-1.5 rounded-full bg-cyan-400"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-1.5 w-1.5 rounded-full bg-white"
         style={{ x, y, translateX: '-50%', translateY: '-50%' }}
         animate={{ opacity: hovering ? 0 : 1 }}
         transition={{ duration: 0.15 }}

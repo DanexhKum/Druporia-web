@@ -232,7 +232,7 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
       <div className="bg-ink-950 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.22),transparent_34rem)] opacity-80"></div>
         <div className="container-page py-16 relative z-10">
-          <p className="text-xs font-bold uppercase tracking-widest text-teal-300 mb-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-white/80 mb-2">
             Druporia Marketplace
           </p>
           <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">

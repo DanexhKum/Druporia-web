@@ -111,7 +111,7 @@ export function TabbedShowcase() {
       <div className="container-page">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <p className="chip">02 · Capabilities</p>
-          <h2 className="heading-dark mt-5">What we build, in detail</h2>
+          <h2 className="heading-dark title-fill mt-5">What we build, in detail</h2>
         </div>
 
         {/* ── Tab list ─────────────────────────────────────── */}
@@ -136,13 +136,13 @@ export function TabbedShowcase() {
                 aria-controls={`panel-${t.id}`}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setActive(i)}
-                className="relative rounded-xl px-4 py-2.5 font-mono text-[13px] tracking-tight transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
+                className="relative rounded-xl px-4 py-2.5 font-mono text-[13px] tracking-tight transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               >
                 {selected && (
                   <motion.span
                     layoutId="tab-pill"
                     aria-hidden
-                    className="absolute inset-0 rounded-xl border border-cyan-400/40 bg-cyan-400/10"
+                    className="absolute inset-0 rounded-xl border border-white/40 bg-white/10"
                     transition={
                       reduceMotion
                         ? { duration: 0 }
@@ -180,7 +180,7 @@ export function TabbedShowcase() {
               {/* Crisp corner wash, not a blurred sphere */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,rgba(99,102,241,0.10),transparent_65%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,rgba(255,255,255,0.10),transparent_65%)]"
               />
 
               <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
@@ -200,7 +200,7 @@ export function TabbedShowcase() {
                       transition={{ duration: 0.4, ease, delay: 0.08 + i * 0.08 }}
                       className="flex items-start gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-4"
                     >
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-white/80" />
                       <span className="text-sm text-white/70">{point}</span>
                     </motion.li>
                   ))}

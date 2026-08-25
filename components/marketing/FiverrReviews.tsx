@@ -71,7 +71,7 @@ export async function FiverrReviews() {
                         className="h-11 w-11 rounded-full border border-white/10 object-cover"
                       />
                     ) : (
-                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-electric-500/30 to-teal-400/20 text-sm font-bold text-white">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-white/30 to-white/20 text-sm font-bold text-white">
                         {review.clientName.charAt(0)}
                       </div>
                     )}

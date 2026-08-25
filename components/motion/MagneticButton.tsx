@@ -70,11 +70,11 @@ export function MagneticButton({
   }
 
   const base =
-    'group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-7 py-3.5 font-mono text-[13px] tracking-tight transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950'
+    'group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-7 py-3.5 font-mono text-[13px] tracking-tight transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950'
 
   const skin =
     variant === 'primary'
-      ? 'border border-cyan-400/30 bg-cyan-400/10 text-white shadow-cta hover:border-cyan-400/60 hover:bg-cyan-400/15'
+      ? 'border border-white/30 bg-white/10 text-white shadow-cta hover:border-white/60 hover:bg-white/15'
       : 'border border-white/10 bg-white/[0.04] text-white/75 backdrop-blur-md hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
 
   const inner = (
@@ -90,7 +90,7 @@ export function MagneticButton({
       {/* Glowing border sweep */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-6 -bottom-px h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-x-6 -bottom-px h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
 
       <span className="relative z-10 inline-flex items-center gap-2">

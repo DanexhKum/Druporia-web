@@ -89,7 +89,7 @@ function Stat({ stat, active }: { stat: TrustStat; active: boolean }) {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-teal-400/25 bg-teal-400/10 text-teal-300">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/80">
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0">

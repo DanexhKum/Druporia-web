@@ -83,7 +83,7 @@ export function ContactForm() {
               id="name"
               name="name"
               required
-              className="mt-1 block w-full rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-teal-400/60 focus:bg-ink-900 focus:ring-teal-400/40"
+              className="mt-1 block w-full rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-white/60 focus:bg-ink-900 focus:ring-white/40"
               placeholder="John Doe"
             />
           </div>
@@ -96,7 +96,7 @@ export function ContactForm() {
               id="email"
               name="email"
               required
-              className="mt-1 block w-full rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-teal-400/60 focus:bg-ink-900 focus:ring-teal-400/40"
+              className="mt-1 block w-full rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-white/60 focus:bg-ink-900 focus:ring-white/40"
               placeholder="john@example.com"
             />
           </div>
@@ -109,7 +109,7 @@ export function ContactForm() {
           <select
             id="subject"
             name="subject"
-            className="mt-1 block w-full rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-teal-400/60 focus:bg-ink-900 focus:ring-teal-400/40"
+            className="mt-1 block w-full rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-white/60 focus:bg-ink-900 focus:ring-white/40"
           >
             <option value="Project Inquiry">Project Inquiry</option>
             <option value="Product Support">Product Support</option>
@@ -127,7 +127,7 @@ export function ContactForm() {
             name="message"
             rows={6}
             required
-            className="mt-1 block w-full resize-y rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-teal-400/60 focus:bg-ink-900 focus:ring-teal-400/40"
+            className="mt-1 block w-full resize-y rounded-lg border border-white/15 bg-ink-950 px-4 py-3 text-sm transition-colors focus:border-white/60 focus:bg-ink-900 focus:ring-white/40"
             placeholder="How can we help you?"
           />
         </div>

@@ -66,7 +66,7 @@ export function ProcessSection() {
                 <div className="flex flex-col items-start">
                   <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/[0.07] bg-ink-900 shadow-card-dark">
                     <Icon className="h-6 w-6 text-white" />
-                    <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-teal-400 text-[11px] font-extrabold tabular-nums text-ink-950">
+                    <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-[11px] font-extrabold tabular-nums text-ink-950">
                       {index + 1}
                     </span>
                   </div>

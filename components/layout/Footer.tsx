@@ -36,11 +36,11 @@ export function Footer() {
             </p>
             <div className="mt-6 space-y-2 text-sm text-white/55">
               <p className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-teal-300 shrink-0" />
+                <Mail className="h-4 w-4 text-white/80 shrink-0" />
                 dhanesh.kum15@gmail.com
               </p>
               <p className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-teal-300 shrink-0" />
+                <MapPin className="h-4 w-4 text-white/80 shrink-0" />
                 Remote-first · Worldwide
               </p>
             </div>

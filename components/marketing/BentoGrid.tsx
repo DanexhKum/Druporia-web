@@ -129,11 +129,11 @@ export function BentoGrid({ items }: { items: BentoItem[] }) {
             {/* Gradient fill that reveals on hover */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-electric-500/[0.14] via-teal-400/[0.05] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.07] via-white/[0.05] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             />
 
             <div className={`relative ${isWide ? "lg:flex lg:items-center lg:gap-7" : ""}`}>
-              <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-teal-300 transition-all duration-500 group-hover:border-teal-400/40 group-hover:bg-teal-400/15 group-hover:text-teal-200">
+              <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white/80 transition-all duration-500 group-hover:border-white/40 group-hover:bg-white/15 group-hover:text-white">
                 <Icon className="h-5 w-5" />
               </span>
 

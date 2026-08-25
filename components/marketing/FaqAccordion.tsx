@@ -30,13 +30,13 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
           <summary
             className="flex w-full cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left
                        transition-colors hover:bg-ink-950
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-400/60"
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/60"
           >
             <h3 className="text-base font-bold tracking-tight text-white">
               {item.question}
             </h3>
             <ChevronDown
-              className="h-5 w-5 shrink-0 text-white/45 transition-transform duration-300 group-open:rotate-180 group-open:text-teal-400"
+              className="h-5 w-5 shrink-0 text-white/45 transition-transform duration-300 group-open:rotate-180 group-open:text-white"
               aria-hidden
             />
           </summary>
