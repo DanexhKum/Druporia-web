@@ -4,8 +4,9 @@
 // ============================================================
 
 import type { Metadata } from 'next'
-import { Mail, MessageSquare, Building } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
+import { SupportTerminal } from '@/components/contact/SupportTerminal'
 import { TawkWidget } from '@/components/chat/TawkWidget'
 
 export const metadata: Metadata = {
@@ -41,73 +42,54 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="bg-ink-950 min-h-screen">
+    <div className="relative overflow-hidden bg-ink-950">
       <TawkWidget />
-      {/* ── Page Header ─────────────────────────────────────── */}
-      <div className="bg-ink-950 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.22),transparent_34rem)] opacity-80"></div>
-        <div className="container-page py-20 relative z-10 text-center max-w-3xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-widest text-white/80 mb-4">
-            Contact Druporia
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Let's build something great together.
-          </h1>
-          <p className="mt-6 text-lg text-white/60">
-            Have a project in mind or a question about our products? Fill out the form below and our team will get back to you within 24 hours.
-          </p>
+      <div aria-hidden className="wash-top" />
+      <div aria-hidden className="blueprint-field" />
+
+      <div className="container-page relative z-10 py-24 sm:py-32">
+        {/* ── Header ─────────────────────────────────────── */}
+        <div className="flex items-center gap-3">
+          <span className="h-px w-10 bg-white/40" />
+          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+            Contact
+          </span>
         </div>
-      </div>
 
-      {/* ── Main Content ────────────────────────────────────── */}
-      <div className="container-page py-24 sm:py-32">
-        <div className="grid gap-12 lg:grid-cols-3 lg:gap-8 max-w-6xl mx-auto">
-          
-          {/* Contact Info Sidebar */}
-          <div className="space-y-8 lg:col-span-1">
-            <div>
-              <h3 className="text-xl font-bold text-white">Reach Out Directly</h3>
-              <p className="mt-2 text-sm text-white/55">
-                We're always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+        <h1 className="mt-6 max-w-2xl font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+          <span className="title-fill">Tell us what is</span>
+          <br />
+          <span className="text-white/35">costing you time.</span>
+        </h1>
+
+        <p className="mt-6 max-w-lg text-base leading-relaxed text-white/55">
+          You get a written scope, a fixed price, and a timeline — before
+          anyone writes a line of code.
+        </p>
+
+        {/* ── Asymmetrical split: 5 / 7 ─────────────────── */}
+        <div className="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-5">
+            <SupportTerminal />
+
+            <div className="mt-8 space-y-3 border-t border-white/10 pt-8">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
+                Direct
               </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] text-white/80">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Email Us</p>
-                  <p className="text-sm text-white/55">dhanesh.kum15@gmail.com</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] text-white/80">
-                  <MessageSquare className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Support</p>
-                  <p className="text-sm text-white/55">support@druporia.com</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] text-white/80">
-                  <Building className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">HQ</p>
-                  <p className="text-sm text-white/55">Global Remote Team</p>
-                </div>
-              </div>
+              <a
+                href="mailto:dhanesh.kum15@gmail.com"
+                className="flex items-center gap-2.5 text-sm text-white/60 transition-colors hover:text-white"
+              >
+                <Mail className="h-3.5 w-3.5 shrink-0" />
+                dhanesh.kum15@gmail.com
+              </a>
+              <p className="text-sm text-white/35">Remote-first · Worldwide</p>
             </div>
           </div>
 
-          {/* Contact form */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-7">
             <ContactForm />
           </div>
-
         </div>
       </div>
     </div>

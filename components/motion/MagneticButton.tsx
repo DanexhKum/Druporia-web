@@ -35,6 +35,11 @@ interface MagneticButtonProps {
   /** How far the element leans, in px, at the edge of its box. */
   strength?: number
   ariaLabel?: string
+  /** Native button type. Defaults to "button" so a stray instance
+   *  inside a form cannot submit it by accident; pass "submit"
+   *  deliberately where the button IS the form's action. */
+  type?: 'button' | 'submit'
+  disabled?: boolean
 }
 
 export function MagneticButton({
@@ -45,6 +50,8 @@ export function MagneticButton({
   className,
   strength = 14,
   ariaLabel,
+  type = 'button',
+  disabled,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
@@ -115,8 +122,9 @@ export function MagneticButton({
         </Link>
       ) : (
         <button
-          type="button"
+          type={type}
           onClick={onClick}
+          disabled={disabled}
           aria-label={ariaLabel}
           className={cn(base, skin, className)}
         >

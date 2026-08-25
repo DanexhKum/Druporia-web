@@ -8,6 +8,8 @@ import { prisma } from '@/lib/prisma'
 import { ProductCard } from '@/components/marketplace/ProductCard'
 import { ProductFilters } from '@/components/marketplace/ProductFilters'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { CommandPalette } from '@/components/marketplace/CommandPalette'
+import { getSearchableProducts } from '@/lib/site-data'
 import type { Metadata } from 'next'
 import { ProductStatus, type ProductCategory } from '@prisma/client'
 import { PackageSearch } from 'lucide-react'
@@ -206,6 +208,10 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
         }
       : {}),
   }
+  // Separate query from the filtered listing on purpose — the
+  // palette must reach every published product, not just the page.
+  const searchable = await getSearchableProducts()
+
   const [totalCount, appCount, wooCount, extCount, filteredCount] = await Promise.all([
     prisma.product.count({ where: countWhere }),
     prisma.product.count({ where: { ...countWhere, category: 'APP' } }),
@@ -230,56 +236,52 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
     <div className="bg-ink-900">
       {/* ── Page header ──────────────────────────────────── */}
       <div className="bg-ink-950 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.22),transparent_34rem)] opacity-80"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.05),transparent_34rem)] opacity-80"></div>
         <div className="container-page py-16 relative z-10">
-          <p className="text-xs font-bold uppercase tracking-widest text-white/80 mb-2">
-            Druporia Marketplace
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Premium Digital Products
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 bg-white/40" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+              Marketplace
+            </span>
+          </div>
+          <h1 className="mt-6 font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+            <span className="title-fill">Production-ready</span>
+            <br />
+            <span className="text-white/35">digital products.</span>
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-white/60">
-            Browse our catalog of high-quality plugins, extensions, and digital assets designed to scale your business. Secure checkout and instant delivery.
+          <p className="mt-6 max-w-lg text-base leading-relaxed text-white/55">
+            Plugins, extensions, and apps built for real commerce operations.
+            Every listing ships with documentation and version history.
           </p>
         </div>
       </div>
 
       {/* ── Content ──────────────────────────────────────── */}
-      <div className="container-page py-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
-          {/* ── Sidebar filters ─────────────────────────── */}
-          <aside className="w-full lg:w-52 lg:shrink-0">
-            <ProductFilters
-              activeCategory={category ?? 'all'}
-              counts={categoryCounts}
-              query={query}
-              price={price}
-              sort={sort}
-            />
-          </aside>
-
-          {/* ── Product grid ──────────────────────────────── */}
-          <div className="flex-1 min-w-0">
-            {/* Result count header */}
-            <div className="mb-5 flex items-center justify-between">
-              <p className="text-sm text-white/55">
-                {totalCount > 0 ? (
-                  <>
-                    Showing{' '}
-                    <span className="font-medium text-white">{filteredCount}</span>{' '}
-                    product
-                    {filteredCount !== 1 ? 's' : ''}
-                  </>
-                ) : (
-                  'No products yet'
-                )}
-              </p>
-            </div>
-
-            <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid category={category} query={query} price={price} sort={sort} />
-            </Suspense>
+      <div className="container-page py-10 sm:py-14">
+        <div className="flex flex-col gap-5">
+          <div className="max-w-md">
+            <CommandPalette products={searchable} initialQuery={query} />
           </div>
+
+          <ProductFilters
+            activeCategory={category ?? 'all'}
+            counts={categoryCounts}
+            query={query}
+            price={price}
+            sort={sort}
+          />
+        </div>
+
+        <p className="mt-8 font-mono text-[11px] text-white/35">
+          {totalCount === 0
+            ? 'No products published yet'
+            : `${filteredCount} product${filteredCount !== 1 ? 's' : ''}${query ? ` matching “${query}”` : ''}`}
+        </p>
+
+        <div className="mt-5">
+          <Suspense fallback={<ProductGridSkeleton />}>
+            <ProductGrid category={category} query={query} price={price} sort={sort} />
+          </Suspense>
         </div>
       </div>
     </div>

@@ -76,6 +76,18 @@ export async function getTrustStats() {
   }
 }
 
+// Lightweight catalogue for the ⌘K palette. Deliberately a
+// separate query from the filtered listing: search should reach
+// every published product, not just the visible page.
+export async function getSearchableProducts() {
+  const rows = await prisma.product.findMany({
+    where: { status: ProductStatus.PUBLISHED },
+    orderBy: [{ isFeatured: 'desc' }, { title: 'asc' }],
+    select: { id: true, title: true, slug: true, category: true, price: true },
+  })
+  return rows.map((r) => ({ ...r, price: Number(r.price) }))
+}
+
 export async function getProductBySlug(
   slug: string,
   options: { includeUnpublished?: boolean } = {}

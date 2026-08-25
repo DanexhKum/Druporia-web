@@ -1,36 +1,44 @@
-// ============================================================
-// components/marketplace/ProductFilters.tsx
-// Sidebar category filters — client component for URL params.
-// ============================================================
-
 'use client'
 
+// ============================================================
+// components/marketplace/ProductFilters.tsx
+// Glassmorphic filter bar.
+//
+// The active pill is ONE element moved between tabs with Framer
+// Motion's layoutId, so it slides rather than cross-fading — one
+// element travelling reads as one control.
+//
+// Filter state lives in the URL, not component state, so a
+// filtered view is shareable, survives refresh, and the back
+// button works. updateParams tests for KEY PRESENCE rather than
+// value, because passing `undefined` means "clear this" and a
+// nullish fallback would silently restore the old value.
+// ============================================================
+
+import { useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useCallback, useState } from 'react'
-import { Search, X } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import type { ProductCategory } from '@prisma/client'
 
 const CATEGORIES = [
-  { key: 'all', label: 'All Products', icon: '🛍️' },
-  { key: 'APP', label: 'Apps', icon: '📱' },
-  { key: 'WOO_PLUGIN', label: 'WooCommerce Plugins', icon: '🛒' },
-  { key: 'CHROME_EXTENSION', label: 'Chrome Extensions', icon: '🧩' },
+  { key: 'all', label: 'All' },
+  { key: 'APP', label: 'Apps' },
+  { key: 'WOO_PLUGIN', label: 'WooCommerce' },
+  { key: 'CHROME_EXTENSION', label: 'Extensions' },
 ]
 
 const PRICE_FILTERS = [
-  { key: 'all', label: 'All prices' },
+  { key: 'all', label: 'Any price' },
   { key: 'free', label: 'Free' },
   { key: 'paid', label: 'Paid' },
   { key: 'under-50', label: 'Under $50' },
-  { key: 'under-100', label: 'Under $100' },
 ]
 
 const SORT_OPTIONS = [
-  { key: 'featured', label: 'Featured first' },
-  { key: 'newest', label: 'Newest first' },
-  { key: 'price-low', label: 'Price low-high' },
-  { key: 'price-high', label: 'Price high-low' },
+  { key: 'featured', label: 'Featured' },
+  { key: 'newest', label: 'Newest' },
+  { key: 'price-low', label: 'Price ↑' },
+  { key: 'price-high', label: 'Price ↓' },
 ]
 
 interface Props {
@@ -50,15 +58,13 @@ export function ProductFilters({
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
-  const [searchValue, setSearchValue] = useState(query ?? '')
+  const reduceMotion = useReducedMotion()
 
   const updateParams = useCallback(
     (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams()
 
-      // Test for key presence, not value: passing `q: undefined` means
-      // "clear this", and `??` would fall straight back to the current
-      // value — which is why the search X button used to do nothing.
+      // Key presence, not value — `undefined` means "clear".
       const pick = (key: string, current: string | undefined) =>
         key in updates ? updates[key] : current
 
@@ -67,150 +73,124 @@ export function ProductFilters({
       const nextPrice = pick('price', price)
       const nextSort = pick('sort', sort)
 
-      if (nextCategory && nextCategory !== 'all') {
-        params.set('category', nextCategory)
-      }
-      if (nextQuery) {
-        params.set('q', nextQuery)
-      }
-      if (nextPrice && nextPrice !== 'all') {
-        params.set('price', nextPrice)
-      }
-      if (nextSort && nextSort !== 'featured') {
-        params.set('sort', nextSort)
-      }
+      if (nextCategory && nextCategory !== 'all') params.set('category', nextCategory)
+      if (nextQuery) params.set('q', nextQuery)
+      if (nextPrice && nextPrice !== 'all') params.set('price', nextPrice)
+      if (nextSort && nextSort !== 'featured') params.set('sort', nextSort)
+
       const qs = params.toString()
-      router.push(qs ? `${pathname}?${qs}` : pathname)
+      router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
     },
     [activeCategory, pathname, price, query, router, sort]
   )
 
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault()
-    updateParams({
-      q: searchValue.trim() || undefined,
-    })
-  }
-
-  function clearSearch() {
-    setSearchValue('')
-    updateParams({
-      q: undefined,
-    })
-  }
+  const pillTransition = reduceMotion
+    ? { duration: 0 }
+    : { type: 'spring' as const, stiffness: 380, damping: 32 }
 
   return (
-    <div className="space-y-6">
-      {/* Search */}
-      <form onSubmit={handleSearch}>
-        <label className="form-label">Search</label>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/45" />
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search products…"
-            className="pl-9 pr-8"
-          />
-          {searchValue && (
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      {/* ── Category tabs ────────────────────────────────── */}
+      <div
+        role="tablist"
+        aria-label="Product category"
+        className="flex flex-wrap items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-1 backdrop-blur-md"
+      >
+        {CATEGORIES.map((cat) => {
+          const on = activeCategory === cat.key
+          const count = counts[cat.key] ?? 0
+          return (
             <button
+              key={cat.key}
+              role="tab"
+              aria-selected={on}
               type="button"
-              onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/45 hover:text-white/55"
+              onClick={() => updateParams({ category: cat.key })}
+              className="relative rounded-lg px-3.5 py-2 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
-              <X className="h-3.5 w-3.5" />
+              {on && (
+                <motion.span
+                  layoutId="category-pill"
+                  aria-hidden
+                  className="absolute inset-0 rounded-lg border border-white/15 bg-white/10"
+                  transition={pillTransition}
+                />
+              )}
+              <span
+                className={cn(
+                  'relative z-10 inline-flex items-center gap-2 whitespace-nowrap',
+                  on ? 'text-white' : 'text-white/50 hover:text-white/80'
+                )}
+              >
+                {cat.label}
+                <span className="font-mono text-[10px] tabular-nums text-white/30">
+                  {count}
+                </span>
+              </span>
             </button>
-          )}
-        </div>
-      </form>
-
-      {/* Category filters */}
-      <div>
-        <p className="form-label">Category</p>
-        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat.key
-            const count = counts[cat.key] ?? 0
-            return (
-              <li key={cat.key}>
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateParams({
-                      category: cat.key,
-                    })
-                  }
-                  className={cn(
-                    'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-colors duration-150',
-                    isActive
-                      ? 'border-white/50 bg-white/10 text-white'
-                      : 'border-white/10 bg-ink-900 text-white/55 hover:bg-ink-950 hover:text-white'
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="text-sm">{cat.icon}</span>
-                    {cat.label}
-                  </span>
-                  <span
-                    className={cn(
-                      'rounded-full px-1.5 py-0.5 text-xs',
-                      isActive
-                        ? 'bg-white/20 text-white'
-                        : 'bg-white/[0.04] text-white/55'
-                    )}
-                  >
-                    {count}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+          )
+        })}
       </div>
 
-      {/* Price filters */}
-      <div>
-        <p className="form-label">Price</p>
-        <div className="flex flex-wrap gap-2 lg:flex-col">
+      {/* ── Price + sort ─────────────────────────────────── */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-1 backdrop-blur-md">
           {PRICE_FILTERS.map((option) => {
-            const isActive = price === option.key
+            const on = price === option.key
             return (
               <button
                 key={option.key}
                 type="button"
+                aria-pressed={on}
                 onClick={() => updateParams({ price: option.key })}
-                className={cn(
-                  'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
-                  isActive
-                    ? 'border-white/50 bg-white/10 text-white'
-                    : 'border-white/10 bg-ink-900 text-white/55 hover:bg-ink-950 hover:text-white'
-                )}
+                className="relative rounded-lg px-3 py-1.5 text-xs transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
               >
-                {option.label}
+                {on && (
+                  <motion.span
+                    layoutId="price-pill"
+                    aria-hidden
+                    className="absolute inset-0 rounded-lg border border-white/15 bg-white/10"
+                    transition={pillTransition}
+                  />
+                )}
+                <span
+                  className={cn(
+                    'relative z-10 whitespace-nowrap',
+                    on ? 'text-white' : 'text-white/45 hover:text-white/75'
+                  )}
+                >
+                  {option.label}
+                </span>
               </button>
             )
           })}
         </div>
-      </div>
 
-      {/* Sorting */}
-      <div>
-        <label className="form-label" htmlFor="marketplace-sort">
-          Sort by
+        <label className="sr-only" htmlFor="marketplace-sort">
+          Sort products
         </label>
         <select
           id="marketplace-sort"
           value={sort}
           onChange={(e) => updateParams({ sort: e.target.value })}
-          className="text-sm"
+          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70 backdrop-blur-md focus:border-white/30 focus:outline-none focus:ring-0"
         >
           {SORT_OPTIONS.map((option) => (
-            <option key={option.key} value={option.key}>
+            <option key={option.key} value={option.key} className="bg-ink-900">
               {option.label}
             </option>
           ))}
         </select>
+
+        {query && (
+          <button
+            type="button"
+            onClick={() => updateParams({ q: undefined })}
+            className="rounded-xl border border-white/10 px-3 py-2 font-mono text-[11px] text-white/50 transition-colors hover:border-white/25 hover:text-white"
+          >
+            Clear “{query}” ✕
+          </button>
+        )}
       </div>
     </div>
   )
