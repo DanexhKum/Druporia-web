@@ -15,6 +15,9 @@ import { BentoGrid, type BentoItem } from '@/components/marketing/BentoGrid'
 import { LogoMarquee } from '@/components/motion/LogoMarquee'
 import { TabbedShowcase } from '@/components/marketing/TabbedShowcase'
 import { ParticleCTA } from '@/components/marketing/ParticleCTA'
+import { ApiPlayground } from '@/components/marketing/ApiPlayground'
+import { LiveMetricsBento } from '@/components/marketing/LiveMetricsBento'
+import { NodeTopology } from '@/components/marketing/NodeTopology'
 import { TawkWidget } from '@/components/chat/TawkWidget'
 import {
   getHomepageServices,
@@ -146,6 +149,48 @@ export default async function HomePage() {
       <TabbedShowcase />
 
       <ScrollBuildSection />
+
+      {/* ── Platform ─────────────────────────────────────── */}
+      <section id="platform" className="dark-shell py-24 sm:py-32">
+        <div className="container-page">
+          <AnimateIn className="mb-14 max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-white/40" />
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+                04 · Platform
+              </span>
+            </div>
+            <h2 className="heading-dark title-fill mt-6">
+              Engineered like a product, not a project
+            </h2>
+            <p className="body-dark mt-4">
+              The same tooling we ship to clients — typed APIs, measured
+              delivery, and deployments you can reverse in one click.
+            </p>
+          </AnimateIn>
+
+          <div className="grid gap-4">
+            <AnimateIn>
+              <ApiPlayground />
+            </AnimateIn>
+
+            <AnimateIn delay={0.08}>
+              <LiveMetricsBento />
+            </AnimateIn>
+
+            <AnimateIn delay={0.16}>
+              <div className="rounded-xl border border-white/10 bg-black/60 p-6 backdrop-blur-md sm:p-8">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
+                  Delivery topology
+                </p>
+                <div className="mt-8">
+                  <NodeTopology />
+                </div>
+              </div>
+            </AnimateIn>
+          </div>
+        </div>
+      </section>
 
       <div id="reviews">
         <FiverrReviews />
