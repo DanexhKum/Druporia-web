@@ -420,25 +420,6 @@
     @apply h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent;
   }
 
-  /* ── Custom cursor ─────────────────────────────────────────
-     Only hides the native cursor once CustomCursor has actually
-     mounted and added this class. If that component bails (touch
-     device, reduced motion, or an error) the real cursor stays. */
-  .has-custom-cursor,
-  .has-custom-cursor * {
-    cursor: none !important;
-  }
-
-  /* Native cursor always returns for text entry and disabled
-     controls, where losing the caret would be genuinely harmful. */
-  .has-custom-cursor input,
-  .has-custom-cursor textarea,
-  .has-custom-cursor select,
-  .has-custom-cursor [contenteditable='true'],
-  .has-custom-cursor :disabled {
-    cursor: auto !important;
-  }
-
   /* ── Film grain ────────────────────────────────────────────
      Replaces the blurred-sphere ambience, which reads as generic.
      feTurbulence baked to a data URI: one tiny inline asset, no

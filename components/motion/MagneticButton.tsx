@@ -8,10 +8,6 @@
 // The pull is capped and eased: the element moves a fraction of
 // the pointer's offset from its centre, so it leans toward the
 // cursor rather than chasing it. Springs return it home on exit.
-//
-// data-magnetic is what CustomCursor looks for — the ring locks
-// to this element's centre while the element leans out to meet
-// it. Both halves are needed for the effect to read.
 // ============================================================
 
 import { useRef, type ReactNode } from 'react'
@@ -109,7 +105,6 @@ export function MagneticButton({
   return (
     <motion.div
       ref={ref}
-      data-magnetic
       style={{ x, y }}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}

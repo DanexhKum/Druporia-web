@@ -6,7 +6,6 @@
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { SmoothScroll } from '@/components/motion/SmoothScroll'
-import { CustomCursor } from '@/components/motion/CustomCursor'
 
 export default function MarketingLayout({
   children,
@@ -16,7 +15,6 @@ export default function MarketingLayout({
   return (
     <SmoothScroll>
       <div className="grain flex min-h-dvh flex-col bg-ink-950 text-white">
-        <CustomCursor />
         <Navbar />
         <main className="flex-1 overflow-x-hidden">{children}</main>
         <Footer />
