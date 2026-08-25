@@ -86,26 +86,41 @@ export function Navbar() {
       <div className="container-page flex h-[72px] items-center justify-between gap-4">
         <Logo href="/" imageClassName="h-9 w-auto brightness-0 invert sm:h-10" />
 
-        {/* Desktop nav — plain links with an underline indicator */}
-        <nav className="hidden items-center gap-8 lg:flex">
+        {/* Desktop nav — one pill slides between active tabs.
+            Section anchors like /#services are never marked active:
+            their pathname is "/", so treating them as pages would
+            light up two tabs at once on the homepage. */}
+        <nav className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => {
-            const active = pathname === link.href
+            const isPage = !link.href.includes('#')
+            const active = isPage && pathname === link.href
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 aria-current={active ? 'page' : undefined}
-                className="group relative py-1 text-sm text-white/60 transition-colors duration-300 hover:text-white"
+                className="relative rounded-lg px-3.5 py-2 text-sm transition-colors duration-300"
               >
-                {link.label}
+                {active && (
+                  <motion.span
+                    layoutId="nav-active-tab"
+                    aria-hidden
+                    className="absolute inset-0 rounded-lg border border-white/15 bg-white/[0.07]"
+                    transition={
+                      reduceMotion
+                        ? { duration: 0 }
+                        : { type: 'spring', stiffness: 380, damping: 32 }
+                    }
+                  />
+                )}
                 <span
-                  aria-hidden
                   className={cn(
-                    'absolute -bottom-0.5 left-0 h-px w-full origin-left bg-white transition-transform duration-500',
-                    active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    'relative z-10 whitespace-nowrap',
+                    active ? 'text-white' : 'text-zinc-400 hover:text-white'
                   )}
-                  style={{ transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)' }}
-                />
+                >
+                  {link.label}
+                </span>
               </Link>
             )
           })}
@@ -116,7 +131,7 @@ export function Navbar() {
             <>
               <Link
                 href="/dashboard"
-                className="hidden rounded-lg border border-white/10 px-4 py-2 text-sm text-white/70 transition-colors hover:border-white/25 hover:text-white sm:inline-flex"
+                className="hidden rounded-lg border border-white/10 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-white/25 hover:text-white sm:inline-flex"
               >
                 Dashboard
               </Link>
@@ -125,7 +140,7 @@ export function Navbar() {
           ) : (
             <>
               <SignInButton mode="modal">
-                <button className="hidden px-3 py-2 text-sm text-white/60 transition-colors hover:text-white sm:inline-flex">
+                <button className="hidden px-3 py-2 text-sm text-zinc-400 transition-colors hover:text-white sm:inline-flex">
                   Sign in
                 </button>
               </SignInButton>
@@ -144,7 +159,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-drawer"
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="rounded-lg border border-white/10 p-2.5 text-white/70 transition-colors hover:border-white/25 hover:text-white lg:hidden"
+            className="rounded-lg border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-white/25 hover:text-white lg:hidden"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -183,7 +198,7 @@ export function Navbar() {
                   >
                     <Link
                       href={link.href}
-                      className="flex items-center justify-between border-b border-white/[0.06] py-4 font-display text-2xl font-semibold text-white/80 transition-colors hover:text-white"
+                      className="flex items-center justify-between border-b border-white/[0.06] py-4 font-display text-2xl font-semibold text-zinc-400 transition-colors hover:text-white"
                     >
                       {link.label}
                       <ArrowUpRight className="h-4 w-4 text-white/30" />

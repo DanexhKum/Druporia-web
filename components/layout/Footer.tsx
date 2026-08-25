@@ -70,7 +70,7 @@ function LinkColumn({
 }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white">
         {heading}
       </p>
       <ul className="mt-5 space-y-3">
@@ -78,7 +78,7 @@ function LinkColumn({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-white/55 transition-colors duration-300 hover:text-white"
+              className="text-sm text-zinc-400 transition-colors duration-300 hover:text-white"
             >
               {link.label}
             </Link>
@@ -100,13 +100,13 @@ export function Footer() {
         <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5">
             <Logo href="/" imageClassName="h-9 w-auto brightness-0 invert" />
-            <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/55">
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-zinc-400">
               Druporia builds commerce plugins, browser extensions, automation,
               and full-stack products for teams that run their operations on
               software.
             </p>
 
-            <div className="mt-7 space-y-2.5 text-sm text-white/45">
+            <div className="mt-7 space-y-2.5 text-sm text-zinc-400">
               <p className="flex items-center gap-2.5">
                 <Mail className="h-3.5 w-3.5 shrink-0" />
                 <a
@@ -124,10 +124,10 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-4 lg:col-start-9">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white">
               Newsletter
             </p>
-            <p className="mt-4 text-sm text-white/55">
+            <p className="mt-4 text-sm text-zinc-400">
               Occasional notes on commerce engineering. No cadence promises,
               no filler.
             </p>
@@ -155,7 +155,7 @@ export function Footer() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:hidden" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
               </span>
-              <span className="font-mono text-[11px] text-white/60">
+              <span className="font-mono text-[11px] text-zinc-300">
                 All systems operational
               </span>
             </span>
@@ -177,7 +177,7 @@ export function Footer() {
                   {...(external
                     ? { target: '_blank', rel: 'noopener noreferrer' }
                     : {})}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/45 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:text-white"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-zinc-400 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:text-white"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
