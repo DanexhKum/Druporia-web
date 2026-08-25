@@ -621,3 +621,65 @@
     transition: none !important;
   }
 }
+
+/* ============================================================
+   PRINT — legal pages are the only thing anyone prints here,
+   and the dark theme wastes an entire toner cartridge. Flip to
+   black-on-white, drop the chrome, and let the browser's
+   "Save as PDF" produce something readable.
+   ============================================================ */
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  /* Decorative layers carry no information on paper. */
+  .grain::after,
+  .blueprint-field,
+  .wash-top,
+  header,
+  footer,
+  canvas,
+  svg[aria-hidden='true'] {
+    display: none !important;
+  }
+
+  main,
+  article,
+  section,
+  div {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  strong {
+    color: #000000 !important;
+    /* .title-fill clips its text to a gradient; on white that
+       leaves an invisible heading, so undo the clip in print. */
+    -webkit-text-fill-color: #000000 !important;
+    background: none !important;
+  }
+
+  p,
+  li,
+  a {
+    color: #222222 !important;
+  }
+
+  /* Show link targets — a printed URL-less link is dead. */
+  a[href^='http']::after,
+  a[href^='mailto']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #555555;
+  }
+
+  section {
+    break-inside: avoid;
+  }
+}
