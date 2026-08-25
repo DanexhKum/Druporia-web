@@ -119,46 +119,47 @@ export function BentoGrid({ items }: { items: BentoItem[] }) {
               visible: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.6, ease }}
-            className={isWide ? 'lg:col-span-2' : ''}
+            className={`h-full ${isWide ? 'lg:col-span-2' : ''}`}
           >
-            <TiltCard
-              className={`group sweep-host card-dark-hover relative p-7 ${
-                isWide ? 'lg:flex lg:flex-col lg:justify-center' : ''
-              }`}
-            >
-            {/* Gradient fill that reveals on hover */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.07] via-white/[0.05] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            />
+            {/* Uniform internal structure on EVERY card, wide or
+                narrow. Wide cards previously laid icon and text side
+                by side while narrow ones stacked them, so headings
+                and chips landed at different heights across a row.
+                justify-between + mt-auto pins the chips to the
+                bottom edge regardless of the copy above them. */}
+            <TiltCard className="group sweep-host card-dark-hover relative flex h-full flex-col justify-between p-8">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.07] via-white/[0.05] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              />
 
-            <div className={`relative ${isWide ? "lg:flex lg:items-center lg:gap-7" : ""}`}>
-              <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white/80 transition-all duration-500 group-hover:border-white/40 group-hover:bg-white/15 group-hover:text-white">
-                <Icon className="h-5 w-5" />
-              </span>
+              {/* Top block */}
+              <div className="relative">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/80 transition-all duration-500 group-hover:border-white/40 group-hover:bg-white/15 group-hover:text-white">
+                  <Icon className="h-5 w-5" />
+                </span>
 
-              <div className={isWide ? 'lg:min-w-0 lg:flex-1' : ''}>
-              <h3 className={`text-lg font-bold tracking-tight text-white ${isWide ? 'lg:mt-0 mt-6' : 'mt-6'}`}>
-                {item.title}
-              </h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-white/60">
-                {item.description}
-              </p>
+                <h3 className="mt-6 text-lg font-bold leading-snug tracking-tight text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-zinc-400">
+                  {item.description}
+                </p>
+              </div>
 
+              {/* Bottom block — pinned by mt-auto */}
               {item.tags.length > 0 && (
-                <div className="mt-5 flex flex-wrap gap-2">
+                <div className="relative mt-auto flex flex-wrap gap-2 pt-8">
                   {item.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-lg border border-white/[0.07] bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-white/40 transition-colors duration-500 group-hover:border-white/15 group-hover:text-white/60"
+                      className="rounded-lg border border-white/[0.07] bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-zinc-500 transition-colors duration-500 group-hover:border-white/15 group-hover:text-zinc-300"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               )}
-              </div>
-            </div>
             </TiltCard>
           </motion.article>
         )

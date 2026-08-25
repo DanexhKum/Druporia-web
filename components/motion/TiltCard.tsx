@@ -69,7 +69,7 @@ export function TiltCard({
   }
 
   return (
-    <div className="[perspective:1200px]">
+    <div className="h-full [perspective:1200px]">
       <motion.div
         ref={ref}
         onPointerMove={handleMove}

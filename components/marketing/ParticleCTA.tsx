@@ -2,170 +2,96 @@
 
 // ============================================================
 // components/marketing/ParticleCTA.tsx
-// Closing CTA with a canvas particle field.
+// Closing CTA — architectural blueprint grid + mouse spotlight.
 //
-// Canvas, not DOM nodes: ~70 animated elements as divs would
-// thrash layout every frame. One canvas is a single composited
-// layer.
+// The canvas particle constellation that used to live here is
+// gone. It read as generic generated ambience and cost a RAF loop
+// plus O(n²) link math for ~70 particles; a static grid and one
+// composited gradient do more for the page at a fraction of the
+// budget.
 //
-// Guards that matter:
-//   - the RAF loop only runs while the section is on screen
-//     (IntersectionObserver), so it costs nothing when scrolled
-//     past — otherwise it burns battery for the whole session
-//   - prefers-reduced-motion draws ONE static frame and stops
-//   - DPR-aware sizing, re-run on resize, so it stays crisp
-//   - the canvas is aria-hidden and purely decorative
+// The spotlight is a Framer motion value driving a radial
+// gradient, so pointer moves never touch React state — a
+// setState per mousemove would re-render this subtree dozens of
+// times a second.
+//
+// The grid is MASKED by the spotlight rather than painted over,
+// so lines brighten under the cursor instead of a pale disc
+// floating above them. A fainter base grid sits underneath so
+// the section never looks empty away from the pointer.
+//
+// Touch and reduced-motion visitors get the grid at a flat
+// readable opacity with no follow behaviour — there is no
+// pointer to follow and no reason to animate.
 // ============================================================
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { MagneticButton } from '@/components/motion/MagneticButton'
 
-interface Particle {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  r: number
-  a: number
-}
-
-const COUNT = 70
-const LINK_DISTANCE = 130
-
 export function ParticleCTA() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
+  const [interactive, setInteractive] = useState(false)
+
+  const mx = useMotionValue(50)
+  const my = useMotionValue(50)
+  const x = useSpring(mx, { stiffness: 120, damping: 22, mass: 0.6 })
+  const y = useSpring(my, { stiffness: 120, damping: 22, mass: 0.6 })
+
+  // Percentages, so the mask tracks correctly at any width.
+  const spotlight = useMotionTemplate`radial-gradient(38rem circle at ${x}% ${y}%, black 0%, rgba(0,0,0,0.35) 45%, transparent 78%)`
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    const section = sectionRef.current
-    if (!canvas || !section) return
+    const fine = window.matchMedia('(pointer: fine)').matches
+    setInteractive(fine && !reduceMotion)
+  }, [reduceMotion])
 
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    let particles: Particle[] = []
-    let raf = 0
-    let visible = false
-    let w = 0
-    let h = 0
-
-    function size() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const rect = canvas!.getBoundingClientRect()
-      w = rect.width
-      h = rect.height
-      canvas!.width = Math.floor(w * dpr)
-      canvas!.height = Math.floor(h * dpr)
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
-    }
-
-    function seed() {
-      particles = Array.from({ length: COUNT }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.28,
-        vy: (Math.random() - 0.5) * 0.28,
-        r: Math.random() * 1.7 + 0.6,
-        a: Math.random() * 0.45 + 0.2,
-      }))
-    }
-
-    function draw() {
-      ctx!.clearRect(0, 0, w, h)
-
-      // Links first, so dots sit on top of the web
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const d = Math.hypot(dx, dy)
-          if (d < LINK_DISTANCE) {
-            ctx!.strokeStyle = `rgba(255,255,255,${(1 - d / LINK_DISTANCE) * 0.16})`
-            ctx!.lineWidth = 1
-            ctx!.beginPath()
-            ctx!.moveTo(particles[i].x, particles[i].y)
-            ctx!.lineTo(particles[j].x, particles[j].y)
-            ctx!.stroke()
-          }
-        }
-      }
-
-      for (const p of particles) {
-        ctx!.fillStyle = `rgba(255,255,255,${p.a})`
-        ctx!.beginPath()
-        ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx!.fill()
-      }
-    }
-
-    function step() {
-      for (const p of particles) {
-        p.x += p.vx
-        p.y += p.vy
-        // Wrap rather than bounce — bouncing makes the edges read
-        // as walls, which draws attention to the canvas bounds.
-        if (p.x < 0) p.x = w
-        if (p.x > w) p.x = 0
-        if (p.y < 0) p.y = h
-        if (p.y > h) p.y = 0
-      }
-      draw()
-      raf = requestAnimationFrame(step)
-    }
-
-    size()
-    seed()
-
-    if (reduced) {
-      draw() // one static frame, no loop
-      return () => {}
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !visible) {
-          visible = true
-          raf = requestAnimationFrame(step)
-        } else if (!entry.isIntersecting && visible) {
-          visible = false
-          cancelAnimationFrame(raf)
-        }
-      },
-      { threshold: 0.05 }
-    )
-    io.observe(section)
-
-    const onResize = () => {
-      size()
-      seed()
-    }
-    window.addEventListener('resize', onResize)
-
-    return () => {
-      cancelAnimationFrame(raf)
-      io.disconnect()
-      window.removeEventListener('resize', onResize)
-    }
-  }, [])
+  function onMove(e: React.PointerEvent) {
+    if (!interactive || !sectionRef.current) return
+    const r = sectionRef.current.getBoundingClientRect()
+    mx.set(((e.clientX - r.left) / r.width) * 100)
+    my.set(((e.clientY - r.top) / r.height) * 100)
+  }
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-t border-white/[0.07] bg-ink-950"
+      onPointerMove={onMove}
+      className="relative overflow-hidden border-t border-white/10 bg-ink-950"
     >
-      <canvas
-        ref={canvasRef}
+      {/* Faint base grid, always present */}
+      {interactive && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#1f293708_1px,transparent_1px),linear-gradient(to_bottom,#1f293708_1px,transparent_1px)] bg-[size:4rem_4rem]"
+        />
+      )}
+
+      {/* Spotlit grid — masked to follow the pointer */}
+      <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full"
+        style={
+          interactive
+            ? { maskImage: spotlight, WebkitMaskImage: spotlight }
+            : undefined
+        }
+        className={`pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#1f293710_1px,transparent_1px),linear-gradient(to_bottom,#1f293710_1px,transparent_1px)] bg-[size:4rem_4rem] ${
+          interactive ? '' : 'opacity-70'
+        }`}
       />
 
+      {/* Vignette — stops the grid meeting the edges hard */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(60%_100%_at_50%_100%,rgba(255,255,255,0.20),transparent_72%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_50%,transparent_35%,#0A0A0A_88%)]"
       />
 
       <div className="container-page relative z-10 py-24 text-center sm:py-32">
@@ -175,9 +101,7 @@ export function ParticleCTA() {
           <h2 className="display mt-6">
             Ready to build
             <br />
-            <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
-              something serious?
-            </span>
+            <span className="title-fill">something serious?</span>
           </h2>
 
           <p className="body-dark mx-auto mt-6 max-w-lg sm:text-lg">
