@@ -111,8 +111,9 @@ export default async function HomePage() {
         <div aria-hidden className="glow-top" />
         <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
           <AnimateIn>
-            <p className="chip mb-5">Why Druporia</p>
-            <h2 className="heading-dark title-fill">Why partner with Druporia?</h2>
+            <h2 className="heading-dark title-fill mt-0">
+              Why partner with Druporia?
+            </h2>
             <p className="body-dark mt-6 text-lg">
               End-to-end eCommerce technology for B2B and B2C — from plugins to
               automation, with measurable outcomes.
@@ -135,9 +136,8 @@ export default async function HomePage() {
 
       <section id="services" className="dark-shell py-24 sm:py-32">
         <div className="container-page">
-          <AnimateIn className="text-center max-w-2xl mx-auto mb-16">
-            <p className="chip">01 · Our expertise</p>
-            <h2 className="heading-dark title-fill mt-5">
+          <AnimateIn className="mx-auto mb-16 max-w-2xl text-center">
+            <h2 className="heading-dark title-fill mt-0">
               Technology services for modern commerce
             </h2>
           </AnimateIn>
@@ -154,13 +154,7 @@ export default async function HomePage() {
       <section id="platform" className="dark-shell py-24 sm:py-32">
         <div className="container-page">
           <AnimateIn className="mb-14 max-w-2xl">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-10 bg-white/40" />
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
-                04 · Platform
-              </span>
-            </div>
-            <h2 className="heading-dark title-fill mt-6">
+            <h2 className="heading-dark title-fill mt-0">
               Engineered like a product, not a project
             </h2>
             <p className="body-dark mt-4">
@@ -202,8 +196,9 @@ export default async function HomePage() {
         <section className="dark-shell py-24 sm:py-32">
           <div className="container-page">
             <AnimateIn className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="chip">FAQ</p>
-              <h2 className="heading-dark title-fill mt-5">Frequently asked questions</h2>
+              <h2 className="heading-dark title-fill mt-0">
+                Frequently asked questions
+              </h2>
             </AnimateIn>
 
             <AnimateIn>

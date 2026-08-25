@@ -45,17 +45,14 @@ import { Boxes, Database, Server, Workflow, type LucideIcon } from 'lucide-react
 
 const STAGES = [
   {
-    n: '01',
     title: 'Syntax & Code',
     body: 'It starts as source — components, handlers, queries. Reviewed line by line before anything is wired together.',
   },
   {
-    n: '02',
     title: 'Architecture & APIs',
     body: 'Modules resolve into a system: runtimes, API surfaces, and data stores, with the contracts between them made explicit.',
   },
   {
-    n: '03',
     title: 'Assembled Solution',
     body: 'The pieces fold into a running product — deployed, instrumented, and documented for the team that inherits it.',
   },
@@ -403,13 +400,6 @@ export function ScrollBuildSection() {
     >
       <div ref={pinRef} className="relative">
         <div className="container-page py-24 sm:py-32 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-0">
-          <div className="mb-10 flex items-center gap-3 lg:mb-12">
-            <span className="h-px w-10 bg-white/40" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
-              03 · Pipeline
-            </span>
-          </div>
-
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
             {/* ── Progress rail + labels ─────────────────── */}
             <div className="lg:col-span-4">
@@ -427,14 +417,16 @@ export function ScrollBuildSection() {
                   {STAGES.map((s, i) => {
                     const on = i === stage
                     return (
-                      <li key={s.n} className="flex items-start gap-4">
+                      <li key={s.title} className="flex items-start gap-4">
+                        {/* Active marker replaces the old numeral —
+                            the rail still shows which stage you are
+                            in, without numbering the sections. */}
                         <span
-                          className={`mt-1 font-mono text-[11px] tabular-nums transition-colors duration-500 ${
-                            on ? 'text-white' : 'text-white/25'
+                          aria-hidden
+                          className={`mt-2 h-px w-4 shrink-0 transition-colors duration-500 ${
+                            on ? 'bg-white' : 'bg-white/20'
                           }`}
-                        >
-                          {s.n}.
-                        </span>
+                        />
                         <div className="min-w-0">
                           <p
                             className={`font-display text-xl font-bold tracking-tight transition-colors duration-500 ${
@@ -460,7 +452,7 @@ export function ScrollBuildSection() {
               <div aria-hidden className="mt-8 flex gap-1.5 lg:hidden">
                 {STAGES.map((s, i) => (
                   <span
-                    key={s.n}
+                    key={s.title}
                     className={`h-px flex-1 transition-colors duration-500 ${
                       i <= stage ? 'bg-white' : 'bg-white/15'
                     }`}
@@ -686,7 +678,7 @@ export function ScrollBuildSection() {
               </div>
 
               <p className="mt-6 hidden font-mono text-[11px] text-white/35 lg:block">
-                {active.n}. {active.title}
+                {active.title}
               </p>
             </div>
           </div>

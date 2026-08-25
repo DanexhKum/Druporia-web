@@ -110,8 +110,9 @@ export function TabbedShowcase() {
     <section id="capabilities" className="relative bg-ink-950 py-24 sm:py-32">
       <div className="container-page">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="chip">02 · Capabilities</p>
-          <h2 className="heading-dark title-fill mt-5">What we build, in detail</h2>
+          <h2 className="heading-dark title-fill mt-0">
+            What we build, in detail
+          </h2>
         </div>
 
         {/* ── Tab list ─────────────────────────────────────── */}

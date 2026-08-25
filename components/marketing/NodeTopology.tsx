@@ -137,19 +137,16 @@ export function NodeTopology() {
 
       {/* ── Nodes ───────────────────────────────────────── */}
       <ol className="relative grid gap-4 md:grid-cols-3 md:gap-8">
-        {NODES.map((node, i) => {
+        {NODES.map((node) => {
           const Icon = node.icon
           return (
             <li
               key={node.id}
               className="rounded-xl border border-white/10 bg-black/60 p-5 backdrop-blur-md transition-colors duration-500 hover:border-white/25"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] text-white/70">
                   <Icon className="h-4 w-4" />
-                </span>
-                <span className="font-mono text-[10px] tabular-nums text-white/25">
-                  0{i + 1}
                 </span>
               </div>
 

@@ -12,10 +12,7 @@ export async function TeamSection() {
     <section id="team" className="bg-ink-950 py-24 sm:py-32 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
-          <p className="chip">
-            Our team
-          </p>
-          <h2 className="heading-dark title-fill mt-5">
+          <h2 className="heading-dark title-fill mt-0">
             Engineers behind Druporia
           </h2>
           <p className="mt-4 text-white/55">

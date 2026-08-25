@@ -45,10 +45,7 @@ export async function FiverrReviews() {
     <section className="bg-ink-900 py-24 sm:py-32 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
-          <p className="chip">
-            03 · Client feedback
-          </p>
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">
+          <h2 className="heading-dark title-fill mt-0">
             Trusted on Fiverr & beyond
           </h2>
           <p className="mt-4 text-white/55">
