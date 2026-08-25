@@ -4,62 +4,75 @@
 // components/marketing/ScrollBuildSection.tsx
 // 3D software pipeline — pinned scroll-to-build.
 //
-// Three stages scrubbed to scroll progress:
-//   0.00–0.33  01. Raw code & syntax
-//              Three IDE cards float in 3D; their syntax lines
-//              draw in left-to-right via clip-path.
-//   0.33–0.66  02. Architecture & languages
-//              Cards recede; an SVG graph assembles — runtime,
-//              API and database nodes joined by vector edges
-//              that draw via stroke-dashoffset.
-//   0.66–1.00  03. Complete product assembly
-//              The graph folds away and a perspective dashboard
-//              resolves, then unpins.
+//   0.00–0.33  01. Syntax & Code
+//              IDE mockups float in on rotateX/rotateY while code
+//              TYPES itself out, with a blinking caret per card.
+//   0.33–0.66  02. Architecture & APIs
+//              Code recedes; runtime / API / database / client
+//              nodes assemble, joined by vector edges drawn with
+//              stroke-dashoffset. A live schema panel sits beside
+//              them. Nodes are HOVERABLE — focusing one isolates
+//              its edges and swaps the schema.
+//   0.66–1.00  03. Assembled Solution
+//              Nodes fold into a perspective dashboard whose
+//              metrics count up as the stage lands.
 //
 // ── Why it is built this way ────────────────────────────────
 //
-// THREE LAYERS, ONE STACK. Each stage is an absolutely positioned
-// layer in the same cell. The timeline cross-fades and transforms
-// between them, so nothing reflows during the scrub — reflow
-// mid-pin is what makes these sections judder.
+// NO RASTER ASSETS. Every element here is DOM or SVG — code
+// tokens, node graph, schema table, charts. Nothing scales
+// badly, nothing needs a network request, and the whole thing
+// re-themes from tokens.
 //
-// MOBILE RENDERS ALL THREE STACKED, STATICALLY. Below lg the
-// layers drop out of absolute positioning, stay at opacity 1 with
-// no transforms, and the pin never initialises. gsap.matchMedia()
-// reverts everything when the breakpoint is crossed.
+// TYPING IS steps() ON clip-path, NOT DOM CHURN. A per-character
+// text rewrite would re-render on every scroll frame. Clipping
+// each line with an easing of steps(charCount) reveals it one
+// character-width at a time — identical result, zero reflow, and
+// it scrubs backwards correctly when the user scrolls up.
 //
-// SYNTAX COLOUR IS WEIGHT AND ALPHA, NOT HUE. The theme is
-// monochrome; keywords are heavier and brighter, punctuation
-// recedes. No highlighter library ships for three snippets.
+// THREE LAYERS, ONE STACK. Stages are absolutely positioned in
+// the same cell and cross-faded, so nothing reflows mid-pin.
 //
-// The dashboard figures come from one STATS constant and are
-// labelled a preview, never presented as live telemetry.
+// MOBILE: layers leave absolute positioning, the pin never
+// initialises, and all three render stacked. gsap.matchMedia()
+// reverts on breakpoint change.
 // ============================================================
 
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Boxes, Database, Server, Workflow } from 'lucide-react'
+import { Boxes, Database, Server, Workflow, type LucideIcon } from 'lucide-react'
 
 const STAGES = [
   {
     n: '01',
-    title: 'Raw code & syntax',
+    title: 'Syntax & Code',
     body: 'It starts as source — components, handlers, queries. Reviewed line by line before anything is wired together.',
   },
   {
     n: '02',
-    title: 'Architecture & languages',
+    title: 'Architecture & APIs',
     body: 'Modules resolve into a system: runtimes, API surfaces, and data stores, with the contracts between them made explicit.',
   },
   {
     n: '03',
-    title: 'Complete product assembly',
+    title: 'Assembled Solution',
     body: 'The pieces fold into a running product — deployed, instrumented, and documented for the team that inherits it.',
   },
 ]
 
-const SNIPPETS = [
+type Tok = [string, keyof typeof TONE]
+
+const TONE = {
+  kw: 'text-white font-semibold',
+  fn: 'text-white/85',
+  str: 'text-white/55',
+  tag: 'text-white/70',
+  num: 'text-white/70',
+  p: 'text-white/35',
+} as const
+
+const SNIPPETS: { lang: string; file: string; lines: Tok[][] }[] = [
   {
     lang: 'tsx',
     file: 'ProductCard.tsx',
@@ -91,41 +104,91 @@ const SNIPPETS = [
   },
 ]
 
-const TONE: Record<string, string> = {
-  kw: 'text-white font-semibold',
-  fn: 'text-white/85',
-  str: 'text-white/55',
-  tag: 'text-white/70',
-  p: 'text-white/35',
+interface NodeDef {
+  id: string
+  icon: LucideIcon
+  label: string
+  meta: string
+  x: number
+  y: number
+  schema: { name: string; type: string }[]
 }
 
-const NODES = [
-  { id: 'runtime', icon: Server, label: 'Runtime', meta: 'Node · Python', x: 18, y: 26 },
-  { id: 'api', icon: Workflow, label: 'API', meta: 'REST · webhooks', x: 50, y: 13 },
-  { id: 'db', icon: Database, label: 'Database', meta: 'PostgreSQL', x: 82, y: 34 },
-  { id: 'app', icon: Boxes, label: 'Client', meta: 'Next.js', x: 50, y: 76 },
+const NODES: NodeDef[] = [
+  {
+    id: 'runtime',
+    icon: Server,
+    label: 'Runtime',
+    meta: 'Node · Python',
+    x: 18,
+    y: 24,
+    schema: [
+      { name: 'worker', type: 'process' },
+      { name: 'queue', type: 'redis' },
+      { name: 'retries', type: 'int' },
+    ],
+  },
+  {
+    id: 'api',
+    icon: Workflow,
+    label: 'API',
+    meta: 'REST · webhooks',
+    x: 50,
+    y: 12,
+    schema: [
+      { name: 'POST /orders', type: '201' },
+      { name: 'GET /products', type: '200' },
+      { name: 'POST /webhooks', type: '202' },
+    ],
+  },
+  {
+    id: 'db',
+    icon: Database,
+    label: 'Database',
+    meta: 'PostgreSQL',
+    x: 82,
+    y: 32,
+    schema: [
+      { name: 'id', type: 'uuid pk' },
+      { name: 'order_id', type: 'uuid fk' },
+      { name: 'total', type: 'numeric' },
+      { name: 'created_at', type: 'timestamptz' },
+    ],
+  },
+  {
+    id: 'app',
+    icon: Boxes,
+    label: 'Client',
+    meta: 'Next.js',
+    x: 50,
+    y: 78,
+    schema: [
+      { name: 'route', type: 'app/' },
+      { name: 'cache', type: 'ISR' },
+      { name: 'bundle', type: '84 kB' },
+    ],
+  },
 ]
 
-const EDGES = [
+const EDGES: [string, string][] = [
   ['runtime', 'api'],
   ['api', 'db'],
   ['runtime', 'app'],
   ['api', 'app'],
   ['db', 'app'],
-] as const
+]
 
-const STATS = [
-  { k: 'Modules', v: '24' },
-  { k: 'Checks', v: '128' },
-  { k: 'Coverage', v: '94%' },
-  { k: 'Deploys', v: '38' },
+const METRICS = [
+  { k: 'Modules', to: 24, suffix: '' },
+  { k: 'Checks', to: 128, suffix: '' },
+  { k: 'Coverage', to: 94, suffix: '%' },
+  { k: 'Deploys', to: 38, suffix: '' },
 ]
 
 const BARS = [38, 55, 44, 70, 58, 82, 66, 91, 74, 88]
 
-function nodeById(id: string) {
-  return NODES.find((n) => n.id === id)!
-}
+const nodeById = (id: string) => NODES.find((n) => n.id === id)!
+const lineChars = (line: Tok[]) => line.reduce((n, [t]) => n + t.length, 0)
 
 export function ScrollBuildSection() {
   const rootRef = useRef<HTMLElement>(null)
@@ -134,7 +197,10 @@ export function ScrollBuildSection() {
   const s2Ref = useRef<HTMLDivElement>(null)
   const s3Ref = useRef<HTMLDivElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
+  const metricRefs = useRef<(HTMLSpanElement | null)[]>([])
+
   const [stage, setStage] = useState(0)
+  const [activeNode, setActiveNode] = useState<string | null>(null)
 
   useEffect(() => {
     const root = rootRef.current
@@ -151,15 +217,18 @@ export function ScrollBuildSection() {
       '(min-width: 1024px) and (prefers-reduced-motion: no-preference)',
       () => {
         const cards = gsap.utils.toArray<HTMLElement>(s1.querySelectorAll('[data-code]'))
-        const codeLines = gsap.utils.toArray<HTMLElement>(s1.querySelectorAll('[data-line]'))
+        const lines = gsap.utils.toArray<HTMLElement>(s1.querySelectorAll('[data-line]'))
+        const carets = gsap.utils.toArray<HTMLElement>(s1.querySelectorAll('[data-caret]'))
         const edges = gsap.utils.toArray<SVGPathElement>(s2.querySelectorAll('[data-edge]'))
         const nodes = gsap.utils.toArray<HTMLElement>(s2.querySelectorAll('[data-node]'))
+        const schema = s2.querySelector('[data-schema]')
         const tiles = gsap.utils.toArray<HTMLElement>(s3.querySelectorAll('[data-tile]'))
 
-        gsap.set([s2, s3], { opacity: 0, pointerEvents: 'none' })
+        gsap.set([s2, s3], { opacity: 0 })
         gsap.set(s1, { opacity: 1 })
         gsap.set(edges, { strokeDasharray: 1, strokeDashoffset: 1 })
-        gsap.set(codeLines, { clipPath: 'inset(0 100% 0 0)' })
+        gsap.set(lines, { clipPath: 'inset(0 100% 0 0)' })
+        gsap.set(carets, { opacity: 0 })
 
         let last = -1
 
@@ -185,7 +254,7 @@ export function ScrollBuildSection() {
           },
         })
 
-        // ── 01: cards float in, syntax draws ───────────────
+        // ── 01 · cards float in, code types ────────────────
         tl.fromTo(
           cards,
           {
@@ -201,39 +270,62 @@ export function ScrollBuildSection() {
             rotateX: 8,
             rotateY: (i: number) => (i - 1) * 7,
             scale: 1,
-            duration: 0.85,
-            stagger: 0.12,
+            duration: 0.8,
+            stagger: 0.1,
             ease: 'power3.out',
           },
           0
         )
-        tl.to(
-          codeLines,
-          {
-            clipPath: 'inset(0 0% 0 0)',
-            duration: 0.5,
-            stagger: 0.035,
-            ease: 'none',
-          },
-          0.4
-        )
 
-        // ── 02: cards recede, graph assembles ──────────────
+        // Typing: each line clips open in character-width steps.
+        lines.forEach((line, i) => {
+          const chars = Number(line.dataset.chars) || 24
+          tl.to(
+            line,
+            {
+              clipPath: 'inset(0 0% 0 0)',
+              duration: 0.34,
+              ease: `steps(${chars})`,
+            },
+            0.35 + i * 0.055
+          )
+        })
+
+        // Caret blinks while its card is typing, then retires.
+        carets.forEach((caret, i) => {
+          tl.to(caret, { opacity: 1, duration: 0.05 }, 0.35 + i * 0.35)
+          tl.to(
+            caret,
+            { opacity: 0, duration: 0.05, repeat: 5, yoyo: true },
+            0.4 + i * 0.35
+          )
+          tl.to(caret, { opacity: 0, duration: 0.05 }, 0.95)
+        })
+
+        // ── 02 · graph assembles ───────────────────────────
         tl.to(s1, { opacity: 0, scale: 0.92, duration: 0.5 }, 1)
         tl.to(s2, { opacity: 1, duration: 0.5 }, 1.15)
         tl.fromTo(
           nodes,
           { opacity: 0, scale: 0.7 },
-          { opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)' },
+          { opacity: 1, scale: 1, duration: 0.45, stagger: 0.1, ease: 'back.out(1.7)' },
           1.25
         )
         tl.to(
           edges,
-          { strokeDashoffset: 0, duration: 0.6, stagger: 0.09, ease: 'none' },
-          1.5
+          { strokeDashoffset: 0, duration: 0.55, stagger: 0.08, ease: 'none' },
+          1.45
         )
+        if (schema) {
+          tl.fromTo(
+            schema,
+            { opacity: 0, x: 24 },
+            { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' },
+            1.6
+          )
+        }
 
-        // ── 03: fold into the product ──────────────────────
+        // ── 03 · fold into the product ─────────────────────
         tl.to(s2, { opacity: 0, scale: 0.94, duration: 0.5 }, 2)
         tl.to(s3, { opacity: 1, duration: 0.5 }, 2.15)
         tl.fromTo(
@@ -245,9 +337,29 @@ export function ScrollBuildSection() {
         tl.fromTo(
           tiles,
           { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' },
           2.4
         )
+
+        // Metrics count up. Written straight to textContent — a
+        // React state update per frame would re-render the tree.
+        METRICS.forEach((m, i) => {
+          const el = metricRefs.current[i]
+          if (!el) return
+          const proxy = { v: 0 }
+          tl.to(
+            proxy,
+            {
+              v: m.to,
+              duration: 0.9,
+              ease: 'power2.out',
+              onUpdate: () => {
+                el.textContent = `${Math.round(proxy.v)}${m.suffix}`
+              },
+            },
+            2.45 + i * 0.06
+          )
+        })
 
         return () => {
           tl.scrollTrigger?.kill()
@@ -258,12 +370,30 @@ export function ScrollBuildSection() {
 
     mm.add('(max-width: 1023px), (prefers-reduced-motion: reduce)', () => {
       setStage(0)
+      // No timeline runs here, so seed the metrics with their
+      // final values rather than leaving them at zero.
+      METRICS.forEach((m, i) => {
+        const el = metricRefs.current[i]
+        if (el) el.textContent = `${m.to}${m.suffix}`
+      })
     })
 
     return () => mm.revert()
   }, [])
 
   const active = STAGES[stage] ?? STAGES[0]
+  const focused = activeNode ? nodeById(activeNode) : null
+  const schemaNode = focused ?? nodeById('db')
+
+  const edgeIsLit = (a: string, b: string) =>
+    !activeNode || a === activeNode || b === activeNode
+
+  // Only the active layer is hit-testable. GSAP applies non-numeric
+  // props at tween boundaries, which left stage 3 intercepting
+  // pointer events over stage 2's nodes — they were unreachable.
+  // Constrained to lg, since below that the layers do not overlap.
+  const hits = (i: number) =>
+    stage === i ? 'lg:pointer-events-auto' : 'lg:pointer-events-none'
 
   return (
     <section
@@ -281,7 +411,7 @@ export function ScrollBuildSection() {
           </div>
 
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-            {/* ── Rail + stage copy ──────────────────────── */}
+            {/* ── Progress rail + labels ─────────────────── */}
             <div className="lg:col-span-4">
               <div className="flex gap-6">
                 <div className="relative hidden w-px shrink-0 bg-white/10 lg:block">
@@ -303,7 +433,7 @@ export function ScrollBuildSection() {
                             on ? 'text-white' : 'text-white/25'
                           }`}
                         >
-                          {s.n}
+                          {s.n}.
                         </span>
                         <div className="min-w-0">
                           <p
@@ -342,10 +472,10 @@ export function ScrollBuildSection() {
             {/* ── Stage layers ───────────────────────────── */}
             <div className="lg:col-span-8">
               <div className="relative space-y-6 [perspective:1600px] lg:h-[30rem] lg:space-y-0">
-                {/* ── 01 · Code ──────────────────────────── */}
+                {/* ── 01 · Syntax & Code ─────────────────── */}
                 <div
                   ref={s1Ref}
-                  className="lg:absolute lg:inset-0 lg:flex lg:items-center"
+                  className={`lg:absolute lg:inset-0 lg:flex lg:items-center ${hits(0)}`}
                 >
                   <div className="grid w-full gap-4 sm:grid-cols-3 [transform-style:preserve-3d]">
                     {SNIPPETS.map((snip) => (
@@ -365,7 +495,12 @@ export function ScrollBuildSection() {
                         <pre className="overflow-x-auto px-3.5 py-3">
                           <code className="font-mono text-[10.5px] leading-[1.9]">
                             {snip.lines.map((line, li) => (
-                              <span key={li} data-line className="block whitespace-pre">
+                              <span
+                                key={li}
+                                data-line
+                                data-chars={lineChars(line)}
+                                className="block whitespace-pre"
+                              >
                                 {line.map(([txt, tone], ti) => (
                                   <span key={ti} className={TONE[tone]}>
                                     {txt}
@@ -373,6 +508,11 @@ export function ScrollBuildSection() {
                                 ))}
                               </span>
                             ))}
+                            <span
+                              data-caret
+                              aria-hidden
+                              className="mt-0.5 inline-block h-3 w-[6px] bg-white/70 align-middle"
+                            />
                           </code>
                         </pre>
                       </div>
@@ -380,69 +520,122 @@ export function ScrollBuildSection() {
                   </div>
                 </div>
 
-                {/* ── 02 · Architecture ──────────────────── */}
+                {/* ── 02 · Architecture & APIs ───────────── */}
                 <div
                   ref={s2Ref}
-                  className="lg:absolute lg:inset-0 lg:flex lg:items-center"
+                  className={`lg:absolute lg:inset-0 lg:flex lg:items-center ${hits(1)}`}
                 >
-                  <div className="relative h-[19rem] w-full rounded-xl border border-white/10 bg-ink-900 sm:h-[21rem]">
-                    <svg
-                      aria-hidden
-                      viewBox="0 0 100 100"
-                      preserveAspectRatio="none"
-                      className="absolute inset-0 h-full w-full"
-                    >
-                      {EDGES.map(([a, b]) => {
-                        const from = nodeById(a)
-                        const to = nodeById(b)
+                  <div className="grid w-full gap-4 lg:grid-cols-5">
+                    {/* Node graph */}
+                    <div className="relative h-[17rem] rounded-xl border border-white/10 bg-ink-900 sm:h-[19rem] lg:col-span-3 lg:h-[21rem]">
+                      <svg
+                        aria-hidden
+                        viewBox="0 0 100 100"
+                        preserveAspectRatio="none"
+                        className="absolute inset-0 h-full w-full"
+                      >
+                        {EDGES.map(([a, b]) => {
+                          const from = nodeById(a)
+                          const to = nodeById(b)
+                          const lit = edgeIsLit(a, b)
+                          return (
+                            <path
+                              key={`${a}-${b}`}
+                              data-edge
+                              d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}
+                              fill="none"
+                              stroke="#FFFFFF"
+                              strokeOpacity={lit ? 0.4 : 0.08}
+                              strokeWidth="1"
+                              pathLength="1"
+                              strokeDasharray="1"
+                              strokeDashoffset="1"
+                              vectorEffect="non-scaling-stroke"
+                              className="transition-[stroke-opacity] duration-300"
+                            />
+                          )
+                        })}
+                      </svg>
+
+                      {NODES.map((node) => {
+                        const Icon = node.icon
+                        const on = activeNode === node.id
                         return (
-                          <path
-                            key={`${a}-${b}`}
-                            data-edge
-                            d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}
-                            fill="none"
-                            stroke="#FFFFFF"
-                            strokeOpacity="0.3"
-                            strokeWidth="1"
-                            pathLength="1"
-                            strokeDasharray="1"
-                            strokeDashoffset="1"
-                            vectorEffect="non-scaling-stroke"
-                          />
+                          <button
+                            key={node.id}
+                            data-node
+                            type="button"
+                            onMouseEnter={() => setActiveNode(node.id)}
+                            onFocus={() => setActiveNode(node.id)}
+                            onMouseLeave={() => setActiveNode(null)}
+                            onBlur={() => setActiveNode(null)}
+                            aria-pressed={on}
+                            style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                            className="absolute -translate-x-1/2 -translate-y-1/2 focus-visible:outline-none"
+                          >
+                            <span
+                              className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 transition-all duration-300 ${
+                                on
+                                  ? 'scale-105 border-white/45 bg-ink-800'
+                                  : 'border-white/15 bg-ink-850'
+                              }`}
+                            >
+                              <Icon className="h-3.5 w-3.5 shrink-0 text-white/70" />
+                              <span className="min-w-0 text-left">
+                                <span className="block whitespace-nowrap text-xs font-semibold text-white">
+                                  {node.label}
+                                </span>
+                                <span className="block whitespace-nowrap font-mono text-[9px] text-white/35">
+                                  {node.meta}
+                                </span>
+                              </span>
+                            </span>
+                          </button>
                         )
                       })}
-                    </svg>
+                    </div>
 
-                    {NODES.map((node) => {
-                      const Icon = node.icon
-                      return (
-                        <div
-                          key={node.id}
-                          data-node
-                          style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                          className="absolute -translate-x-1/2 -translate-y-1/2"
-                        >
-                          <div className="flex items-center gap-2.5 rounded-lg border border-white/15 bg-ink-850 px-3 py-2 shadow-card-dark">
-                            <Icon className="h-3.5 w-3.5 shrink-0 text-white/70" />
-                            <div className="min-w-0">
-                              <p className="whitespace-nowrap text-xs font-semibold text-white">
-                                {node.label}
-                              </p>
-                              <p className="whitespace-nowrap font-mono text-[9px] text-white/35">
-                                {node.meta}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
+                    {/* Schema panel — follows the focused node */}
+                    <div
+                      data-schema
+                      className="rounded-xl border border-white/10 bg-ink-900 lg:col-span-2"
+                    >
+                      <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
+                        <span className="font-mono text-[10px] text-white/45">
+                          {schemaNode.id === 'db'
+                            ? 'schema · orders'
+                            : `contract · ${schemaNode.id}`}
+                        </span>
+                        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/25">
+                          {schemaNode.label}
+                        </span>
+                      </div>
+                      <ul className="divide-y divide-white/[0.06]">
+                        {schemaNode.schema.map((row) => (
+                          <li
+                            key={row.name}
+                            className="flex items-center justify-between gap-3 px-4 py-2.5"
+                          >
+                            <span className="truncate font-mono text-[11px] text-white/70">
+                              {row.name}
+                            </span>
+                            <span className="shrink-0 font-mono text-[10px] text-white/30">
+                              {row.type}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="border-t border-white/10 px-4 py-2.5 font-mono text-[9px] text-white/25">
+                        hover a node to inspect
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* ── 03 · Product ───────────────────────── */}
+                {/* ── 03 · Assembled Solution ────────────── */}
                 <div
                   ref={s3Ref}
-                  className="transform-gpu lg:absolute lg:inset-0 lg:flex lg:items-center"
+                  className={`transform-gpu lg:absolute lg:inset-0 lg:flex lg:items-center ${hits(2)}`}
                 >
                   <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-ink-900">
                     <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
@@ -455,13 +648,19 @@ export function ScrollBuildSection() {
                     </div>
 
                     <div className="grid grid-cols-2 divide-x divide-white/10 sm:grid-cols-4">
-                      {STATS.map((s) => (
-                        <div key={s.k} data-tile className="px-5 py-5">
-                          <p className="font-display text-2xl font-bold tabular-nums text-white">
-                            {s.v}
-                          </p>
+                      {METRICS.map((m, i) => (
+                        <div key={m.k} data-tile className="px-5 py-5">
+                          <span
+                            ref={(el) => {
+                              metricRefs.current[i] = el
+                            }}
+                            className="block font-display text-2xl font-bold tabular-nums text-white"
+                          >
+                            {m.to}
+                            {m.suffix}
+                          </span>
                           <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
-                            {s.k}
+                            {m.k}
                           </p>
                         </div>
                       ))}
@@ -487,7 +686,7 @@ export function ScrollBuildSection() {
               </div>
 
               <p className="mt-6 hidden font-mono text-[11px] text-white/35 lg:block">
-                {active.n} · {active.title}
+                {active.n}. {active.title}
               </p>
             </div>
           </div>
