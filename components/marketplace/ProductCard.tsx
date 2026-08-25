@@ -15,9 +15,21 @@
 // The status badge reflects actual state: price 0 -> Free,
 // isFeatured -> Featured, otherwise the version. Nothing here
 // claims availability or stock that the schema does not track.
+//
+// The media region shows the product thumbnail when there is one.
+// The manifest is the FALLBACK, not the default: a card with no
+// image still needs to fill that space with something truthful
+// rather than an empty grey box. A thumbnail that fails to load
+// falls back to it too, so a dead URL degrades to the manifest
+// instead of a broken-image icon.
+//
+// Plain <img> rather than next/image, matching the detail page.
+// next/image throws on a hostname missing from remotePatterns, and
+// since this is a client component that would take down the whole
+// grid — a bad thumbnail URL should cost one card, not the page.
 // ============================================================
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   motion,
@@ -53,12 +65,14 @@ export function ProductCard({
   description,
   price,
   category,
+  thumbnailUrl,
   version,
   fileSize,
   isFeatured,
 }: ProductCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
+  const [imageBroken, setImageBroken] = useState(false)
 
   const px = useMotionValue(0)
   const py = useMotionValue(0)
@@ -98,6 +112,8 @@ export function ProductCard({
     ...(fileSize ? ([['size', `"${fileSize}"`]] as [string, string][]) : []),
   ]
 
+  const showImage = Boolean(thumbnailUrl) && !imageBroken
+
   const badge = isFree
     ? { label: 'Free', tone: 'border-white/25 bg-white/10 text-white' }
     : isFeatured
@@ -124,7 +140,30 @@ export function ProductCard({
             className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           />
 
-          {/* ── JSON manifest preview ─────────────────── */}
+          {/* ── Media: thumbnail, else manifest ───────── */}
+          {showImage ? (
+            <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-white/10 bg-ink-990">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumbnailUrl as string}
+                alt={title}
+                loading="lazy"
+                decoding="async"
+                onError={() => setImageBroken(true)}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              />
+              {/* Scrim keeps the badge legible over a light image. */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/55 to-transparent"
+              />
+              <span
+                className={`absolute right-3 top-3 rounded border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] backdrop-blur-sm ${badge.tone}`}
+              >
+                {badge.label}
+              </span>
+            </div>
+          ) : (
           <div className="relative border-b border-white/10 bg-ink-990/60 px-4 py-3.5">
             <div className="mb-2.5 flex items-center justify-between">
               <span className="font-mono text-[10px] text-white/30">
@@ -153,6 +192,7 @@ export function ProductCard({
               </code>
             </pre>
           </div>
+          )}
 
           {/* ── Body ──────────────────────────────────── */}
           <div className="relative flex flex-1 flex-col p-5">
