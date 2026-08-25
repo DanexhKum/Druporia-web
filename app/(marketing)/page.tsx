@@ -9,7 +9,7 @@ import { TeamSection } from '@/components/marketing/TeamSection'
 import { FiverrReviews } from '@/components/marketing/FiverrReviews'
 import { AnimateIn } from '@/components/marketing/AnimateIn'
 import { TrustBar, type TrustStat } from '@/components/marketing/TrustBar'
-import { ProcessSection } from '@/components/marketing/ProcessSection'
+import { ScrollBuildSection } from '@/components/marketing/ScrollBuildSection'
 import { FaqAccordion } from '@/components/marketing/FaqAccordion'
 import { BentoGrid, type BentoItem } from '@/components/marketing/BentoGrid'
 import { LogoMarquee } from '@/components/motion/LogoMarquee'
@@ -145,7 +145,7 @@ export default async function HomePage() {
 
       <TabbedShowcase />
 
-      <ProcessSection />
+      <ScrollBuildSection />
 
       <div id="reviews">
         <FiverrReviews />

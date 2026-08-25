@@ -90,7 +90,7 @@ export function TiltCard({
                   `radial-gradient(340px circle at ${gx} ${gy}, rgba(0,240,255,0.13), transparent 70%)`
               ),
             }}
-            className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-400 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           />
         )}
         {children}
