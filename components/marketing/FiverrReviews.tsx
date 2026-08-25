@@ -42,7 +42,7 @@ export async function FiverrReviews() {
         : 'lg:grid-cols-3'
 
   return (
-    <section className="bg-ink-900 py-16 sm:py-24 border-t border-white/10">
+    <section className="bg-ink-900 py-24 sm:py-32 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
           <p className="chip">

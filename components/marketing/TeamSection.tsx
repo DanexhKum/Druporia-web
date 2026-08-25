@@ -9,7 +9,7 @@ export async function TeamSection() {
   if (members.length === 0) return null
 
   return (
-    <section id="team" className="bg-ink-950 py-16 sm:py-24 border-t border-white/10">
+    <section id="team" className="bg-ink-950 py-24 sm:py-32 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
           <p className="chip">

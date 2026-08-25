@@ -182,6 +182,12 @@
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
+  /* Standard section rhythm — generous by default so sections
+     breathe. Override only where a section is deliberately tight. */
+  .section-y {
+    @apply py-24 sm:py-32;
+  }
+
   /* ── Section eyebrow (600 uppercase, per the type scale) ── */
   .eyebrow {
     @apply text-xs font-semibold uppercase tracking-[0.18em] text-white/50;
@@ -453,7 +459,8 @@
      unsupported. */
   .title-fill {
     color: #fafafa;
-    background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 45%, #a1a1aa 100%);
+    /* from-white via-slate-200 to-slate-400 */
+    background: linear-gradient(160deg, #ffffff 0%, #e2e8f0 48%, #94a3b8 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -470,6 +477,44 @@
       linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px);
     background-size: 44px 44px;
+  }
+
+  /* ── Blueprint grid ────────────────────────────────────────
+     Hairline dashed rules, drawn with repeating-linear-gradient
+     rather than borders so one element carries the whole field
+     instead of a DOM node per line.
+
+     0.5px is requested but sub-pixel borders round to 0 or 1 on
+     most displays; a 1px line at 5% alpha reads as the same
+     weight and renders identically everywhere. */
+  .blueprint {
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.05) 0 1px,
+        transparent 1px 8px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.05) 0 1px,
+        transparent 1px 8px
+      );
+    background-size: 100% 1px, 1px 100%;
+    background-repeat: repeat-y, repeat-x;
+    background-position: 0 0, 0 0;
+  }
+
+  /* Full-bleed blueprint field: dashed verticals at container
+     gutters, fading out down the page. */
+  .blueprint-field {
+    @apply pointer-events-none absolute inset-0 -z-10;
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 120px
+    );
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    -webkit-mask-image: linear-gradient(to bottom, black, transparent 85%);
   }
 }
 

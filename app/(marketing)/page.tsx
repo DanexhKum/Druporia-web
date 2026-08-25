@@ -104,7 +104,7 @@ export default async function HomePage() {
 
       <FeaturedProducts />
 
-      <section className="dark-shell py-16 sm:py-24">
+      <section className="dark-shell py-24 sm:py-32">
         <div aria-hidden className="glow-top" />
         <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
           <AnimateIn>
@@ -130,7 +130,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="services" className="dark-shell py-16 sm:py-24">
+      <section id="services" className="dark-shell py-24 sm:py-32">
         <div className="container-page">
           <AnimateIn className="text-center max-w-2xl mx-auto mb-16">
             <p className="chip">01 · Our expertise</p>
@@ -154,7 +154,7 @@ export default async function HomePage() {
       <TeamSection />
 
       {faqs.length > 0 && (
-        <section className="dark-shell py-16 sm:py-24">
+        <section className="dark-shell py-24 sm:py-32">
           <div className="container-page">
             <AnimateIn className="mx-auto mb-12 max-w-2xl text-center">
               <p className="chip">FAQ</p>

@@ -60,7 +60,7 @@ export default function ContactPage() {
       </div>
 
       {/* ── Main Content ────────────────────────────────────── */}
-      <div className="container-page py-16 sm:py-24">
+      <div className="container-page py-24 sm:py-32">
         <div className="grid gap-12 lg:grid-cols-3 lg:gap-8 max-w-6xl mx-auto">
           
           {/* Contact Info Sidebar */}

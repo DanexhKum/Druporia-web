@@ -272,7 +272,7 @@ export function ScrollBuildSection() {
       className="relative overflow-x-clip border-t border-white/10 bg-ink-950"
     >
       <div ref={pinRef} className="relative">
-        <div className="container-page py-16 sm:py-24 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-0">
+        <div className="container-page py-24 sm:py-32 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-0">
           <div className="mb-10 flex items-center gap-3 lg:mb-12">
             <span className="h-px w-10 bg-white/40" />
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">

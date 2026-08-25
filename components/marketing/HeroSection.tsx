@@ -32,6 +32,13 @@ const EASE = [0.16, 1, 0.3, 1] as const
 
 // One source of truth for the panel. Summary figures are computed
 // from this, never hardcoded alongside it.
+// Chips describe posture, not telemetry — nothing here polls a
+// health endpoint, so none of them claim a measured value.
+const STATUS_CHIPS = [
+  { label: 'Accepting projects', dot: 'bg-emerald-400', pulse: true },
+  { label: 'Avg. reply < 24h', dot: 'bg-white/50', pulse: false },
+]
+
 const PIPELINE = [
   { id: 'woo', label: 'WooCommerce plugin', stage: 'In build', pct: 72, days: 6 },
   { id: 'ext', label: 'Chrome extension', stage: 'In review', pct: 94, days: 2 },
@@ -59,6 +66,9 @@ export function HeroSection() {
       {/* Crisp wash — no blurred spheres */}
       <div aria-hidden className="wash-top" />
 
+      {/* Blueprint verticals at gutter intervals */}
+      <div aria-hidden className="blueprint-field" />
+
       {/* Hairline grid, fading downward */}
       <div
         aria-hidden
@@ -83,7 +93,7 @@ export function HeroSection() {
               <RevealText
                 text="engineered to last."
                 delay={0.28}
-                className="text-white/40"
+                className="title-fill"
               />
             </h1>
 
@@ -115,8 +125,32 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: EASE, delay: 0.34 }}
             className="lg:col-span-5 lg:-mr-6 xl:-mr-16"
+            style={{ perspective: '1200px' }}
           >
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-900/60 backdrop-blur-sm">
+            {/* Status chips ride above the panel */}
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              {STATUS_CHIPS.map((chip) => (
+                <span
+                  key={chip.label}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5"
+                >
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span
+                      className={`absolute inline-flex h-full w-full rounded-full opacity-60 motion-reduce:hidden ${chip.dot} ${chip.pulse ? 'animate-ping' : ''}`}
+                    />
+                    <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${chip.dot}`} />
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/55">
+                    {chip.label}
+                  </span>
+                </span>
+              ))}
+            </div>
+
+            <div
+              className="transform-gpu overflow-hidden rounded-2xl border border-white/10 bg-ink-900/60 backdrop-blur-sm transition-transform duration-700 hover:[transform:rotateX(2deg)_rotateY(-4deg)]"
+              style={{ transform: 'rotateX(4deg) rotateY(-7deg)' }}
+            >
               {/* Chrome */}
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
                 <span className="font-mono text-[11px] tracking-tight text-white/35">

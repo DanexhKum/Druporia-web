@@ -10,7 +10,7 @@ export async function FeaturedProducts() {
   if (products.length === 0) return null
 
   return (
-    <section className="py-16 sm:py-24 bg-ink-900 border-t border-white/10">
+    <section className="py-24 sm:py-32 bg-ink-900 border-t border-white/10">
       <div className="container-page">
         <AnimateIn className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
           <div>

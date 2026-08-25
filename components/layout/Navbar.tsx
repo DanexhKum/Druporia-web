@@ -78,7 +78,7 @@ export function Navbar() {
       className={cn(
         'sticky top-0 z-50 transition-all duration-500',
         scrolled || open
-          ? 'border-b border-white/10 bg-black/40 backdrop-blur-md'
+          ? 'border-b border-white/10 bg-black/60 backdrop-blur-xl'
           : 'border-b border-transparent bg-transparent'
       )}
       style={{ transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)' }}

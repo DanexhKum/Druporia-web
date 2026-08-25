@@ -44,7 +44,53 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     ScrollTrigger.refresh()
 
+    // ── Hash links ─────────────────────────────────────────
+    // Lenis owns the scroll position, so a native #hash jump is
+    // either ignored or fights the smoothing. Intercept in-page
+    // anchors and hand them to lenis.scrollTo instead.
+    const onAnchorClick = (e: MouseEvent) => {
+      // Let modified clicks (new tab, etc.) behave normally.
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey) return
+
+      const link = (e.target as HTMLElement)?.closest?.('a')
+      if (!link) return
+
+      const href = link.getAttribute('href')
+      if (!href) return
+
+      // Same-page anchors only: "#id" or "/#id" while already on "/".
+      const hash = href.startsWith('#')
+        ? href
+        : href.startsWith('/#') && window.location.pathname === '/'
+          ? href.slice(1)
+          : null
+      if (!hash || hash === '#') return
+
+      const target = document.querySelector(hash)
+      if (!target) return
+
+      e.preventDefault()
+      // Offset by the sticky header so the heading isn't hidden.
+      lenis.scrollTo(target as HTMLElement, { offset: -88, duration: 1.2 })
+      history.pushState(null, '', hash)
+    }
+
+    document.addEventListener('click', onAnchorClick)
+
+    // Arriving from another route with a hash: the element may not
+    // exist until after paint, so settle first, then scroll.
+    const initialHash = window.location.hash
+    let settle = 0
+    if (initialHash && initialHash.length > 1) {
+      settle = window.setTimeout(() => {
+        const target = document.querySelector(initialHash)
+        if (target) lenis.scrollTo(target as HTMLElement, { offset: -88, immediate: true })
+      }, 260)
+    }
+
     return () => {
+      window.clearTimeout(settle)
+      document.removeEventListener('click', onAnchorClick)
       gsap.ticker.remove(tick)
       lenis.destroy()
     }
