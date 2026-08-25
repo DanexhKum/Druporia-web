@@ -365,10 +365,118 @@ export function ScrollBuildSection() {
       }
     )
 
-    mm.add('(max-width: 1023px), (prefers-reduced-motion: reduce)', () => {
+    // ── Mobile / tablet: NO PIN ────────────────────────────
+    // Pinning a viewport on touch fights the browser's own
+    // momentum scrolling and traps the user mid-gesture. Instead
+    // each stage reveals on its own as it enters view, with
+    // scrub:false so the animation plays at its own pace and the
+    // finger is never fighting a scrubbed timeline. Native
+    // momentum is left completely untouched.
+    mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', () => {
+      // Seed final values — nothing counts up on this branch.
+      METRICS.forEach((m, i) => {
+        const el = metricRefs.current[i]
+        if (el) el.textContent = `${m.to}${m.suffix}`
+      })
+
+      const layers = [s1, s2, s3]
+      const triggers: ScrollTrigger[] = []
+
+      layers.forEach((layer, i) => {
+        // Reveal the layer itself.
+        gsap.fromTo(
+          layer,
+          { opacity: 0, y: 32 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: layer,
+              start: 'top 82%',
+              toggleActions: 'play none none none',
+              onEnter: () => setStage(i),
+              onEnterBack: () => setStage(i),
+            },
+          }
+        )
+
+        // Draw the pieces inside it.
+        const lines = layer.querySelectorAll('[data-line]')
+        const edges = layer.querySelectorAll('[data-edge]')
+        const nodes = layer.querySelectorAll('[data-node]')
+        const tiles = layer.querySelectorAll('[data-tile]')
+
+        if (lines.length) {
+          gsap.fromTo(
+            lines,
+            { clipPath: 'inset(0 100% 0 0)' },
+            {
+              clipPath: 'inset(0 0% 0 0)',
+              duration: 0.4,
+              stagger: 0.05,
+              ease: 'none',
+              scrollTrigger: { trigger: layer, start: 'top 75%' },
+            }
+          )
+        }
+        if (edges.length) {
+          gsap.fromTo(
+            edges,
+            { strokeDasharray: 1, strokeDashoffset: 1 },
+            {
+              strokeDashoffset: 0,
+              duration: 0.7,
+              stagger: 0.08,
+              ease: 'none',
+              scrollTrigger: { trigger: layer, start: 'top 75%' },
+            }
+          )
+        }
+        if (nodes.length) {
+          gsap.fromTo(
+            nodes,
+            { opacity: 0, scale: 0.8 },
+            {
+              opacity: 1,
+              scale: 1,
+              duration: 0.45,
+              stagger: 0.08,
+              ease: 'back.out(1.6)',
+              scrollTrigger: { trigger: layer, start: 'top 78%' },
+            }
+          )
+        }
+        if (tiles.length) {
+          gsap.fromTo(
+            tiles,
+            { opacity: 0, y: 16 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.45,
+              stagger: 0.05,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: layer, start: 'top 78%' },
+            }
+          )
+        }
+      })
+
+      ScrollTrigger.getAll().forEach((t) => {
+        if (layers.some((l) => l === t.trigger)) triggers.push(t)
+      })
+
+      // matchMedia reverts tweens on exit; kill the triggers too so
+      // switching to desktop does not leave orphans behind.
+      return () => triggers.forEach((t) => t.kill())
+    })
+
+    // Reduced motion at any width: everything visible, no triggers.
+    mm.add('(prefers-reduced-motion: reduce)', () => {
       setStage(0)
-      // No timeline runs here, so seed the metrics with their
-      // final values rather than leaving them at zero.
+      gsap.set([s1, s2, s3], { opacity: 1, y: 0, clearProps: 'transform' })
       METRICS.forEach((m, i) => {
         const el = metricRefs.current[i]
         if (el) el.textContent = `${m.to}${m.suffix}`
@@ -399,8 +507,8 @@ export function ScrollBuildSection() {
       className="relative overflow-x-clip border-t border-white/10 bg-ink-950"
     >
       <div ref={pinRef} className="relative">
-        <div className="container-page py-24 sm:py-32 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-0">
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
+        <div className="container-page py-12 sm:py-20 lg:py-28 lg:flex lg:min-h-dvh lg:flex-col lg:justify-center lg:py-0">
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12 [&>*]:min-w-0">
             {/* ── Progress rail + labels ─────────────────── */}
             <div className="lg:col-span-4">
               <div className="flex gap-6">

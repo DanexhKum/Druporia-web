@@ -110,7 +110,7 @@ export function LegalPage({
         </div>
 
         {/* ── Body ───────────────────────────────────────── */}
-        <div ref={ref} className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-14">
+        <div ref={ref} className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-14 [&>*]:min-w-0">
           {/* Sticky ToC */}
           <nav
             aria-label="On this page"

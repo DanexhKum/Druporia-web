@@ -38,7 +38,7 @@ export default async function AdminLayout({
   await requireAdmin()
 
   return (
-    <div className="light-surface min-h-screen bg-slate-50 text-slate-900">
+    <div className="light-surface min-h-dvh bg-slate-50 text-slate-900">
       {/* Admin top bar */}
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
@@ -58,7 +58,7 @@ export default async function AdminLayout({
 
       <div className="mx-auto flex max-w-7xl flex-col gap-0 lg:flex-row">
         {/* Sidebar nav */}
-        <aside className="border-b border-slate-200 bg-white lg:w-56 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-53px)]">
+        <aside className="border-b border-slate-200 bg-white lg:w-56 lg:border-b-0 lg:border-r lg:min-h-[calc(100dvh-53px)]">
           <nav className="p-4 space-y-0.5">
             <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
               Management

@@ -14,7 +14,7 @@ export default async function AppLayout({
   await requireAuth()
 
   return (
-    <div className="light-surface flex min-h-screen flex-col bg-slate-50 text-slate-900">
+    <div className="light-surface flex min-h-dvh flex-col bg-slate-50 text-slate-900">
       <Navbar />
       <main className="flex-1 bg-slate-50/50">{children}</main>
       <Footer />

@@ -94,7 +94,7 @@ export function ParticleCTA() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_50%,transparent_35%,#0A0A0A_88%)]"
       />
 
-      <div className="container-page relative z-10 py-24 text-center sm:py-32">
+      <div className="container-page relative z-10 py-12 text-center sm:py-20 lg:py-28">
         <div className="mx-auto max-w-2xl">
           <p className="chip mx-auto">Start a project</p>
 

@@ -75,9 +75,9 @@ export function HeroSection() {
         className="grid-backdrop pointer-events-none absolute inset-0 -z-10 opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_70%)]"
       />
 
-      <div className="container-page relative z-10 pb-20 pt-14 sm:pb-28 sm:pt-20">
+      <div className="container-page relative z-10 pb-12 pt-10 sm:pb-20 sm:pt-16 lg:pb-28 lg:pt-20">
         {/* 7/5 asymmetry, with the panel breaking the right gutter */}
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-8">
+        <div className="grid grid-cols-1 items-center gap-10 sm:gap-14 lg:grid-cols-12 lg:gap-8 [&>*]:min-w-0">
           {/* ── Copy: 7 of 12 ─────────────────────────────── */}
           <div className="lg:col-span-7 lg:pr-8">
             <motion.div {...rise(0)} className="mb-9 flex items-center gap-3">
@@ -87,7 +87,7 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <h1 className="font-display text-[clamp(2.5rem,5.2vw,4.25rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-white">
+            <h1 className="font-display text-3xl font-extrabold leading-[1.08] tracking-[-0.03em] text-white sm:text-5xl sm:leading-[1.02] lg:text-6xl xl:text-7xl">
               <RevealText text="Commerce software," delay={0.12} />
               <br />
               <RevealText
@@ -124,7 +124,7 @@ export function HeroSection() {
             initial={animate ? { opacity: 0, y: 40 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: EASE, delay: 0.34 }}
-            className="lg:col-span-5 lg:-mr-6 xl:-mr-16"
+            className="w-full min-w-0 lg:col-span-5 lg:-mr-6 xl:-mr-16"
             style={{ perspective: '1200px' }}
           >
             {/* Status chips ride above the panel */}
@@ -162,7 +162,7 @@ export function HeroSection() {
               </div>
 
               {/* Summary — recomputed from the active row */}
-              <div className="grid grid-cols-3 divide-x divide-white/10 border-b border-white/10">
+              <div className="grid grid-cols-1 divide-y divide-white/10 border-b border-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                 {[
                   { k: 'Stage', v: active.stage },
                   { k: 'Complete', v: `${active.pct}%` },

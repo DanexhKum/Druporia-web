@@ -97,7 +97,7 @@ export default async function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-ink-950">
+    <div className="min-h-dvh bg-ink-950">
       <TawkWidget />
       <HeroSection />
 
@@ -107,7 +107,7 @@ export default async function HomePage() {
 
       <FeaturedProducts />
 
-      <section className="dark-shell py-24 sm:py-32">
+      <section className="dark-shell py-12 sm:py-20 lg:py-28">
         <div aria-hidden className="glow-top" />
         <div className="container-page relative z-10 grid gap-12 lg:grid-cols-2 items-center">
           <AnimateIn>
@@ -134,7 +134,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="services" className="dark-shell py-24 sm:py-32">
+      <section id="services" className="dark-shell py-12 sm:py-20 lg:py-28">
         <div className="container-page">
           <AnimateIn className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="heading-dark title-fill mt-0">
@@ -151,7 +151,7 @@ export default async function HomePage() {
       <ScrollBuildSection />
 
       {/* ── Platform ─────────────────────────────────────── */}
-      <section id="platform" className="dark-shell py-24 sm:py-32">
+      <section id="platform" className="dark-shell py-12 sm:py-20 lg:py-28">
         <div className="container-page">
           <AnimateIn className="mb-14 max-w-2xl">
             <h2 className="heading-dark title-fill mt-0">
@@ -193,7 +193,7 @@ export default async function HomePage() {
       <TeamSection />
 
       {faqs.length > 0 && (
-        <section className="dark-shell py-24 sm:py-32">
+        <section className="dark-shell py-12 sm:py-20 lg:py-28">
           <div className="container-page">
             <AnimateIn className="mx-auto mb-12 max-w-2xl text-center">
               <h2 className="heading-dark title-fill mt-0">

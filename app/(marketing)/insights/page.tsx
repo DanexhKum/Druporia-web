@@ -49,7 +49,7 @@ export default function InsightsPage() {
         </div>
       </section>
 
-      <section className="container-page py-24 sm:py-32">
+      <section className="container-page py-12 sm:py-20 lg:py-28">
         <StaggerGrid className="grid gap-6 md:grid-cols-2">
           {posts.map((post) => (
             <StaggerItem key={post.slug}>

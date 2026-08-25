@@ -48,7 +48,7 @@ export default function ContactPage() {
       <div aria-hidden className="wash-top" />
       <div aria-hidden className="blueprint-field" />
 
-      <div className="container-page relative z-10 py-24 sm:py-32">
+      <div className="container-page relative z-10 py-12 sm:py-20 lg:py-28">
         {/* ── Header ─────────────────────────────────────── */}
         <div className="flex items-center gap-3">
           <span className="h-px w-10 bg-white/40" />
@@ -69,7 +69,7 @@ export default function ContactPage() {
         </p>
 
         {/* ── Asymmetrical split: 5 / 7 ─────────────────── */}
-        <div className="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12">
+        <div className="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12 [&>*]:min-w-0">
           <div className="lg:col-span-5">
             <SupportTerminal />
 

@@ -120,7 +120,7 @@ export default function RootLayout({
             rel="stylesheet"
           />
         </head>
-        <body className="min-h-screen bg-ink-950 text-white">
+        <body className="min-h-dvh overflow-x-hidden bg-ink-950 text-white">
           {children}
           <Toaster
             position="bottom-right"

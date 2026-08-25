@@ -95,9 +95,9 @@ export function Footer() {
       {/* Blueprint verticals, fading down */}
       <div aria-hidden className="blueprint-field" />
 
-      <div className="container-page relative py-20 sm:py-24">
+      <div className="container-page relative py-12 sm:py-20 lg:py-28">
         {/* ── Top: identity + newsletter ─────────────────── */}
-        <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-12 lg:gap-8">
+        <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-12 lg:gap-8 [&>*]:min-w-0">
           <div className="lg:col-span-5">
             <Logo href="/" imageClassName="h-9 w-auto brightness-0 invert" />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-zinc-400">
@@ -107,7 +107,7 @@ export function Footer() {
             </p>
 
             <div className="mt-7 space-y-2.5 text-sm text-zinc-400">
-              <p className="flex items-center gap-2.5">
+              <p className="flex items-start gap-2.5 break-words">
                 <Mail className="h-3.5 w-3.5 shrink-0" />
                 <a
                   href="mailto:dhanesh.kum15@gmail.com"
@@ -116,7 +116,7 @@ export function Footer() {
                   dhanesh.kum15@gmail.com
                 </a>
               </p>
-              <p className="flex items-center gap-2.5">
+              <p className="flex items-start gap-2.5 break-words">
                 <MapPin className="h-3.5 w-3.5 shrink-0" />
                 Remote-first · Worldwide
               </p>
@@ -138,7 +138,7 @@ export function Footer() {
         </div>
 
         {/* ── Middle: link columns ───────────────────────── */}
-        <div className="grid gap-10 py-14 sm:grid-cols-3 lg:gap-8">
+        <div className="grid gap-10 py-14 sm:grid-cols-3 lg:gap-8 [&>*]:min-w-0">
           <LinkColumn heading="Products" links={PRODUCT_LINKS} />
           <LinkColumn heading="Company" links={COMPANY_LINKS} />
           <LinkColumn heading="Legal" links={LEGAL_LINKS} />

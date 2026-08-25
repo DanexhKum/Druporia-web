@@ -107,7 +107,7 @@ export function TabbedShowcase() {
   const tab = TABS[active]
 
   return (
-    <section id="capabilities" className="relative bg-ink-950 py-24 sm:py-32">
+    <section id="capabilities" className="relative bg-ink-950 py-12 sm:py-20 lg:py-28">
       <div className="container-page">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="heading-dark title-fill mt-0">

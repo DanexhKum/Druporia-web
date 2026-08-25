@@ -147,7 +147,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
   const requirements = getCategoryRequirements(product.category)
 
   return (
-    <div className="bg-ink-950 min-h-screen">
+    <div className="bg-ink-950 min-h-dvh">
       <div className="relative overflow-hidden bg-ink-990 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,58,95,0.32),transparent_34rem),radial-gradient(circle_at_bottom_right,rgba(201,165,90,0.18),transparent_28rem)]" />
         <div className="container-page relative z-10 py-10">

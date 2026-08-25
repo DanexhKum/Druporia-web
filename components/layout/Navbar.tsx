@@ -16,7 +16,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
@@ -47,6 +47,16 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
+  // Closing by tapping a link means the visitor is navigating, so the
+  // saved offset must NOT be restored — doing so yanks the page back
+  // and cancels the in-flight smooth scroll to the target section.
+  // Closing via X, the backdrop or Escape should restore it.
+  const restoreScroll = useRef(true)
+  const close = (restore: boolean) => {
+    restoreScroll.current = restore
+    setOpen(false)
+  }
+
   // Boolean state only — see the note at the top of the file.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -57,18 +67,61 @@ export function Navbar() {
 
   useEffect(() => setOpen(false), [pathname])
 
-  // Lock the page while the drawer is open, and restore on close.
+  // Lock the page while the drawer is open, and restore on close. Three things have to be handled together:
+  //   - `html` carries `overflow-x: hidden` globally, which makes
+  //     it the scroll container, so `body { overflow: hidden }`
+  //     alone no longer blocks the page. Lock the element that
+  //     actually scrolls.
+  //   - iOS Safari ignores `overflow: hidden` on the scroller and
+  //     rubber-bands anyway, so the body is pinned with
+  //     `position: fixed` at the current offset and restored to it
+  //     on close — otherwise closing the drawer teleports you to
+  //     the top of the page.
+  //   - Lenis drives scroll from its own RAF loop and does not
+  //     consult CSS at all; it has to be stopped explicitly.
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
+    if (!open) return
+    const y = window.scrollY
+    const html = document.documentElement
+    const { body } = document
+    const prevBodyTop = body.style.top
+
+    window.__lenis?.stop()
+    html.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.top = `-${y}px`
+    body.style.width = '100%'
+
     return () => {
-      document.body.style.overflow = ''
+      // Unpin first, so the document regains its full height and the
+      // scroll offset is settable again.
+      html.style.overflow = ''
+      body.style.position = ''
+      body.style.top = prevBodyTop
+      body.style.width = ''
+      // Same reason as above: the pinned body shrank the document and
+      // Lenis's cached scroll limit went with it. Recompute before
+      // asking it to go anywhere, or the target gets clamped to 0.
+      window.__lenis?.resize()
+
+      if (restoreScroll.current) {
+        window.scrollTo(0, y)
+        // Lenis re-reads the real scroll position when it restarts,
+        // and while the body was pinned the browser clamped that to
+        // 0 — so restarting alone throws the restored offset away.
+        // Tell it where we actually are. `force` is required because
+        // the instance is still stopped at this point.
+        window.__lenis?.scrollTo(y, { immediate: true, force: true })
+      }
+      restoreScroll.current = true
+      window.__lenis?.start()
     }
   }, [open])
 
   // Escape closes the drawer.
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close(true)
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
@@ -159,7 +212,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-drawer"
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="rounded-lg border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-white/25 hover:text-white lg:hidden"
+            className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 text-zinc-400 transition-colors hover:border-white/25 hover:text-white active:border-white/40 lg:hidden"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -176,8 +229,8 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              onClick={() => setOpen(false)}
-              className="fixed inset-0 top-[72px] z-40 bg-black/70 backdrop-blur-sm lg:hidden"
+              onClick={() => close(true)}
+              className="fixed inset-0 top-[64px] z-40 bg-black/70 backdrop-blur-md lg:hidden"
             />
 
             <motion.nav
@@ -198,6 +251,7 @@ export function Navbar() {
                   >
                     <Link
                       href={link.href}
+                      onClick={() => close(false)}
                       className="flex items-center justify-between border-b border-white/[0.06] py-4 font-display text-2xl font-semibold text-zinc-400 transition-colors hover:text-white"
                     >
                       {link.label}
