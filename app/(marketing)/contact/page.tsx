@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { Mail } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { SupportTerminal } from '@/components/contact/SupportTerminal'
+import { TrustBadges } from '@/components/contact/TrustBadges'
 import { TawkWidget } from '@/components/chat/TawkWidget'
 
 export const metadata: Metadata = {
@@ -89,6 +90,7 @@ export default function ContactPage() {
 
           <div className="lg:col-span-7">
             <ContactForm />
+            <TrustBadges />
           </div>
         </div>
       </div>

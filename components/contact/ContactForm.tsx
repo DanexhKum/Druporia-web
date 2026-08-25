@@ -29,11 +29,18 @@ const SUBJECTS = [
   'Other',
 ]
 
+// Dark glassmorphism per spec. One deviation, deliberate:
+// the spec asks for placeholder:text-zinc-500, but a visible
+// placeholder AND a resting floating label render the same slot
+// twice. So the placeholder is transparent at rest — the LABEL is
+// what you see — and becomes zinc-500 on focus, where it turns
+// into a useful format hint under the risen label. Both behaviours
+// the spec wanted, without the collision.
 const FIELD =
-  'peer w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 pb-2.5 pt-6 text-sm text-white placeholder:text-transparent transition-colors duration-300 focus:border-white/30 focus:outline-none focus:ring-0'
+  'peer w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 pb-2.5 pt-6 text-sm text-white transition-all duration-200 placeholder:text-transparent focus:border-white/30 focus:bg-white/[0.06] focus:outline-none focus:ring-0 focus:placeholder:text-zinc-500'
 
 const LABEL =
-  'pointer-events-none absolute left-4 top-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-[13px] peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-white/30 peer-focus:top-2 peer-focus:text-[10px] peer-focus:uppercase peer-focus:tracking-[0.14em] peer-focus:text-white/60'
+  'pointer-events-none absolute left-4 top-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-[13px] peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-zinc-500 peer-focus:top-2 peer-focus:text-[10px] peer-focus:uppercase peer-focus:tracking-[0.14em] peer-focus:text-white/70'
 
 export function ContactForm() {
   const [status, setStatus] = useState<SubmitState>('idle')
@@ -105,7 +112,7 @@ export function ContactForm() {
               id="name"
               name="name"
               required
-              placeholder="Full name"
+              placeholder="Jane Okafor"
               autoComplete="name"
               className={FIELD}
             />
@@ -120,7 +127,7 @@ export function ContactForm() {
               id="email"
               name="email"
               required
-              placeholder="Email address"
+              placeholder="you@company.com"
               autoComplete="email"
               className={FIELD}
             />
@@ -135,7 +142,7 @@ export function ContactForm() {
             id="subject"
             name="subject"
             defaultValue={SUBJECTS[0]}
-            className="w-full appearance-none rounded-xl border border-white/10 bg-white/[0.03] px-4 pb-2.5 pt-6 text-sm text-white transition-colors duration-300 focus:border-white/30 focus:outline-none focus:ring-0"
+            className="w-full appearance-none rounded-lg border border-white/10 bg-white/[0.03] px-4 pb-2.5 pt-6 text-sm text-white transition-all duration-200 focus:border-white/30 focus:bg-white/[0.06] focus:outline-none focus:ring-0"
           >
             {SUBJECTS.map((s) => (
               <option key={s} value={s} className="bg-ink-900">
@@ -145,7 +152,7 @@ export function ContactForm() {
           </select>
           <label
             htmlFor="subject"
-            className="pointer-events-none absolute left-4 top-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40"
+            className="pointer-events-none absolute left-4 top-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45"
           >
             Subject
           </label>
@@ -157,7 +164,7 @@ export function ContactForm() {
             name="message"
             rows={6}
             required
-            placeholder="Tell us about the workflow"
+            placeholder="e.g. orders are re-keyed from Shopify into our ERP by hand every morning"
             className={`${FIELD} resize-y`}
           />
           <label htmlFor="message" className={LABEL}>

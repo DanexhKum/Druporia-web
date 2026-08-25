@@ -16,7 +16,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import { Clock, ShieldCheck, Zap } from 'lucide-react'
+import { Globe, MapPin } from 'lucide-react'
 
 type Line = { kind: 'in' | 'out' | 'note'; text: string }
 
@@ -29,16 +29,29 @@ const TRANSCRIPT: Line[] = [
   { kind: 'out', text: 'Written scope sent. No commitment until you approve.' },
 ]
 
-// Claims we can actually stand behind. The site already tells
-// people "within 24 hours" on the contact form, so anything
-// faster stated here would contradict it.
-const BADGES = [
-  { icon: Clock, label: 'Reply within 24h', sub: 'stated policy' },
-  { icon: ShieldCheck, label: 'Fixed-price scoping', sub: 'before any code' },
-  { icon: Zap, label: 'Post-launch support', sub: 'included in scope' },
+// Coverage rows. The clocks are genuinely live — computed in the
+// visitor's browser from the IANA zone, ticking every second — so
+// nothing here is a static string pretending to be real-time.
+const ZONES = [
+  { city: 'Karachi', zone: 'Asia/Karachi' },
+  { city: 'London', zone: 'Europe/London' },
+  { city: 'New York', zone: 'America/New_York' },
 ]
 
 const STEP_MS = 620
+
+// One interval for every clock. Rendering on the client only —
+// a server-rendered time is stale the instant it is sent, and
+// would hydrate-mismatch against the browser's own zone.
+function useClock() {
+  const [now, setNow] = useState<Date | null>(null)
+  useEffect(() => {
+    setNow(new Date())
+    const id = window.setInterval(() => setNow(new Date()), 1000)
+    return () => window.clearInterval(id)
+  }, [])
+  return now
+}
 
 export function SupportTerminal() {
   const ref = useRef<HTMLDivElement>(null)
@@ -80,6 +93,7 @@ export function SupportTerminal() {
   }, [reduceMotion])
 
   const done = shown >= TRANSCRIPT.length
+  const now = useClock()
 
   return (
     <div ref={ref} className="flex flex-col gap-5">
@@ -130,25 +144,53 @@ export function SupportTerminal() {
         </div>
       </div>
 
-      {/* ── Trust badges ─────────────────────────────────── */}
-      <div className="grid gap-2.5 sm:grid-cols-3">
-        {BADGES.map((badge) => {
-          const Icon = badge.icon
-          return (
-            <div
-              key={badge.label}
-              className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+      {/* ── Live coverage ────────────────────────────────── */}
+      <div className="rounded-2xl border border-white/10 bg-ink-900">
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+          <span className="flex items-center gap-2 font-mono text-[11px] text-white/45">
+            <Globe className="h-3.5 w-3.5" />
+            coverage
+          </span>
+          <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:hidden" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            </span>
+            Online
+          </span>
+        </div>
+
+        <ul className="divide-y divide-white/[0.06]">
+          {ZONES.map((z) => (
+            <li
+              key={z.zone}
+              className="flex items-center justify-between gap-3 px-4 py-3"
             >
-              <Icon className="h-4 w-4 text-white/60" />
-              <p className="mt-3 text-sm font-semibold text-white">
-                {badge.label}
-              </p>
-              <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/30">
-                {badge.sub}
-              </p>
-            </div>
-          )
-        })}
+              <span className="flex items-center gap-2.5 text-sm text-zinc-400">
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-white/30" />
+                {z.city}
+              </span>
+              <span
+                className="font-mono text-[12px] tabular-nums text-white"
+                suppressHydrationWarning
+              >
+                {now
+                  ? new Intl.DateTimeFormat('en-GB', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      timeZone: z.zone,
+                      hour12: false,
+                    }).format(now)
+                  : '--:--:--'}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="border-t border-white/10 px-4 py-2.5 font-mono text-[9px] text-white/25">
+          local time in your browser · remote-first team
+        </p>
       </div>
     </div>
   )

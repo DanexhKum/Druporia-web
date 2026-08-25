@@ -77,11 +77,11 @@ export function MagneticButton({
   }
 
   const base =
-    'group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-7 py-3.5 font-mono text-[13px] tracking-tight transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950'
+    'beam-host group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-7 py-3.5 font-mono text-[13px] tracking-tight transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950'
 
   const skin =
     variant === 'primary'
-      ? 'border border-white/30 bg-white/10 text-white shadow-cta hover:border-white/60 hover:bg-white/15'
+      ? 'border border-white/25 bg-ink-850 text-white shadow-cta hover:border-white/45'
       : 'border border-white/10 bg-white/[0.04] text-white/75 backdrop-blur-md hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
 
   const inner = (

@@ -43,14 +43,21 @@
     @apply font-bold tracking-tight;
   }
 
-  /* Inputs — clean, sharp borders */
-  input[type='text'],
-  input[type='email'],
-  input[type='number'],
-  input[type='password'],
-  input[type='url'],
-  select,
-  textarea {
+  /* Inputs — LIGHT SYSTEM ONLY (admin, dashboard).
+     Scoped to .light-surface deliberately. As a bare element +
+     attribute selector this has specificity 0-0-1-1, which BEATS
+     a single utility class at 0-0-1-0 — so unscoped it silently
+     overrode bg-white/[0.03] on every dark form and painted the
+     contact fields pure white with a navy border.
+     Admin inputs carry no className and rely on this, so it stays
+     — just fenced to the surfaces that want it. */
+  .light-surface input[type='text'],
+  .light-surface input[type='email'],
+  .light-surface input[type='number'],
+  .light-surface input[type='password'],
+  .light-surface input[type='url'],
+  .light-surface select,
+  .light-surface textarea {
     @apply w-full rounded-lg border border-navy-200 bg-white px-3.5 py-2.5
            text-sm text-navy-900 placeholder:text-navy-400
            focus:border-navy-500 focus:outline-none focus:ring-2
@@ -469,6 +476,43 @@
   /* Display face — Space Grotesk, for headlines only */
   .font-display {
     font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Border beam ───────────────────────────────────────────
+     A conic gradient rotating behind the element, with an inset
+     panel covering the middle so only a sliver shows at the edge.
+
+     Built this way rather than animating a CSS variable, because
+     @property is still not universal — an unsupported browser
+     would simply freeze the gradient rather than lose the border.
+     The beam layer is aria-hidden and purely decorative. */
+  .beam-host {
+    @apply relative isolate;
+  }
+
+  .beam-host::before {
+    content: '';
+    @apply pointer-events-none absolute -inset-px -z-10 rounded-[inherit] opacity-0
+           transition-opacity duration-300;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      transparent 300deg,
+      rgba(255, 255, 255, 0.9) 340deg,
+      transparent 360deg
+    );
+    animation: spin 2.6s linear infinite;
+  }
+
+  .beam-host:hover::before,
+  .beam-host:focus-within::before {
+    @apply opacity-100;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beam-host::before {
+      animation: none;
+    }
   }
 
   /* Grid backdrop for panels */
