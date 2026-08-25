@@ -143,12 +143,12 @@ export function CommandPalette({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-label="Search products"
-        className="group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left transition-colors duration-300 hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+        className="group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left transition-all duration-300 hover:border-white/25 hover:bg-white/[0.06] focus-visible:border-white/40 focus-visible:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
       >
         {/* Border sweep on hover */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px -translate-x-full bg-gradient-to-r from-transparent via-white to-transparent transition-transform duration-700 group-hover:translate-x-full group-focus-visible:translate-x-full motion-reduce:transition-none"
         />
 
         <Search className="h-4 w-4 shrink-0 text-white/35" />
