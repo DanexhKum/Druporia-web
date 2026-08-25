@@ -1,6 +1,7 @@
 import { Github, Linkedin } from 'lucide-react'
 import { getPublishedTeam } from '@/lib/site-data'
 import { AnimateIn, StaggerGrid, StaggerItem } from '@/components/marketing/AnimateIn'
+import { truncate } from '@/lib/utils'
 
 export async function TeamSection() {
   const members = await getPublishedTeam()
@@ -26,7 +27,7 @@ export async function TeamSection() {
         <StaggerGrid className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
             <StaggerItem key={member.id}>
-              <article className="group card-dark-hover sweep-host overflow-hidden text-center">
+              <article className="group card-dark-hover sweep-host flex h-full flex-col overflow-hidden text-center">
                 <div className="relative bg-gradient-to-br from-ink-990 via-ink-950 to-ink-950 px-6 pb-8 pt-10">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.22),transparent_50%)] opacity-80" />
                   <div className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border border-white/20 bg-white/10 p-1.5 shadow-2xl shadow-black/60 backdrop-blur">
@@ -46,13 +47,13 @@ export async function TeamSection() {
                     </div>
                   </div>
                 </div>
-                <div className="p-6 pt-0">
+                <div className="flex flex-1 flex-col p-6 pt-0">
                   <h3 className="text-lg font-bold text-white">{member.name}</h3>
                   <p className="mt-1 text-sm font-medium text-white/80">{member.role}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-white/55 line-clamp-4">
-                    {member.bio}
+                  <p className="mt-3 text-sm leading-relaxed text-white/65 line-clamp-4">
+                    {truncate(member.bio, 165)}
                   </p>
-                  <div className="mt-4 flex justify-center gap-3">
+                  <div className="mt-auto flex justify-center gap-3 pt-4">
                     {member.linkedInUrl && (
                       <a
                         href={member.linkedInUrl}

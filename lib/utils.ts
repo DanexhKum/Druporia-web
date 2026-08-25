@@ -69,5 +69,16 @@ export function generateSlug(title: string): string {
 
 // ── Truncate text ─────────────────────────────────────────────
 export function truncate(str: string, length: number): string {
-  return str.length > length ? `${str.slice(0, length).trim()}…` : str
+  if (str.length <= length) return str
+
+  // Break on a word boundary rather than mid-word. Falling back to a
+  // hard cut only when the last space is very early, so a single long
+  // token can't collapse the whole string.
+  const cut = str.slice(0, length)
+  const lastSpace = cut.lastIndexOf(' ')
+  const base = lastSpace > length * 0.6 ? cut.slice(0, lastSpace) : cut
+
+  // Strip trailing punctuation before the ellipsis — otherwise a clause
+  // ending in a comma renders as "architecture,…", which reads broken.
+  return `${base.trimEnd().replace(/[,;:.\-–—]+$/, '')}…`
 }
