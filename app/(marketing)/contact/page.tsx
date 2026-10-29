@@ -6,7 +6,6 @@
 
 import type { Metadata } from 'next'
 import { ContactForm } from '@/components/contact/ContactForm'
-import { TawkWidget } from '@/components/chat/TawkWidget'
 import { PageHeader } from '@/components/ui/Section'
 import { CONTACT_EMAIL, PROCESS_STEPS, parseServiceParam } from '@/lib/site-content'
 
@@ -44,7 +43,6 @@ export default async function ContactPage({ searchParams }: PageProps) {
 
   return (
     <>
-      <TawkWidget />
       <PageHeader
         eyebrow="Contact"
         title="Book a free discovery call"

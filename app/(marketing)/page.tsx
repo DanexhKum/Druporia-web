@@ -13,7 +13,6 @@ import {
 import { TeamSection, type TeamMemberData } from '@/components/marketing/TeamSection'
 import { FaqAccordion } from '@/components/marketing/FaqAccordion'
 import { SectionHeading } from '@/components/ui/Section'
-import { TawkWidget } from '@/components/chat/TawkWidget'
 import { getHomepageServices, getPublishedFaqs, getPublishedTeam } from '@/lib/site-data'
 import { DEFAULT_SERVICES } from '@/lib/default-services'
 import {
@@ -108,7 +107,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <TawkWidget />
       <Hero />
       <StackStrip items={TECH_STACK} />
       <ServicesSection services={services} />

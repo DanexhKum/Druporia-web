@@ -121,25 +121,34 @@ export const DEFAULT_FAQS = [
   },
 ]
 
+export const TEAM_INTRO = {
+  title: 'The people you’ll work with',
+  description:
+    'A small, senior team. The engineers who scope your project are the ones who build it — no account managers, no hand-offs, one shared channel from discovery call to launch.',
+}
+
 export const DEFAULT_TEAM = [
   {
     name: 'Dhanesh Kumar',
     role: 'Founder & Principal Engineer',
-    bio: 'Drives technical direction across full-stack architecture, n8n automation and AI integrations.',
+    bio: 'Leads every engagement from the first call — scoping, architecture and the code itself. Works across WooCommerce and Shopify extensions, Next.js platforms, n8n automation and AI integrations, and owns the fixed-price scope you sign off on.',
+    focus: ['Architecture', 'Next.js', 'WooCommerce', 'AI'],
     linkedInUrl: 'https://www.linkedin.com/in/dhaneshkum15/',
     githubUrl: 'https://github.com/DanexhKum/',
   },
   {
     name: 'Hitesh Kumar',
     role: 'Software Engineer',
-    bio: 'Full-stack engineer focused on workflow automation and machine-learning integrations.',
+    bio: 'Builds the integrations that connect your store to the rest of your stack — n8n workflows, APIs and AI features like support bots and product recommendations — designed to keep running quietly after launch.',
+    focus: ['n8n', 'APIs', 'Machine learning'],
     linkedInUrl: 'https://www.linkedin.com/in/hitesh-kumar-85454323a/',
     githubUrl: 'https://github.com/hitesh311',
   },
   {
     name: 'Aastha Gupta',
     role: 'Data Analyst',
-    bio: 'Builds analytical pipelines and dashboards that shape smarter product and business decisions.',
+    bio: 'Turns sales, customer and marketing data into dashboards your team actually opens — cleaning the data, defining the KPIs and building the reporting pipelines behind them.',
+    focus: ['Python', 'Data pipelines', 'Dashboards'],
     linkedInUrl: 'https://www.linkedin.com/in/aastha-gupta-2001582bb/',
     githubUrl: 'https://github.com/A2A2S2T2H2A2-RANI',
   },
