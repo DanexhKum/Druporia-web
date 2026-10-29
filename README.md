@@ -8,7 +8,7 @@ Live site: https://druporia-soft.vercel.app
 
 Next.js 14 (App Router), Prisma ORM, Clerk for authentication and role-based access control.
 
-## Features
+## Features 
 
 Portfolio showcase, marketplace listings with image upload support, an admin panel for editing site content, a contact form, and a team profiles page.
 
