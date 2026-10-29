@@ -6,16 +6,25 @@
 import type { Metadata, Viewport } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from 'react-hot-toast'
+import { Geist } from 'next/font/google'
+import { colors } from '@/lib/design-tokens'
 import '@/app/globals.css'
+
+const geist = Geist({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-geist',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://druporia.vercel.app'),
   title: {
-    default: 'Druporia — Enterprise Technology Solutions',
+    default: 'Druporia — Custom engineering for digital commerce',
     template: '%s | Druporia',
   },
   description:
-    'Druporia provides end-to-end eCommerce and technology services for B2B and B2C companies. Custom plugins, AI solutions, and full-stack development.',
+    'Druporia designs and builds custom plugins, Shopify apps, AI automation and full-stack platforms for B2B and B2C brands — scoped up front, built in the open, supported after launch.',
   keywords: [
     'freelance developer',
     'web development',
@@ -39,9 +48,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    title: 'Druporia — Enterprise Technology Solutions',
+    title: 'Druporia — Custom engineering for digital commerce',
     description:
-      'Innovative, scalable, and future-ready technology solutions tailored to your business needs.',
+      'Custom plugins, Shopify apps, AI automation and full-stack development for commerce brands. Book a free discovery call.',
     siteName: 'Druporia',
     url: '/',
     images: [
@@ -55,15 +64,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Druporia — Enterprise Technology Solutions',
+    title: 'Druporia — Custom engineering for digital commerce',
     description:
-      'End-to-end eCommerce technology, AI automation, custom plugins, and full-stack development.',
+      'Custom plugins, Shopify apps, AI automation and full-stack development for commerce brands.',
     images: ['/icon.svg'],
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: colors.canvas,
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
@@ -78,59 +87,47 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: '#0f172a',
-          colorBackground: '#ffffff',
-          colorInputBackground: '#ffffff',
-          colorInputText: '#0f172a',
-          fontFamily: 'Inter, -apple-system, sans-serif',
-          borderRadius: '6px',
+          colorPrimary: colors.ink.DEFAULT,
+          colorBackground: colors.canvas,
+          colorInputBackground: colors.canvas,
+          colorInputText: colors.ink.DEFAULT,
+          colorText: colors.ink.DEFAULT,
+          colorTextSecondary: colors.body,
+          fontFamily: 'var(--font-geist), system-ui, sans-serif',
+          borderRadius: '12px',
         },
         elements: {
-          formButtonPrimary:
-            'bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium',
-          card: 'border border-slate-200 shadow-card',
-          headerTitle: 'text-slate-900 font-semibold',
-          headerSubtitle: 'text-slate-500',
-          formFieldInput:
-            'border-slate-200 focus:ring-slate-900 text-sm',
-          footerActionLink: 'text-slate-900 font-medium',
+          formButtonPrimary: 'bg-ink hover:bg-ink-hover text-white text-sm font-semibold rounded-full',
+          card: 'border border-line-card shadow-hero rounded-card-lg',
+          headerTitle: 'text-ink font-semibold',
+          headerSubtitle: 'text-body',
+          formFieldInput: 'border-line-chip text-sm',
+          footerActionLink: 'text-orange-text font-medium hover:text-orange-deep',
         },
       }}
     >
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-            rel="stylesheet"
-          />
-        </head>
-        <body className="min-h-screen bg-white text-slate-900">
+      <html lang="en" className={geist.variable} suppressHydrationWarning>
+        <body className="min-h-screen bg-canvas font-sans text-ink">
           {children}
           <Toaster
             position="bottom-right"
             toastOptions={{
               duration: 4000,
               style: {
-                background: '#ffffff',
-                color: '#0f172a',
-                border: '1px solid #e2e8f0',
-                borderRadius: '6px',
+                background: colors.canvas,
+                color: colors.ink.DEFAULT,
+                border: `1px solid ${colors.line.card}`,
+                borderRadius: '16px',
                 fontSize: '14px',
                 fontWeight: '500',
-                boxShadow: '0 4px 16px 0 rgba(0,0,0,0.08)',
+                boxShadow: '0 16px 40px rgba(15, 20, 32, 0.12)',
                 padding: '12px 16px',
               },
               success: {
-                iconTheme: { primary: '#16a34a', secondary: '#ffffff' },
+                iconTheme: { primary: colors.status, secondary: colors.canvas },
               },
               error: {
-                iconTheme: { primary: '#dc2626', secondary: '#ffffff' },
+                iconTheme: { primary: colors.orange.deep, secondary: colors.canvas },
               },
             }}
           />

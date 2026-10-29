@@ -1,115 +1,92 @@
 // ============================================================
 // app/(marketing)/contact/page.tsx
-// Modern Contact Page with Formspree Integration
+// Contact / discovery-call request. Reads ?service= params from
+// the homepage picker to pre-select services in the form.
 // ============================================================
 
 import type { Metadata } from 'next'
-import { Mail, MessageSquare, Building } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { TawkWidget } from '@/components/chat/TawkWidget'
+import { PageHeader } from '@/components/ui/Section'
+import { CONTACT_EMAIL, PROCESS_STEPS, parseServiceParam } from '@/lib/site-content'
 
 export const metadata: Metadata = {
-  title: 'Contact Druporia',
+  title: 'Book a free discovery call',
   description:
-    'Contact Druporia for custom plugins, Shopify apps, AI automation, data analytics, and full-stack product development.',
+    'Tell Druporia what you are building — custom plugins, Shopify apps, AI automation, data dashboards or full-stack platforms. We reply within one business day.',
   alternates: {
     canonical: '/contact',
   },
   openGraph: {
-    title: 'Contact Druporia',
+    title: 'Book a free discovery call — Druporia',
     description:
-      'Start a project with Druporia for commerce technology, automation, analytics, and custom development.',
+      'Start a project with Druporia: a free 30-minute call, then a fixed-price scope.',
     url: '/contact',
     type: 'website',
-    images: [
-      {
-        url: '/icon.svg',
-        width: 64,
-        height: 64,
-        alt: 'Contact Druporia',
-      },
-    ],
+    images: [{ url: '/icon.svg', width: 64, height: 64, alt: 'Contact Druporia' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact Druporia',
+    title: 'Book a free discovery call — Druporia',
     description:
-      'Start a project with Druporia for commerce technology, automation, analytics, and custom development.',
+      'Start a project with Druporia: a free 30-minute call, then a fixed-price scope.',
     images: ['/icon.svg'],
   },
 }
 
-export default function ContactPage() {
+interface PageProps {
+  searchParams: Promise<{ service?: string | string[] }>
+}
+
+export default async function ContactPage({ searchParams }: PageProps) {
+  const { service } = await searchParams
+  const initialServices = parseServiceParam(service)
+
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <>
       <TawkWidget />
-      {/* ── Page Header ─────────────────────────────────────── */}
-      <div className="bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80"></div>
-        <div className="container-page py-20 relative z-10 text-center max-w-3xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-widest text-blue-400 mb-4">
-            Contact Druporia
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Let's build something great together.
-          </h1>
-          <p className="mt-6 text-lg text-slate-300">
-            Have a project in mind or a question about our products? Fill out the form below and our team will get back to you within 24 hours.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Contact"
+        title="Book a free discovery call"
+        description="Tell us what you’re building. We’ll reply within one business day with next steps and a time for a 30-minute call — no commitment."
+      />
 
-      {/* ── Main Content ────────────────────────────────────── */}
-      <div className="container-page py-16 sm:py-24">
-        <div className="grid gap-12 lg:grid-cols-3 lg:gap-8 max-w-6xl mx-auto">
-          
-          {/* Contact Info Sidebar */}
-          <div className="space-y-8 lg:col-span-1">
-            <div>
-              <h3 className="text-xl font-bold text-slate-900">Reach Out Directly</h3>
-              <p className="mt-2 text-sm text-slate-500">
-                We're always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Email Us</p>
-                  <p className="text-sm text-slate-500">dhanesh.kumar15@gmail.com</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                  <MessageSquare className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Support</p>
-                  <p className="text-sm text-slate-500">support@druporia.com</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                  <Building className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">HQ</p>
-                  <p className="text-sm text-slate-500">Global Remote Team</p>
-                </div>
-              </div>
-            </div>
+      <section className="container-page grid gap-12 pb-20 desk:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] desk:gap-16 desk:pb-section">
+        <aside className="flex flex-col gap-10">
+          <div>
+            <h2 className="text-h3-sm font-semibold">Reach us directly</h2>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-3 inline-block font-medium text-orange-text transition-colors hover:text-orange-deep"
+            >
+              {CONTACT_EMAIL}
+            </a>
+            <p className="mt-1.5 text-[15px] text-muted-soft">Remote-first · Worldwide</p>
           </div>
 
-          {/* Contact form */}
-          <div className="lg:col-span-2">
-            <ContactForm />
+          <div>
+            <h2 className="text-h3-sm font-semibold">What happens next</h2>
+            <ol className="mt-5 flex flex-col gap-5">
+              {PROCESS_STEPS.map((step, i) => (
+                <li key={step.title} className="flex gap-4">
+                  <span
+                    aria-hidden="true"
+                    className="grid h-[30px] w-[30px] flex-none place-items-center rounded-full bg-brand text-[13px] font-semibold text-white"
+                  >
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="font-semibold">{step.title}</p>
+                    <p className="mt-1 text-[15px] leading-[1.55] text-body">{step.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
+        </aside>
 
-        </div>
-      </div>
-    </div>
+        <ContactForm key={initialServices.join(',')} initialServices={initialServices} />
+      </section>
+    </>
   )
 }

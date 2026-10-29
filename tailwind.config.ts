@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import { colors, gradients, shadows } from './lib/design-tokens'
 
 const config: Config = {
   content: [
@@ -9,38 +10,50 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: [
-          'Inter',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'sans-serif',
-        ],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      // Design breakpoints: 1 column ≤640px, 2 columns ≤1024px.
+      screens: {
+        tab: '641px',
+        desk: '1025px',
       },
-      colors: {
-        slate: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
-        },
+      fontFamily: {
+        sans: ['var(--font-geist)', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      },
+      colors,
+      backgroundImage: {
+        brand: gradients.brand,
+        'brand-text': gradients.brandText,
       },
       boxShadow: {
-        'card': '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
-        'card-hover': '0 4px 12px 0 rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04)',
-        'dropdown': '0 4px 16px 0 rgba(0,0,0,0.08)',
+        hero: shadows.hero,
+        cta: shadows.cta,
+        pop: shadows.pop,
+        card: '0 1px 2px 0 rgba(15, 20, 32, 0.04)',
+        'card-hover': shadows.pop,
+        dropdown: shadows.pop,
       },
       borderRadius: {
-        DEFAULT: '6px',
+        DEFAULT: '10px',
+        tile: '10px',
+        faq: '20px',
+        card: '22px',
+        'card-lg': '24px',
+        section: '36px',
+      },
+      fontSize: {
+        h1: ['clamp(2.75rem, 1.4rem + 4.6vw, 4.875rem)', { lineHeight: '1.02', letterSpacing: '-0.045em' }],
+        h2: ['clamp(2.125rem, 1.35rem + 2.7vw, 3.375rem)', { lineHeight: '1.05', letterSpacing: '-0.04em' }],
+        'h2-sm': ['clamp(2rem, 1.4rem + 2vw, 3rem)', { lineHeight: '1.05', letterSpacing: '-0.04em' }],
+        'h2-lg': ['clamp(2.25rem, 1.3rem + 3.2vw, 3.625rem)', { lineHeight: '1.02', letterSpacing: '-0.045em' }],
+        h3: ['1.4375rem', { lineHeight: '1.2', letterSpacing: '-0.025em' }],
+        'h3-sm': ['1.25rem', { lineHeight: '1.25', letterSpacing: '-0.02em' }],
+        lead: ['clamp(1.0625rem, 0.95rem + 0.35vw, 1.1875rem)', { lineHeight: '1.6' }],
+      },
+      spacing: {
+        section: '112px',
+        gutter: '72px',
+      },
+      maxWidth: {
+        page: '1280px',
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',
@@ -59,19 +72,29 @@ const config: Config = {
       typography: {
         DEFAULT: {
           css: {
-            color: '#1e293b',
+            color: colors.body,
             maxWidth: 'none',
+            fontSize: '1.0625rem',
+            lineHeight: '1.7',
+            h1: { color: colors.ink.DEFAULT, fontWeight: '600', letterSpacing: '-0.04em' },
+            h2: { color: colors.ink.DEFAULT, fontWeight: '600', letterSpacing: '-0.03em' },
+            h3: { color: colors.ink.DEFAULT, fontWeight: '600', letterSpacing: '-0.02em' },
+            strong: { color: colors.ink.DEFAULT },
             a: {
-              color: '#0f172a',
-              textDecoration: 'underline',
-              textDecorationColor: '#cbd5e1',
+              color: colors.orange.text,
+              textDecoration: 'none',
+              fontWeight: '500',
+              '&:hover': { color: colors.orange.deep },
             },
+            'ul > li::marker': { color: colors.orange.DEFAULT },
             code: {
-              backgroundColor: '#f1f5f9',
-              borderRadius: '4px',
-              padding: '2px 5px',
+              backgroundColor: colors.surface.DEFAULT,
+              borderRadius: '6px',
+              padding: '2px 6px',
               fontWeight: '500',
             },
+            'code::before': { content: 'none' },
+            'code::after': { content: 'none' },
           },
         },
       },

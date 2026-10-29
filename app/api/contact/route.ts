@@ -9,6 +9,11 @@ export async function POST(request: Request) {
   const email = String(formData.get('email') ?? '').trim()
   const subject = String(formData.get('subject') ?? '').trim()
   const message = String(formData.get('message') ?? '').trim()
+  const services = formData
+    .getAll('services')
+    .map((value) => String(value).trim().slice(0, 60))
+    .filter(Boolean)
+    .slice(0, 10)
 
   if (!name || !email || !message) {
     return NextResponse.json(
@@ -21,7 +26,11 @@ export async function POST(request: Request) {
     name,
     email,
     subject: subject || 'Website contact form',
-    message,
+    message: services.length
+      ? `Services: ${services.join(', ')}
+
+${message}`
+      : message,
     _replyto: email,
   })
 

@@ -1,13 +1,25 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle2, Send } from 'lucide-react'
+import { buttonClasses } from '@/components/ui/Button'
+import { CONTACT_EMAIL, SERVICE_OPTIONS, type ServiceOptionValue } from '@/lib/site-content'
+import { cn } from '@/lib/utils'
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
 
-export function ContactForm() {
+const fieldClass =
+  'mt-1 block w-full rounded-2xl border border-line-chip bg-canvas px-4 py-3 text-[15px] transition-colors focus:border-orange focus:ring-2 focus:ring-orange/20'
+
+export function ContactForm({ initialServices = [] }: { initialServices?: ServiceOptionValue[] }) {
   const [status, setStatus] = useState<SubmitState>('idle')
   const [message, setMessage] = useState('')
+  const [services, setServices] = useState<ServiceOptionValue[]>(initialServices)
+
+  function toggle(value: ServiceOptionValue) {
+    setServices((current) =>
+      current.includes(value) ? current.filter((v) => v !== value) : [...current, value]
+    )
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -31,102 +43,118 @@ export function ContactForm() {
       }
 
       form.reset()
+      setServices([])
       setStatus('success')
       setMessage(
-        'Thank you for contacting us. Our team has received your message and will get back to you within 24 hours.'
+        'Thanks — we’ve got your message and will reply within one business day with next steps.'
       )
     } catch {
       setStatus('error')
       setMessage(
-        'Message could not be sent right now. Please email us directly at dhanesh.kumar15@gmail.com.'
+        `Your message couldn’t be sent right now. Please email us directly at ${CONTACT_EMAIL}.`
       )
     }
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
+    <div className="rounded-card-lg border border-line-card bg-canvas p-6 shadow-hero tab:p-10">
       {message && (
         <div
-          className={`mb-6 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${
-            status === 'success'
-              ? 'border-green-200 bg-green-50 text-green-800'
-              : 'border-red-200 bg-red-50 text-red-700'
-          }`}
+          className={cn(
+            'mb-6 rounded-2xl px-4 py-3 text-sm',
+            status === 'success' ? 'bg-success-tint text-success' : 'bg-danger-tint text-danger'
+          )}
           role="status"
         >
-          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-          <p>{message}</p>
+          {message}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div>
-            <label htmlFor="name" className="form-label text-slate-700">
-              Full Name
-            </label>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <fieldset>
+          <legend className="form-label">What do you need help with?</legend>
+          <div className="mt-1 flex flex-wrap gap-2">
+            {SERVICE_OPTIONS.map((option) => {
+              const on = services.includes(option.value)
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => toggle(option.value)}
+                  className={cn(
+                    'rounded-full border px-3.5 py-[9px] text-sm font-medium transition-colors',
+                    on
+                      ? 'border-orange bg-orange-tint text-orange-deep'
+                      : 'border-line-chip bg-canvas text-nav hover:bg-surface'
+                  )}
+                >
+                  {option.label}
+                </button>
+              )
+            })}
+          </div>
+          {services.map((value) => (
             <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              className="mt-1 block w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
-              placeholder="John Doe"
+              key={value}
+              type="hidden"
+              name="services"
+              value={SERVICE_OPTIONS.find((o) => o.value === value)?.label ?? value}
             />
+          ))}
+        </fieldset>
+
+        <div className="grid gap-6 tab:grid-cols-2">
+          <div>
+            <label htmlFor="name" className="form-label">
+              Full name
+            </label>
+            <input type="text" id="name" name="name" required autoComplete="name" className={fieldClass} placeholder="Jane Doe" />
           </div>
           <div>
-            <label htmlFor="email" className="form-label text-slate-700">
-              Email Address
+            <label htmlFor="email" className="form-label">
+              Work email
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              className="mt-1 block w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
-              placeholder="john@example.com"
-            />
+            <input type="email" id="email" name="email" required autoComplete="email" className={fieldClass} placeholder="jane@company.com" />
           </div>
         </div>
 
         <div>
-          <label htmlFor="subject" className="form-label text-slate-700">
-            Subject / Inquiry Type
+          <label htmlFor="subject" className="form-label">
+            Inquiry type
           </label>
-          <select
-            id="subject"
-            name="subject"
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
-          >
-            <option value="Project Inquiry">Project Inquiry</option>
-            <option value="Product Support">Product Support</option>
-            <option value="Partnership">Partnership / Automation (n8n)</option>
-            <option value="Other">Other</option>
+          <select id="subject" name="subject" className={fieldClass}>
+            <option value="Project Inquiry">New project</option>
+            <option value="Existing project">Extend an existing store or app</option>
+            <option value="Product Support">Help with one of our products</option>
+            <option value="Other">Something else</option>
           </select>
         </div>
 
         <div>
-          <label htmlFor="message" className="form-label text-slate-700">
-            Message
+          <label htmlFor="message" className="form-label">
+            Tell us about the project
           </label>
           <textarea
             id="message"
             name="message"
             rows={6}
             required
-            className="mt-1 block w-full resize-y rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm transition-colors focus:border-blue-500 focus:bg-white focus:ring-blue-500"
-            placeholder="How can we help you?"
+            className={cn(fieldClass, 'resize-y')}
+            placeholder="Your store or stack, what you want to build, and any timeline."
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={status === 'submitting'}
-          className="btn-primary w-full justify-center gap-2 py-4 text-base font-semibold shadow-lg shadow-blue-500/20"
-        >
-          {status === 'submitting' ? 'Sending...' : 'Send Message'}
-          <Send className="h-5 w-5" />
-        </button>
+        <div className="flex flex-col gap-4 tab:flex-row tab:items-center tab:justify-between">
+          <p className="text-[13.5px] text-muted-note">Free 30-min call · no commitment</p>
+          <button
+            type="submit"
+            disabled={status === 'submitting'}
+            className={buttonClasses('primary', 'lg')}
+          >
+            {status === 'submitting' ? 'Sending…' : 'Send and book a call'}
+          </button>
+        </div>
       </form>
     </div>
   )

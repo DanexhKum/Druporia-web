@@ -11,18 +11,20 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import type { Metadata } from 'next'
 import { ProductStatus, type ProductCategory } from '@prisma/client'
 import { PackageSearch } from 'lucide-react'
+import { PageHeader } from '@/components/ui/Section'
+import { CtaBand } from '@/components/marketing/HomeSections'
 
 export const metadata: Metadata = {
-  title: 'Marketplace — Premium Digital Products',
+  title: 'Products',
   description:
-    'Browse premium web apps, WooCommerce plugins, Chrome extensions, and digital products built by Druporia for modern commerce.',
+    'WooCommerce plugins, Chrome extensions and app starters from Druporia — use one as a starting point, or have us adapt it to your store.',
   alternates: {
     canonical: '/marketplace',
   },
   openGraph: {
-    title: 'Druporia Marketplace — Premium Digital Products',
+    title: 'Druporia Products',
     description:
-      'Browse production-ready plugins, extensions, apps, and tools for modern commerce.',
+      'Plugins, extensions and app starters from Druporia, ready to adapt to your store.',
     url: '/marketplace',
     type: 'website',
     images: [
@@ -30,15 +32,15 @@ export const metadata: Metadata = {
         url: '/icon.svg',
         width: 64,
         height: 64,
-        alt: 'Druporia Marketplace',
+        alt: 'Druporia Products',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Druporia Marketplace — Premium Digital Products',
+    title: 'Druporia Products',
     description:
-      'Production-ready plugins, extensions, apps, and tools for modern commerce.',
+      'Plugins, extensions and app starters from Druporia, ready to adapt to your store.',
     images: ['/icon.svg'],
   },
 }
@@ -116,21 +118,14 @@ async function getProducts(
 // ── Skeleton loader ─────────────────────────────────────────────
 function ProductGridSkeleton() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 tab:grid-cols-2 desk:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="animate-pulse rounded-lg border border-slate-200 bg-white"
-        >
-          <div className="h-40 rounded-t-lg bg-slate-100" />
-          <div className="p-5 space-y-3">
-            <div className="h-3 w-20 rounded bg-slate-100" />
-            <div className="h-4 w-3/4 rounded bg-slate-100" />
-            <div className="h-3 w-full rounded bg-slate-100" />
-            <div className="h-3 w-5/6 rounded bg-slate-100" />
-          </div>
-          <div className="border-t border-slate-100 px-5 py-4">
-            <div className="h-7 w-full rounded bg-slate-100" />
+        <div key={i} className="card-surface animate-pulse p-2">
+          <div className="aspect-[16/10] rounded-[16px] bg-surface-photo" />
+          <div className="space-y-3 p-4">
+            <div className="h-3 w-24 rounded-full bg-surface-photo" />
+            <div className="h-5 w-3/4 rounded-full bg-surface-photo" />
+            <div className="h-3 w-full rounded-full bg-surface-photo" />
           </div>
         </div>
       ))}
@@ -156,20 +151,20 @@ async function ProductGrid({
     return (
       <EmptyState
         icon={PackageSearch}
-        title={query ? 'No matching products found' : 'No products available yet'}
+        title={query ? 'Nothing matches that search' : 'Nothing listed here yet'}
         description={
           query
-            ? `No results for "${query}". Try another keyword, price range, or category.`
-            : 'Products will appear here as soon as they are published from the admin panel.'
+            ? `No results for "${query}". Try another keyword, price range or category.`
+            : 'Need something specific? We build custom plugins and apps as scoped projects.'
         }
         actionHref="/contact"
-        actionLabel="Request a custom product"
+        actionLabel="Book a free discovery call"
       />
     )
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in">
+    <div className="grid gap-4 tab:grid-cols-2 desk:grid-cols-3 animate-fade-in">
       {products.map((product) => (
         <ProductCard
           key={product.id}
@@ -223,61 +218,44 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="bg-white">
-      {/* ── Page header ──────────────────────────────────── */}
-      <div className="bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.22),transparent_34rem)] opacity-80"></div>
-        <div className="container-page py-16 relative z-10">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">
-            Druporia Marketplace
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Premium Digital Products
-          </h1>
-          <p className="mt-4 max-w-xl text-lg text-slate-300">
-            Browse our catalog of high-quality plugins, extensions, and digital assets designed to scale your business. Secure checkout and instant delivery.
-          </p>
+    <>
+      <PageHeader
+        eyebrow="Products"
+        title="Building blocks from our work"
+        description="Plugins, extensions and app starters we’ve built along the way. Use one as a starting point, or have us adapt it to your store as part of a scoped project."
+      />
+
+      <section className="container-page pb-20 desk:pb-section">
+        <div className="border-t border-line pt-8">
+          <ProductFilters
+            activeCategory={category ?? 'all'}
+            counts={categoryCounts}
+            query={query}
+            price={price}
+            sort={sort}
+          />
         </div>
-      </div>
 
-      {/* ── Content ──────────────────────────────────────── */}
-      <div className="container-page py-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
-          {/* ── Sidebar filters ─────────────────────────── */}
-          <aside className="w-full lg:w-52 lg:shrink-0">
-            <ProductFilters
-              activeCategory={category ?? 'all'}
-              counts={categoryCounts}
-              query={query}
-              price={price}
-              sort={sort}
-            />
-          </aside>
+        <p className="mb-5 mt-8 text-sm text-muted" aria-live="polite">
+          {totalCount > 0 ? (
+            <>
+              Showing <span className="font-medium text-ink">{filteredCount}</span>{' '}
+              product{filteredCount !== 1 ? 's' : ''}
+            </>
+          ) : (
+            'No products listed yet'
+          )}
+        </p>
 
-          {/* ── Product grid ──────────────────────────────── */}
-          <div className="flex-1 min-w-0">
-            {/* Result count header */}
-            <div className="mb-5 flex items-center justify-between">
-              <p className="text-sm text-slate-500">
-                {totalCount > 0 ? (
-                  <>
-                    Showing{' '}
-                    <span className="font-medium text-slate-900">{filteredCount}</span>{' '}
-                    product
-                    {filteredCount !== 1 ? 's' : ''}
-                  </>
-                ) : (
-                  'No products yet'
-                )}
-              </p>
-            </div>
+        <Suspense fallback={<ProductGridSkeleton />}>
+          <ProductGrid category={category} query={query} price={price} sort={sort} />
+        </Suspense>
+      </section>
 
-            <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid category={category} query={query} price={price} sort={sort} />
-            </Suspense>
-          </div>
-        </div>
-      </div>
-    </div>
+      <CtaBand
+        title="Need something built to fit?"
+        description="Tell us about your store or workflow. We’ll scope a custom build as fixed-price work."
+      />
+    </>
   )
 }

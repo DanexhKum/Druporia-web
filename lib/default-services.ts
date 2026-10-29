@@ -4,8 +4,8 @@ export const DEFAULT_SERVICES = [
     iconKey: 'Box',
     title: 'Custom Plugin Development',
     description:
-      'Extend WooCommerce, Shopify, and Magento with scalable, production-ready plugins.',
-    tags: ['WooCommerce', 'Shopify'],
+      'Extend WooCommerce, Shopify and Magento with scalable, production-ready plugins.',
+    tags: ['WooCommerce', 'Magento'],
     sortOrder: 0,
   },
   {
@@ -22,8 +22,8 @@ export const DEFAULT_SERVICES = [
     iconKey: 'Bot',
     title: 'AI Solutions & Chatbots',
     description:
-      'Intelligent recommendations, support bots, and workflow automation powered by AI.',
-    tags: ['AI/ML', 'Chatbots'],
+      'Intelligent recommendations, support bots and workflow automation powered by AI.',
+    tags: ['OpenAI', 'Chatbots'],
     sortOrder: 2,
   },
   {
@@ -31,17 +31,17 @@ export const DEFAULT_SERVICES = [
     iconKey: 'Code2',
     title: 'Full-Stack Development',
     description:
-      'Modern web apps with Next.js, React, and robust PostgreSQL backends.',
-    tags: ['Next.js', 'React'],
+      'Modern web apps with Next.js, React and robust PostgreSQL backends.',
+    tags: ['Next.js', 'PostgreSQL'],
     sortOrder: 3,
   },
   {
     sourceKey: 'business-automation-n8n',
     iconKey: 'Workflow',
-    title: 'Business Automation (n8n)',
+    title: 'Business Automation',
     description:
       'Connect your stack with custom n8n workflows and reliable data pipelines.',
-    tags: ['n8n', 'Automation'],
+    tags: ['n8n', 'APIs'],
     sortOrder: 4,
   },
   {
@@ -49,8 +49,8 @@ export const DEFAULT_SERVICES = [
     iconKey: 'BarChart3',
     title: 'Data Analytics & Reporting',
     description:
-      'Turn sales, customer, and marketing data into clear dashboards and actionable insights.',
-    tags: ['Data Analyst', 'Dashboards'],
+      'Turn sales, customer and marketing data into clear dashboards and decisions.',
+    tags: ['Python', 'Dashboards'],
     sortOrder: 5,
   },
 ]

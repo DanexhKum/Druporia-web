@@ -4,34 +4,38 @@
 
 /* ============================================================
    Global Base Styles
-   Design system: Linear/Tailwind UI inspired — white, clean,
-   structural. Zero gradients, zero glow effects.
+   Druporia system: white canvas, warm neutrals, orange→amber
+   brand gradient, pill buttons, generous radii. Tokens live in
+   lib/design-tokens.ts and are exposed through Tailwind.
    ============================================================ */
 
 @layer base {
-  :root {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  }
-
   html {
-    @apply text-slate-900 bg-white antialiased;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    @apply bg-canvas text-ink antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply min-h-screen bg-slate-50 text-slate-900;
-    font-family: var(--font-sans);
+    @apply min-h-screen bg-canvas font-sans text-ink;
+    text-wrap: pretty;
   }
 
-  /* Headings — tight, corporate weight */
+  ::selection {
+    background: theme('colors.selection');
+  }
+
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-semibold;
+    text-wrap: balance;
   }
 
-  /* Inputs — clean, sharp borders */
+  :focus-visible {
+    outline: 2px solid theme('colors.orange.DEFAULT');
+    outline-offset: 2px;
+  }
+
   input[type='text'],
   input[type='email'],
   input[type='number'],
@@ -39,170 +43,179 @@
   input[type='url'],
   select,
   textarea {
-    @apply w-full rounded border border-slate-200 bg-white px-3 py-2
-           text-sm text-slate-900 placeholder:text-slate-400
-           focus:border-slate-400 focus:outline-none focus:ring-2
-           focus:ring-slate-900 focus:ring-offset-0
-           disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60
+    @apply w-full rounded-xl border border-line-chip bg-canvas px-3.5 py-2.5
+           text-sm text-ink placeholder:text-muted-soft
+           focus:border-orange focus:outline-none focus:ring-2
+           focus:ring-orange/20 focus:ring-offset-0
+           disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60
            transition-colors duration-150;
   }
 
-  /* Links */
   a {
     @apply text-inherit no-underline;
-  }
-
-  /* Code */
-  code {
-    @apply font-mono text-sm;
   }
 }
 
 @layer components {
-  /* ── Button system ── */
+  /* ── Layout ── */
+  .container-page {
+    @apply mx-auto w-full max-w-page px-5 tab:px-10 desk:px-gutter;
+  }
+
+  /* Rounded bands inset 24px from the page edge (How we work, CTA). */
+  .band {
+    @apply mx-3 tab:mx-6;
+  }
+
+  @media (min-width: 1328px) {
+    .band {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: calc(theme('maxWidth.page') - 48px);
+    }
+  }
+
+  .section-y {
+    @apply py-20 desk:py-section;
+  }
+
+  /* ── Button system (pills) ── */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border
-           px-4 py-2 text-sm font-semibold transition-all duration-200
-           focus-visible:outline-none focus-visible:ring-2
-           focus-visible:ring-slate-900 focus-visible:ring-offset-2
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full
+           border border-transparent px-5 py-2.5 text-[15px] font-semibold
+           transition-[background-color,border-color,color,filter,box-shadow] duration-150
            disabled:pointer-events-none disabled:opacity-50;
-    transform: translateZ(0);
   }
 
   .btn-primary {
-    @apply btn bg-blue-700 text-white border-blue-700
-           hover:-translate-y-0.5 hover:bg-blue-800 active:translate-y-0 active:bg-blue-900 shadow-sm shadow-blue-700/20;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    @apply btn bg-brand text-white shadow-cta hover:brightness-[1.06];
+  }
+
+  .btn-dark {
+    @apply btn bg-ink text-white hover:bg-ink-hover;
   }
 
   .btn-secondary {
-    @apply btn bg-white text-slate-700 border-slate-200
-           hover:-translate-y-0.5 hover:bg-slate-50 hover:border-slate-300 active:translate-y-0 active:bg-slate-100;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    @apply btn border-line-strong bg-canvas font-medium text-ink hover:bg-surface;
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-slate-600 border-transparent
-           hover:bg-slate-100 hover:text-slate-900;
+    @apply btn bg-transparent font-medium text-ink hover:bg-surface-hover;
+  }
+
+  .btn-white {
+    @apply btn bg-canvas text-ink hover:bg-surface;
   }
 
   .btn-danger {
-    @apply btn bg-red-600 text-white border-red-600
-           hover:bg-red-700 active:bg-red-800;
+    @apply btn bg-danger text-white hover:brightness-95;
   }
 
-  /* ── Card ── */
+  /* ── Cards ── */
   .card {
-    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+    @apply rounded-card border border-line-card bg-canvas;
+  }
+
+  .card-surface {
+    @apply rounded-card bg-surface;
   }
 
   .card-hover {
-    @apply card transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-card-hover;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    @apply card transition-colors duration-150 hover:bg-orange-tint;
   }
 
   .motion-card {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-card-hover;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    transform: translateZ(0);
+    @apply transition-colors duration-150;
   }
 
   .motion-thumb {
     @apply overflow-hidden;
   }
 
-  .motion-thumb img {
-    @apply transition-transform duration-500 ease-out;
-  }
-
-  .group:hover .motion-thumb img,
-  .motion-thumb:hover img {
-    transform: scale(1.055);
-  }
-
-  .cta-smooth {
-    @apply transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* ── Badge / tag ── */
+  /* ── Tags / chips ── */
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full border border-slate-200
-           bg-slate-50 px-2.5 py-0.5 text-xs font-medium text-slate-600;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line-chip
+           bg-canvas px-3 py-1 text-[13px] font-medium text-nav;
   }
 
-  /* ── Section divider ── */
-  .section-divider {
-    @apply border-t border-slate-100 my-8;
+  .tag {
+    @apply inline-flex items-center rounded-full bg-canvas px-3 py-[5px] text-[13px] font-medium text-nav;
   }
 
-  /* ── Form label ── */
+  /* ── Section eyebrow ── */
+  .eyebrow {
+    @apply text-[15px] font-semibold text-orange-text;
+  }
+
+  /* ── Decorative gradient ring (hollow via mask-composite) ── */
+  .gradient-ring {
+    @apply pointer-events-none absolute select-none rounded-full;
+    box-sizing: border-box;
+    border: var(--ring-width, 78px) solid transparent;
+    background: theme('backgroundImage.brand') border-box;
+    -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* ── Forms ── */
   .form-label {
-    @apply block text-sm font-medium text-slate-700 mb-1.5;
+    @apply mb-1.5 block text-sm font-medium text-ink;
   }
 
-  /* ── Form error ── */
   .form-error {
-    @apply mt-1.5 text-xs text-red-600 flex items-center gap-1;
+    @apply mt-1.5 flex items-center gap-1 text-xs text-danger;
   }
 
-  /* ── Container ── */
-  .container-page {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  .section-divider {
+    @apply my-8 border-t border-line;
   }
 }
 
 @layer utilities {
-  .premium-surface {
-    background:
-      radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32rem),
-      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  .text-gradient {
+    background: theme('backgroundImage.brand-text');
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
-  .glass-panel {
-    @apply border border-white/60 bg-white/80 shadow-sm backdrop-blur-xl;
-  }
-
-  /* Scrollbar */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.slate.200') transparent;
+    scrollbar-color: theme('colors.line.chip') transparent;
   }
 
-  /* Focus ring */
   .focus-ring {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2;
+    @apply focus:outline-none focus-visible:outline focus-visible:outline-2
+           focus-visible:outline-offset-2 focus-visible:outline-orange;
   }
 
   .animate-soft-in {
-    animation: soft-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: soft-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
 
 @keyframes soft-in {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.985);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  .motion-card,
-  .btn,
-  .cta-smooth {
-    transform: none !important;
   }
 }

@@ -7,7 +7,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { ensureDbUser, isAdminRole } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { formatPrice, formatDate, CATEGORY_LABELS, CATEGORY_ICONS } from '@/lib/utils'
+import { formatPrice, formatDate, CATEGORY_LABELS } from '@/lib/utils'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Download, Package, Clock, User, ShieldAlert, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
@@ -65,9 +65,9 @@ export default async function DashboardPage() {
   if (!user) {
     return (
       <div className="container-page py-16 text-center">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted">
           Setting up your account…{' '}
-          <Link href="/" className="underline text-slate-900">
+          <Link href="/" className="underline text-ink">
             Go home
           </Link>
         </p>
@@ -86,10 +86,10 @@ export default async function DashboardPage() {
     <div className="container-page py-10">
       {/* ── Header ───────────────────────────────────────── */}
       <div className="mb-8">
-        <h1 className="text-xl font-semibold text-slate-900">
+        <h1 className="text-h2-sm font-semibold">
           Welcome back{user.name ? `, ${user.name.split(' ')[0]}` : ''}
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted">
           Manage your purchases, downloads, and profile settings.
         </p>
       </div>
@@ -117,14 +117,14 @@ export default async function DashboardPage() {
           return (
             <div key={stat.label} className="card p-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50">
-                  <Icon className="h-4 w-4 text-slate-500" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-line-card bg-surface">
+                  <Icon className="h-4 w-4 text-muted" />
                 </div>
                 <div>
-                  <p className="text-2xl font-semibold text-slate-900">
+                  <p className="text-2xl font-semibold text-ink">
                     {stat.value}
                   </p>
-                  <p className="text-xs text-slate-500">{stat.label}</p>
+                  <p className="text-xs text-muted">{stat.label}</p>
                 </div>
               </div>
             </div>
@@ -137,8 +137,8 @@ export default async function DashboardPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Purchased products */}
           <div className="card overflow-hidden">
-            <div className="border-b border-slate-100 px-5 py-4">
-              <h2 className="text-sm font-semibold text-slate-900">
+            <div className="border-b border-line px-5 py-4">
+              <h2 className="text-sm font-semibold text-ink">
                 Purchased Products
               </h2>
             </div>
@@ -148,27 +148,24 @@ export default async function DashboardPage() {
                 title="No purchases yet"
                 description="Browse the marketplace and your completed purchases will appear here for quick access."
                 actionHref="/marketplace"
-                actionLabel="Browse marketplace"
+                actionLabel="Browse products"
               />
             ) : (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-line">
                 {user.orders.flatMap((order) =>
                   order.items.map((item) => (
                     <li
                       key={item.id}
-                      className="flex items-center gap-3 px-5 py-3.5 hover:bg-slate-50/50 transition-colors"
+                      className="flex items-center gap-3 px-5 py-3.5 hover:bg-surface transition-colors"
                     >
-                      <span className="text-xl">
-                        {CATEGORY_ICONS[item.product.category]}
-                      </span>
                       <div className="min-w-0 flex-1">
                         <Link
                           href={`/marketplace/${item.product.slug}`}
-                          className="block text-sm font-medium text-slate-900 hover:underline truncate"
+                          className="block text-sm font-medium text-ink hover:underline truncate"
                         >
                           {item.product.title}
                         </Link>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-muted-soft">
                           {CATEGORY_LABELS[item.product.category]}
                           {item.product.version && (
                             <> · v{item.product.version}</>
@@ -176,13 +173,13 @@ export default async function DashboardPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-700">
+                        <span className="text-xs font-medium text-nav">
                           {formatPrice(Number(item.priceAtPurchase))}
                         </span>
                         {/* Download button — generates signed URL */}
                         <Link
                           href={`/api/download/${item.product.id}`}
-                          className="inline-flex items-center gap-1 rounded border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                          className="inline-flex items-center gap-1 rounded border border-line-card bg-white px-2.5 py-1.5 text-xs font-medium text-nav hover:bg-surface transition-colors"
                         >
                           <Download className="h-3 w-3" />
                           Download
@@ -197,8 +194,8 @@ export default async function DashboardPage() {
 
           {/* Recent downloads */}
           <div className="card overflow-hidden">
-            <div className="border-b border-slate-100 px-5 py-4">
-              <h2 className="text-sm font-semibold text-slate-900">
+            <div className="border-b border-line px-5 py-4">
+              <h2 className="text-sm font-semibold text-ink">
                 Download History
               </h2>
             </div>
@@ -213,33 +210,33 @@ export default async function DashboardPage() {
             ) : (
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50">
-                    <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500">
+                  <tr className="border-b border-line bg-surface">
+                    <th className="px-5 py-3 text-left text-xs font-semibold text-muted">
                       Product
                     </th>
-                    <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500">
+                    <th className="px-5 py-3 text-left text-xs font-semibold text-muted">
                       Date
                     </th>
-                    <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500">
+                    <th className="px-5 py-3 text-left text-xs font-semibold text-muted">
                       Status
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-line">
                   {user.downloads.map((dl) => (
-                    <tr key={dl.id} className="hover:bg-slate-50/50">
-                      <td className="px-5 py-3 font-medium text-slate-900">
+                    <tr key={dl.id} className="hover:bg-surface">
+                      <td className="px-5 py-3 font-medium text-ink">
                         {dl.product.title}
                       </td>
-                      <td className="px-5 py-3 text-slate-500">
+                      <td className="px-5 py-3 text-muted">
                         {formatDate(dl.createdAt)}
                       </td>
                       <td className="px-5 py-3">
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
                             dl.success
-                              ? 'bg-green-50 text-green-700'
-                              : 'bg-red-50 text-red-600'
+                              ? 'bg-success-tint text-success'
+                              : 'bg-danger-tint text-danger'
                           }`}
                         >
                           {dl.success ? 'Success' : 'Failed'}
@@ -262,41 +259,41 @@ export default async function DashboardPage() {
                 <img
                   src={user.avatarUrl}
                   alt="Avatar"
-                  className="h-10 w-10 rounded-full border border-slate-200"
+                  className="h-10 w-10 rounded-full border border-line-card"
                 />
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-100">
-                  <User className="h-5 w-5 text-slate-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-line-card bg-surface-hover">
+                  <User className="h-5 w-5 text-muted-soft" />
                 </div>
               )}
               <div>
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-sm font-semibold text-ink">
                   {user.name ?? 'User'}
                 </p>
-                <p className="text-xs text-slate-400">{user.email}</p>
+                <p className="text-xs text-muted-soft">{user.email}</p>
               </div>
             </div>
 
             <div className="space-y-2 text-xs">
               {isAdmin && (
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Role</span>
-                  <span className="font-medium text-purple-700">Admin</span>
+                  <span className="text-muted">Role</span>
+                  <span className="font-medium text-orange-deep">Admin</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-slate-500">Member since</span>
-                <span className="text-slate-700">
+                <span className="text-muted">Member since</span>
+                <span className="text-nav">
                   {formatDate(user.createdAt)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Subscription</span>
+                <span className="text-muted">Subscription</span>
                 <span
                   className={`font-medium ${
                     user.hasActiveSubscription
-                      ? 'text-green-700'
-                      : 'text-slate-400'
+                      ? 'text-success'
+                      : 'text-muted-soft'
                   }`}
                 >
                   {user.hasActiveSubscription ? 'Active' : 'None'}
@@ -307,19 +304,19 @@ export default async function DashboardPage() {
 
           {/* Admin panel shortcut */}
           {isAdmin && (
-            <div className="card border-purple-100 bg-purple-50/50 p-4">
+            <div className="card border-orange/20 bg-orange-tint p-4">
               <div className="flex items-center gap-2 mb-2">
-                <ShieldAlert className="h-4 w-4 text-purple-600" />
-                <span className="text-sm font-semibold text-purple-800">
+                <ShieldAlert className="h-4 w-4 text-orange-text" />
+                <span className="text-sm font-semibold text-orange-deep">
                   Admin Access
                 </span>
               </div>
-              <p className="text-xs text-purple-600 mb-3">
+              <p className="text-xs text-orange-text mb-3">
                 You have administrator privileges.
               </p>
               <Link
                 href="/admin"
-                className="inline-flex items-center gap-1.5 rounded border border-purple-200 bg-white px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded border border-orange/30 bg-white px-3 py-1.5 text-xs font-medium text-orange-deep hover:bg-orange-tint transition-colors"
               >
                 Go to Admin Panel →
               </Link>

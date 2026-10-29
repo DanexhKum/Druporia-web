@@ -42,7 +42,7 @@ export default async function AdminLayout({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <Logo href="/" imageClassName="h-8 w-auto" />
+            <Logo href="/" size="sm" />
             <span className="text-slate-300">/</span>
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-slate-400" />

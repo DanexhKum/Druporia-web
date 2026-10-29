@@ -1,24 +1,14 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
-import {
-  ArrowLeft,
-  CheckCircle2,
-  Clock,
-  Download,
-  HelpCircle,
-  Headphones,
-  ShieldCheck,
-  Sparkles,
-  Tag,
-  Zap,
-} from 'lucide-react'
 import { getProductBySlug, getRelatedProducts } from '@/lib/site-data'
 import { requireAdmin } from '@/lib/auth'
-import { CATEGORY_LABELS, CATEGORY_ICONS } from '@/lib/utils'
+import { CATEGORY_LABELS } from '@/lib/utils'
 import { ProductCard } from '@/components/marketplace/ProductCard'
 import { ProductPurchase } from '@/components/marketplace/ProductPurchase'
-import { AnimateIn } from '@/components/marketing/AnimateIn'
+import { Tag } from '@/components/ui/Card'
+import { Eyebrow, SectionHeading } from '@/components/ui/Section'
+import { CtaBand } from '@/components/marketing/HomeSections'
 import type { Metadata } from 'next'
 
 interface PageProps {
@@ -35,27 +25,27 @@ function getGalleryUrls(value: unknown) {
 function getCategoryFeatures(category: string) {
   if (category === 'WOO_PLUGIN') {
     return [
-      'WooCommerce-ready implementation',
-      'Clean admin workflow',
-      'Performance-focused codebase',
-      'Built for real commerce stores',
+      'Works inside WooCommerce admin',
+      'Settings with safe defaults',
+      'Performance-minded queries',
+      'Readable code you can extend',
     ]
   }
 
   if (category === 'CHROME_EXTENSION') {
     return [
-      'Fast browser-native experience',
-      'Clean extension architecture',
-      'Simple installation flow',
-      'Built for daily productivity',
+      'Lightweight, browser-native UI',
+      'Clear extension structure',
+      'Simple installation',
+      'Easy to adapt to your workflow',
     ]
   }
 
   return [
-    'Modern responsive interface',
-    'Scalable full-stack architecture',
-    'Production-ready user experience',
-    'Built with maintainable code',
+    'Responsive interface',
+    'Full-stack Next.js foundation',
+    'Readable, maintainable code',
+    'Easy to adapt to your brand',
   ]
 }
 
@@ -71,10 +61,10 @@ function getCategoryRequirements(category: string) {
   return ['Modern browser', 'Stable internet connection', 'Deployment/runtime setup based on product type']
 }
 
-const TRUST_BADGES = [
-  { icon: ShieldCheck, label: 'Secure checkout ready', description: 'Designed for protected payment and delivery flows.' },
-  { icon: Zap, label: 'Instant delivery', description: 'Digital files are prepared for fast post-purchase access.' },
-  { icon: Headphones, label: 'Support included', description: 'Contact support for setup, usage, and early purchase help.' },
+const HIGHLIGHTS = [
+  { label: 'Adaptable', description: 'Use it as-is or as the starting point for a custom build.' },
+  { label: 'Setup help', description: 'Ask us about installation and configuration for your stack.' },
+  { label: 'Scoped changes', description: 'Customisation is quoted as fixed-price work, up front.' },
 ]
 
 const FAQS = [
@@ -84,11 +74,11 @@ const FAQS = [
   },
   {
     question: 'How do downloads work?',
-    answer: 'Free products can be downloaded directly. Paid checkout and protected delivery are planned for the next release.',
+    answer: 'Free products can be downloaded directly after signing in. For paid products, contact us and we’ll arrange access.',
   },
   {
     question: 'Is support included?',
-    answer: 'Basic product support is included. Custom development or setup work can be quoted separately.',
+    answer: 'We answer setup questions. Custom development or configuration work is scoped and quoted separately.',
   },
 ]
 
@@ -110,7 +100,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `/marketplace/${product.slug}`,
     },
     openGraph: {
-      title: `${product.title} — Druporia Marketplace`,
+      title: `${product.title} — Druporia Products`,
       description,
       url: `/marketplace/${product.slug}`,
       type: 'website',
@@ -125,7 +115,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.title} — Druporia Marketplace`,
+      title: `${product.title} — Druporia Products`,
       description,
       images: [image],
     },
@@ -152,237 +142,167 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
   const features = getCategoryFeatures(product.category)
   const requirements = getCategoryRequirements(product.category)
 
+  const plainDescription = product.description.replace(/[#*_`>-]/g, '').replace(/\s+/g, ' ').trim()
+
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.32),transparent_34rem),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.18),transparent_28rem)]" />
-        <div className="container-page relative z-10 py-10">
+    <>
+      <header className="container-page grid items-center gap-12 pb-14 pt-12 desk:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] desk:gap-14 desk:pb-20 desk:pt-16">
+        <div>
           <Link
             href="/marketplace"
-            className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-[15px] font-medium text-nav transition-colors hover:text-ink"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back to marketplace
+            <span aria-hidden="true">←</span> All products
           </Link>
-
-          <div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <AnimateIn>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-200">
-                  {CATEGORY_ICONS[product.category]} {CATEGORY_LABELS[product.category]}
-                </span>
-                {isPreview && (
-                  <span className="inline-flex items-center rounded-full border border-amber-400/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-100">
-                    Admin preview: {product.status.toLowerCase()}
-                  </span>
-                )}
-              </div>
-              <h1 className="mt-5 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl">
-                {product.title}
-              </h1>
-              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">
-                {product.description.replace(/[#*_`>-]/g, '').slice(0, 180)}
-                {product.description.length > 180 ? '...' : ''}
-              </p>
-              {(product.version || product.fileSize) && (
-                <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-300">
-                  {product.version && (
-                    <span className="flex items-center gap-1">
-                      <Tag className="h-4 w-4" /> v{product.version}
-                    </span>
-                  )}
-                  {product.fileSize && (
-                    <span className="flex items-center gap-1">
-                      <Download className="h-4 w-4" /> {product.fileSize}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" /> Instant access flow
-                  </span>
-                </div>
-              )}
-            </AnimateIn>
-
-            {product.thumbnailUrl && (
-              <AnimateIn delay={0.12}>
-                <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/10 p-2 shadow-2xl shadow-blue-950/40 backdrop-blur">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={product.thumbnailUrl}
-                    alt={product.title}
-                    className="h-[320px] w-full rounded-[1.5rem] object-cover md:h-[420px]"
-                  />
-                </div>
-              </AnimateIn>
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <Eyebrow>{CATEGORY_LABELS[product.category]}</Eyebrow>
+            {isPreview && (
+              <span className="badge border-orange bg-orange-tint text-orange-deep">
+                Admin preview: {product.status.toLowerCase()}
+              </span>
             )}
           </div>
-        </div>
-      </div>
-
-      <div className="container-page py-12">
-        <AnimateIn className="mb-8 grid gap-4 md:grid-cols-3">
-          {TRUST_BADGES.map((badge) => {
-            const Icon = badge.icon
-            return (
-              <div key={badge.label} className="card p-5">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-sm font-semibold text-slate-900">{badge.label}</h2>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-500">{badge.description}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </AnimateIn>
-
-        <div className="grid gap-10 lg:grid-cols-3">
-          <AnimateIn className="lg:col-span-2 space-y-8">
-            <div className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-blue-600">
-              <ReactMarkdown>{product.description}</ReactMarkdown>
+          <h1 className="mt-[18px] max-w-[20ch] text-[clamp(2.25rem,1.5rem+2.8vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
+            {product.title}
+          </h1>
+          <p className="mt-6 max-w-[56ch] text-lead text-body">
+            {plainDescription.slice(0, 180)}
+            {plainDescription.length > 180 ? '…' : ''}
+          </p>
+          {(product.version || product.fileSize) && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {product.version && <Tag className="bg-surface">v{product.version}</Tag>}
+              {product.fileSize && <Tag className="bg-surface">{product.fileSize}</Tag>}
             </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <section className="card p-6">
-                <div className="mb-4 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-slate-900">Key features</h2>
-                </div>
-                <ul className="space-y-3">
-                  {features.map((feature) => (
-                    <li key={feature} className="flex gap-3 text-sm text-slate-600">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <section className="card p-6">
-                <div className="mb-4 flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-slate-900">Requirements</h2>
-                </div>
-                <ul className="space-y-3">
-                  {requirements.map((requirement) => (
-                    <li key={requirement} className="flex gap-3 text-sm text-slate-600">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
-                      {requirement}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </div>
-
-            {galleryUrls.length > 0 && (
-              <div className="card p-6">
-                <h2 className="text-xl font-semibold text-slate-900">Screenshots</h2>
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  {galleryUrls.map((url) => (
-                    <div key={url} className="motion-thumb overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={url}
-                        alt={`${product.title} screenshot`}
-                        className="h-56 w-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {product.documentation && (
-              <div className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-blue-600">
-                <h2>Documentation</h2>
-                <ReactMarkdown>{product.documentation}</ReactMarkdown>
-              </div>
-            )}
-
-            {product.changelog && (
-              <div className="card p-8 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-blue-600">
-                <h2>Version history</h2>
-                <ReactMarkdown>{product.changelog}</ReactMarkdown>
-              </div>
-            )}
-
-            {!product.changelog && (
-              <div className="card p-6">
-                <h2 className="text-xl font-semibold text-slate-900">Version history</h2>
-                <p className="mt-3 text-sm text-slate-600">
-                  Current release: <span className="font-semibold">v{product.version ?? '1.0.0'}</span>. Detailed changelog can be added from the admin product editor.
-                </p>
-              </div>
-            )}
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <section className="card p-6">
-                <div className="mb-4 flex items-center gap-2">
-                  <HelpCircle className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-slate-900">FAQs</h2>
-                </div>
-                <div className="space-y-4">
-                  {FAQS.map((faq) => (
-                    <div key={faq.question}>
-                      <h3 className="text-sm font-semibold text-slate-900">{faq.question}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{faq.answer}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="card p-6">
-                <div className="mb-4 flex items-center gap-2">
-                  <Headphones className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-slate-900">Support</h2>
-                </div>
-                <p className="text-sm leading-relaxed text-slate-600">
-                  Need installation help, customization, or a business-specific version? Contact Druporia and include your platform, current workflow, and deadline.
-                </p>
-                <Link href="/contact" className="btn-secondary mt-5 inline-flex">
-                  Contact support
-                </Link>
-              </section>
-            </div>
-          </AnimateIn>
-
-          <AnimateIn delay={0.15} className="lg:col-span-1">
-            <div className="sticky top-24">
-              <ProductPurchase price={price} productId={product.id} />
-            </div>
-          </AnimateIn>
+          )}
         </div>
 
-        {relatedProducts.length > 0 && (
-          <AnimateIn className="mt-16">
-            <div className="mb-6 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-blue-600">
-                  More from Druporia
-                </p>
-                <h2 className="mt-2 text-2xl font-bold text-slate-900">
-                  Related products
-                </h2>
-              </div>
-              <Link href="/marketplace" className="text-sm font-semibold text-slate-600 hover:text-slate-900">
-                View all
-              </Link>
-            </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {relatedProducts.map((relatedProduct) => (
-                <ProductCard
-                  key={relatedProduct.id}
-                  {...relatedProduct}
-                  price={Number(relatedProduct.price)}
-                />
-              ))}
-            </div>
-          </AnimateIn>
+        {product.thumbnailUrl && (
+          <div className="overflow-hidden rounded-card-lg bg-surface-photo shadow-hero">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={product.thumbnailUrl}
+              alt={product.title}
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </div>
         )}
+      </header>
+
+      <div className="container-page grid gap-12 pb-20 desk:grid-cols-[minmax(0,8fr)_minmax(0,4fr)] desk:gap-14 desk:pb-section">
+        <div className="flex min-w-0 flex-col gap-12">
+          <ul className="grid gap-4 tab:grid-cols-3">
+            {HIGHLIGHTS.map((item) => (
+              <li key={item.label} className="flex flex-col gap-2 border-t-2 border-ink pt-5">
+                <h2 className="text-[17px] font-semibold">{item.label}</h2>
+                <p className="text-[15px] leading-[1.55] text-body">{item.description}</p>
+              </li>
+            ))}
+          </ul>
+
+          <article className="prose max-w-none">
+            <ReactMarkdown>{product.description}</ReactMarkdown>
+          </article>
+
+          <div className="grid gap-4 tab:grid-cols-2">
+            <section className="card-surface p-7">
+              <h2 className="text-h3-sm font-semibold">Key features</h2>
+              <ul className="mt-4 flex flex-col gap-3">
+                {features.map((feature) => (
+                  <li key={feature} className="flex gap-3 text-[15px] text-body">
+                    <span className="mt-[9px] h-1.5 w-1.5 flex-none rounded-full bg-orange" aria-hidden="true" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <section className="card-surface p-7">
+              <h2 className="text-h3-sm font-semibold">Requirements</h2>
+              <ul className="mt-4 flex flex-col gap-3">
+                {requirements.map((requirement) => (
+                  <li key={requirement} className="flex gap-3 text-[15px] text-body">
+                    <span className="mt-[9px] h-1.5 w-1.5 flex-none rounded-full bg-muted-soft" aria-hidden="true" />
+                    {requirement}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
+          {galleryUrls.length > 0 && (
+            <section>
+              <h2 className="text-h3 font-semibold">Screenshots</h2>
+              <div className="mt-5 grid gap-4 tab:grid-cols-2">
+                {galleryUrls.map((url) => (
+                  <div key={url} className="overflow-hidden rounded-card bg-surface-photo">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt={`${product.title} screenshot`}
+                      className="aspect-[16/10] w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {product.documentation && (
+            <section className="prose max-w-none border-t border-line pt-10">
+              <h2>Documentation</h2>
+              <ReactMarkdown>{product.documentation}</ReactMarkdown>
+            </section>
+          )}
+
+          <section className="prose max-w-none border-t border-line pt-10">
+            <h2>Version history</h2>
+            {product.changelog ? (
+              <ReactMarkdown>{product.changelog}</ReactMarkdown>
+            ) : (
+              <p>
+                Current release: <strong>v{product.version ?? '1.0.0'}</strong>.
+              </p>
+            )}
+          </section>
+
+          <section className="border-t border-line pt-10">
+            <h2 className="text-h3 font-semibold">Questions</h2>
+            <dl className="mt-6 flex flex-col gap-2.5">
+              {FAQS.map((faq) => (
+                <div key={faq.question} className="rounded-faq bg-surface px-6 py-5">
+                  <dt className="text-[17px] font-semibold">{faq.question}</dt>
+                  <dd className="mt-2 text-[15px] leading-[1.6] text-body">{faq.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        </div>
+
+        <aside>
+          <div className="desk:sticky desk:top-28">
+            <ProductPurchase price={price} productId={product.id} />
+          </div>
+        </aside>
       </div>
-    </div>
+
+      {relatedProducts.length > 0 && (
+        <section className="container-page pb-20 desk:pb-section">
+          <SectionHeading eyebrow="More products" title="Related" size="sm" className="mb-10" />
+          <ul className="grid gap-4 tab:grid-cols-2 desk:grid-cols-3">
+            {relatedProducts.map((relatedProduct) => (
+              <li key={relatedProduct.id}>
+                <ProductCard {...relatedProduct} price={Number(relatedProduct.price)} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <CtaBand
+        title="Want this adapted to your store?"
+        description="Tell us your platform, workflow and timeline. We’ll scope the changes as fixed-price work."
+      />
+    </>
   )
 }

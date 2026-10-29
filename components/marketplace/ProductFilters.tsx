@@ -12,10 +12,10 @@ import { cn } from '@/lib/utils'
 import type { ProductCategory } from '@prisma/client'
 
 const CATEGORIES = [
-  { key: 'all', label: 'All Products', icon: '🛍️' },
-  { key: 'APP', label: 'Apps', icon: '📱' },
-  { key: 'WOO_PLUGIN', label: 'WooCommerce Plugins', icon: '🛒' },
-  { key: 'CHROME_EXTENSION', label: 'Chrome Extensions', icon: '🧩' },
+  { key: 'all', label: 'All' },
+  { key: 'APP', label: 'Apps' },
+  { key: 'WOO_PLUGIN', label: 'WooCommerce plugins' },
+  { key: 'CHROME_EXTENSION', label: 'Chrome extensions' },
 ]
 
 const PRICE_FILTERS = [
@@ -29,9 +29,17 @@ const PRICE_FILTERS = [
 const SORT_OPTIONS = [
   { key: 'featured', label: 'Featured first' },
   { key: 'newest', label: 'Newest first' },
-  { key: 'price-low', label: 'Price low-high' },
-  { key: 'price-high', label: 'Price high-low' },
+  { key: 'price-low', label: 'Price: low to high' },
+  { key: 'price-high', label: 'Price: high to low' },
 ]
+
+const chip = (active: boolean) =>
+  cn(
+    'inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors',
+    active
+      ? 'border-orange bg-orange-tint text-orange-deep'
+      : 'border-line-chip bg-canvas text-nav hover:bg-surface'
+  )
 
 interface Props {
   activeCategory: string
@@ -93,117 +101,83 @@ export function ProductFilters({
   }
 
   return (
-    <div className="space-y-6">
-      {/* Search */}
-      <form onSubmit={handleSearch}>
-        <label className="form-label">Search</label>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search products…"
-            className="pl-9 pr-8"
-          />
-          {searchValue && (
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-      </form>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4 desk:flex-row desk:items-end desk:justify-between">
+        <form onSubmit={handleSearch} role="search" className="w-full desk:max-w-sm">
+          <label htmlFor="marketplace-search" className="form-label">Search</label>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-soft" aria-hidden="true" />
+            <input
+              id="marketplace-search"
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search products"
+              className="!rounded-full !py-3 !pl-10 !pr-10"
+            />
+            {searchValue && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-soft hover:text-ink"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </form>
 
-      {/* Category filters */}
-      <div>
-        <p className="form-label">Category</p>
-        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat.key
-            const count = counts[cat.key] ?? 0
-            return (
-              <li key={cat.key}>
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateParams({
-                      category: cat.key,
-                    })
-                  }
-                  className={cn(
-                    'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-colors duration-150',
-                    isActive
-                      ? 'border-slate-900 bg-slate-900 text-white'
-                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="text-sm">{cat.icon}</span>
-                    {cat.label}
-                  </span>
-                  <span
-                    className={cn(
-                      'rounded-full px-1.5 py-0.5 text-xs',
-                      isActive
-                        ? 'bg-white/20 text-white'
-                        : 'bg-slate-100 text-slate-500'
-                    )}
-                  >
-                    {count}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+        <div className="w-full tab:max-w-[240px]">
+          <label className="form-label" htmlFor="marketplace-sort">
+            Sort by
+          </label>
+          <select
+            id="marketplace-sort"
+            value={sort}
+            onChange={(e) => updateParams({ sort: e.target.value })}
+            className="!rounded-full !py-3"
+          >
+            {SORT_OPTIONS.map((option) => (
+              <option key={option.key} value={option.key}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Price filters */}
-      <div>
-        <p className="form-label">Price</p>
-        <div className="flex flex-wrap gap-2 lg:flex-col">
-          {PRICE_FILTERS.map((option) => {
-            const isActive = price === option.key
+      <div className="flex flex-col gap-3 desk:flex-row desk:items-center desk:justify-between">
+        <div role="group" aria-label="Category" className="flex flex-wrap gap-2">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.key
             return (
               <button
-                key={option.key}
+                key={cat.key}
                 type="button"
-                onClick={() => updateParams({ price: option.key })}
-                className={cn(
-                  'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
-                  isActive
-                    ? 'border-slate-900 bg-slate-900 text-white'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                )}
+                aria-pressed={isActive}
+                onClick={() => updateParams({ category: cat.key })}
+                className={chip(isActive)}
               >
-                {option.label}
+                {cat.label}
+                <span className="text-[13px] opacity-70">{counts[cat.key] ?? 0}</span>
               </button>
             )
           })}
         </div>
-      </div>
-
-      {/* Sorting */}
-      <div>
-        <label className="form-label" htmlFor="marketplace-sort">
-          Sort by
-        </label>
-        <select
-          id="marketplace-sort"
-          value={sort}
-          onChange={(e) => updateParams({ sort: e.target.value })}
-          className="text-sm"
-        >
-          {SORT_OPTIONS.map((option) => (
-            <option key={option.key} value={option.key}>
+        <div role="group" aria-label="Price" className="flex flex-wrap gap-2">
+          {PRICE_FILTERS.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              aria-pressed={price === option.key}
+              onClick={() => updateParams({ price: option.key })}
+              className={chip(price === option.key)}
+            >
               {option.label}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
     </div>
   )

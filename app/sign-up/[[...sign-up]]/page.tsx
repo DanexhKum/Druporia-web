@@ -3,6 +3,8 @@
 // ============================================================
 
 import { SignUp } from '@clerk/nextjs'
+import { Logo } from '@/components/branding/Logo'
+import { GradientRing } from '@/components/ui/GradientRing'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -11,24 +13,22 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-canvas px-5 py-16">
+      <GradientRing className="-right-[150px] -top-[230px] h-[380px] w-[380px] [--ring-width:60px]" />
+      <div className="relative w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded border border-slate-900 bg-slate-900 text-sm font-bold text-white mb-4">
-            D
+          <div className="mb-8 flex justify-center">
+            <Logo href="/" />
           </div>
-          <h1 className="text-xl font-semibold text-slate-900">
-            Create your account
-          </h1>
-          <p className="mt-1.5 text-sm text-slate-500">
-            Get access to the marketplace and start downloading.
-          </p>
+          <h1 className="text-[28px] font-semibold tracking-[-0.03em]">Create your account</h1>
+          <p className="mt-2 text-[15px] text-body">Keep track of your projects and downloads in one place.</p>
         </div>
         <SignUp
           appearance={{
             elements: {
               rootBox: 'w-full',
-              card: 'w-full shadow-none border border-slate-200 rounded-lg',
+              cardBox: 'w-full shadow-hero rounded-card-lg',
+              card: 'w-full shadow-none',
             },
           }}
         />

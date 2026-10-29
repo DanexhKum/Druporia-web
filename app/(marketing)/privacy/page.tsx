@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { LegalPage } from '@/components/layout/LegalPage'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -15,9 +16,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="container-page py-16 max-w-3xl prose prose-slate">
-      <h1>Privacy Policy</h1>
-      <p>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    <LegalPage title="Privacy Policy" updated={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}>
       <p>
         Druporia (&quot;we&quot;) respects your privacy. We collect account information via
         Clerk for authentication, order and download data for marketplace services, and
@@ -30,7 +29,7 @@ export default function PrivacyPage() {
         <li>Technical logs for security and performance</li>
       </ul>
       <h2>Contact</h2>
-      <p>Questions: dhanesh.kumar15@gmail.com</p>
-    </div>
+      <p>Questions: <a href="mailto:dhanesh.kumar15@gmail.com">dhanesh.kumar15@gmail.com</a></p>
+    </LegalPage>
   )
 }

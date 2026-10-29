@@ -1,88 +1,85 @@
-import { Github, Linkedin } from 'lucide-react'
-import { getPublishedTeam } from '@/lib/site-data'
-import { AnimateIn, StaggerGrid, StaggerItem } from '@/components/marketing/AnimateIn'
+import Image from 'next/image'
+import { SectionHeading } from '@/components/ui/Section'
 
-export async function TeamSection() {
-  const members = await getPublishedTeam()
+export interface TeamMemberData {
+  name: string
+  role: string
+  bio: string
+  avatarUrl?: string | null
+  linkedInUrl?: string | null
+  githubUrl?: string | null
+}
 
+// Hosts allowed in next.config images.remotePatterns; anything else
+// is served unoptimized so an unexpected host can't break the page.
+const OPTIMIZED_HOSTS = [/\.supabase\.co$/, /\.amazonaws\.com$/, /^img\.clerk\.com$/, /^media\.licdn\.com$/]
+
+function isOptimizable(src: string) {
+  if (src.startsWith('/')) return true
+  try {
+    const { hostname, protocol } = new URL(src)
+    return protocol === 'https:' && OPTIMIZED_HOSTS.some((re) => re.test(hostname))
+  } catch {
+    return false
+  }
+}
+
+const pill =
+  'rounded-full border border-line-chip px-3.5 py-[7px] text-[13px] font-medium text-ink transition-colors hover:bg-surface'
+
+export function TeamSection({ members }: { members: TeamMemberData[] }) {
   if (members.length === 0) return null
 
   return (
-    <section id="team" className="bg-slate-50 py-20 sm:py-28 border-t border-slate-200">
-      <div className="container-page">
-        <AnimateIn className="text-center max-w-2xl mx-auto mb-14">
-          <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-3">
-            Our team
-          </p>
-          <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-            Engineers behind Druporia
-          </h2>
-          <p className="mt-4 text-slate-600">
-            Developers and specialists building plugins, apps, and automation for
-            global clients.
-          </p>
-        </AnimateIn>
-
-        <StaggerGrid className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {members.map((member) => (
-            <StaggerItem key={member.id}>
-              <article className="group card-hover overflow-hidden text-center">
-                <div className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 px-6 pb-16 pt-10">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.35),transparent_45%)] opacity-80" />
-                  <div className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border border-white/20 bg-white/10 p-1.5 shadow-2xl shadow-blue-950/40 backdrop-blur">
-                    <div className="h-full w-full overflow-hidden rounded-full bg-slate-900 ring-4 ring-white/90">
-                      {member.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={member.avatarUrl}
-                          alt={member.name}
-                          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-white/70">
-                          {member.name.charAt(0)}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+    <section id="team" className="container-page scroll-mt-20 pb-20 pt-6 desk:pb-[104px]">
+      <SectionHeading
+        eyebrow="Team"
+        title="The people you’ll work with"
+        description="No account managers in between — you talk directly to the engineers writing your code."
+        layout="split"
+        className="mb-11"
+      />
+      <ul className="grid gap-10 tab:grid-cols-2 tab:gap-6 desk:grid-cols-3">
+        {members.map((member) => (
+          <li key={member.name} className="flex flex-col gap-[18px]">
+            <div className="relative aspect-square overflow-hidden rounded-card bg-surface-photo">
+              {member.avatarUrl ? (
+                <Image
+                  src={member.avatarUrl}
+                  alt={`Portrait of ${member.name}`}
+                  fill
+                  sizes="(min-width: 1025px) 380px, (min-width: 641px) 50vw, 100vw"
+                  className="object-cover"
+                  unoptimized={!isOptimizable(member.avatarUrl)}
+                />
+              ) : (
+                <div className="grid h-full w-full place-items-center text-6xl font-semibold text-muted-soft" aria-hidden="true">
+                  {member.name.charAt(0)}
                 </div>
-                <div className="-mt-10 p-6 pt-0">
-                  <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-transparent" />
-                  <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
-                  <p className="mt-1 text-sm font-medium text-blue-600">{member.role}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-600 line-clamp-4">
-                    {member.bio}
-                  </p>
-                  <div className="mt-4 flex justify-center gap-3">
-                    {member.linkedInUrl && (
-                      <a
-                        href={member.linkedInUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-full border border-slate-200 p-2 text-slate-500 hover:border-blue-300 hover:text-blue-600 transition-colors"
-                        aria-label={`${member.name} on LinkedIn`}
-                      >
-                        <Linkedin className="h-4 w-4" />
-                      </a>
-                    )}
-                    {member.githubUrl && (
-                      <a
-                        href={member.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-full border border-slate-200 p-2 text-slate-500 hover:border-blue-300 hover:text-blue-600 transition-colors"
-                        aria-label={`${member.name} on GitHub`}
-                      >
-                        <Github className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </article>
-            </StaggerItem>
-          ))}
-        </StaggerGrid>
-      </div>
+              )}
+            </div>
+            <div>
+              <h3 className="text-[22px] font-semibold tracking-[-0.02em]">{member.name}</h3>
+              <p className="mt-1.5 text-sm font-medium text-orange-text">{member.role}</p>
+              <p className="mt-3 text-[15px] leading-[1.6] text-body">{member.bio}</p>
+            </div>
+            {(member.linkedInUrl || member.githubUrl) && (
+              <div className="flex gap-2">
+                {member.linkedInUrl && (
+                  <a href={member.linkedInUrl} target="_blank" rel="noopener noreferrer" className={pill}>
+                    LinkedIn<span className="sr-only"> profile of {member.name}</span>
+                  </a>
+                )}
+                {member.githubUrl && (
+                  <a href={member.githubUrl} target="_blank" rel="noopener noreferrer" className={pill}>
+                    GitHub<span className="sr-only"> profile of {member.name}</span>
+                  </a>
+                )}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

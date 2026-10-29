@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { LegalPage } from '@/components/layout/LegalPage'
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
@@ -15,8 +16,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="container-page py-16 max-w-3xl prose prose-slate">
-      <h1>Terms of Service</h1>
+    <LegalPage title="Terms of Service">
       <p>
         By using Druporia&apos;s website and purchasing digital products, you agree to
         these terms. Products are licensed for use per product documentation. Redistribution
@@ -28,7 +28,7 @@ export default function TermsPage() {
         then, purchases may be arranged directly with our team.
       </p>
       <h2>Support</h2>
-      <p>Contact dhanesh.kumar15@gmail.com for licensing and support inquiries.</p>
-    </div>
+      <p>Contact <a href="mailto:dhanesh.kumar15@gmail.com">dhanesh.kumar15@gmail.com</a> for licensing and support inquiries.</p>
+    </LegalPage>
   )
 }

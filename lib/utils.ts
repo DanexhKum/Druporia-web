@@ -42,12 +42,6 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   [ProductCategory.CHROME_EXTENSION]: 'Chrome Extension',
 }
 
-export const CATEGORY_ICONS: Record<ProductCategory, string> = {
-  [ProductCategory.APP]: '📱',
-  [ProductCategory.WOO_PLUGIN]: '🛒',
-  [ProductCategory.CHROME_EXTENSION]: '🧩',
-}
-
 // ── Slug generation ───────────────────────────────────────────
 export function generateSlug(title: string): string {
   return title
