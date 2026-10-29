@@ -46,7 +46,7 @@ export function ContactForm({ initialServices = [] }: { initialServices?: Servic
       setServices([])
       setStatus('success')
       setMessage(
-        'Thanks — we’ve got your message and will reply within one business day with next steps.'
+        'Thank you. We’ve received your message and will reply within one business day with next steps.'
       )
     } catch {
       setStatus('error')

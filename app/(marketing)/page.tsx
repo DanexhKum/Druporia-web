@@ -10,14 +10,14 @@ import {
   WhyDruporia,
   type ServiceCardData,
 } from '@/components/marketing/HomeSections'
-import { TeamSection, type TeamMemberData } from '@/components/marketing/TeamSection'
+import { TeamSection } from '@/components/marketing/TeamSection'
 import { FaqAccordion } from '@/components/marketing/FaqAccordion'
 import { SectionHeading } from '@/components/ui/Section'
-import { getHomepageServices, getPublishedFaqs, getPublishedTeam } from '@/lib/site-data'
+import { getHomepageServices, getPublishedFaqs } from '@/lib/site-data'
+import { getTeamMembers } from '@/lib/team'
 import { DEFAULT_SERVICES } from '@/lib/default-services'
 import {
   DEFAULT_FAQS,
-  DEFAULT_TEAM,
   SERVICE_KEY_TO_OPTION,
   TECH_STACK,
   contactHref,
@@ -50,10 +50,10 @@ function serviceHref(sourceKey?: string | null) {
 }
 
 export default async function HomePage() {
-  const [managedServices, managedFaqs, managedTeam] = await Promise.all([
+  const [managedServices, managedFaqs, team] = await Promise.all([
     orEmpty(getHomepageServices()),
     orEmpty(getPublishedFaqs()),
-    orEmpty(getPublishedTeam()),
+    getTeamMembers(),
   ])
 
   const managedKeys = new Set(
@@ -79,31 +79,6 @@ export default async function HomePage() {
   const faqs = managedFaqs.length > 0
     ? managedFaqs.map((faq) => ({ id: faq.id, question: faq.question, answer: faq.answer }))
     : DEFAULT_FAQS
-
-  // Copy and links come from the defaults; photos (and any extra
-  // members) come from the admin-managed team records.
-  const managedByName = new Map(managedTeam.map((m) => [m.name.trim().toLowerCase(), m]))
-  const team: TeamMemberData[] = [
-    ...DEFAULT_TEAM.map((member) => {
-      const managed = managedByName.get(member.name.toLowerCase())
-      return {
-        ...member,
-        avatarUrl: managed?.avatarUrl ?? null,
-        linkedInUrl: member.linkedInUrl || managed?.linkedInUrl,
-        githubUrl: member.githubUrl || managed?.githubUrl,
-      }
-    }),
-    ...managedTeam
-      .filter((m) => !DEFAULT_TEAM.some((d) => d.name.toLowerCase() === m.name.trim().toLowerCase()))
-      .map((m) => ({
-        name: m.name,
-        role: m.role,
-        bio: m.bio,
-        avatarUrl: m.avatarUrl,
-        linkedInUrl: m.linkedInUrl,
-        githubUrl: m.githubUrl,
-      })),
-  ]
 
   return (
     <>

@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, 160)
-  const image = product.thumbnailUrl || '/icon.svg'
+  const image = product.thumbnailUrl || '/og.png'
 
   return {
     title: product.title,
@@ -100,22 +100,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `/marketplace/${product.slug}`,
     },
     openGraph: {
-      title: `${product.title} — Druporia Products`,
+      title: `${product.title} | Druporia Products`,
       description,
       url: `/marketplace/${product.slug}`,
       type: 'website',
       images: [
         {
           url: image,
-          width: product.thumbnailUrl ? 1200 : 64,
-          height: product.thumbnailUrl ? 630 : 64,
+          width: 1200,
+          height: 630,
           alt: product.title,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.title} — Druporia Products`,
+      title: `${product.title} | Druporia Products`,
       description,
       images: [image],
     },

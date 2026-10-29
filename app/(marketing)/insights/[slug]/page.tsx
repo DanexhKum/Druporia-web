@@ -26,19 +26,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords: post.keywords,
     alternates: { canonical: `/insights/${post.slug}` },
     openGraph: {
-      title: `${post.title} — Druporia Insights`,
+      title: `${post.title} | Druporia Insights`,
       description: post.excerpt,
       url: `/insights/${post.slug}`,
       type: 'article',
       publishedTime: post.publishedAt,
       tags: post.keywords,
-      images: [{ url: '/icon.svg', width: 64, height: 64, alt: post.title }],
+      images: [{ url: '/og.png', width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${post.title} — Druporia Insights`,
+      title: `${post.title} | Druporia Insights`,
       description: post.excerpt,
-      images: ['/icon.svg'],
+      images: ['/og.png'],
     },
   }
 }
@@ -117,7 +117,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
 
       <CtaBand
         title="Need this built for your business?"
-        description="We build plugins, Shopify apps, automation workflows, AI tools and analytics dashboards — scoped as fixed-price work."
+        description="We build plugins, Shopify apps, automation workflows, AI tools and analytics dashboards, each scoped as fixed-price work."
       />
     </>
   )

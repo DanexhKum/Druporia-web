@@ -37,7 +37,7 @@ export default async function AdminReviewsPage() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="form-label" htmlFor="rating">Rating (1–5)</label>
+            <label className="form-label" htmlFor="rating">Rating (1 to 5)</label>
             <input id="rating" name="rating" type="number" min={1} max={5} defaultValue={5} />
           </div>
           <div>
@@ -71,8 +71,8 @@ export default async function AdminReviewsPage() {
           <label className="form-label" htmlFor="approvalStatus">Approval status</label>
           <select id="approvalStatus" name="approvalStatus" defaultValue={ReviewApprovalStatus.APPROVED}>
             <option value={ReviewApprovalStatus.PENDING}>Pending review</option>
-            <option value={ReviewApprovalStatus.APPROVED}>Approved - show on site</option>
-            <option value={ReviewApprovalStatus.REJECTED}>Rejected - hidden</option>
+            <option value={ReviewApprovalStatus.APPROVED}>Approved: shown on site</option>
+            <option value={ReviewApprovalStatus.REJECTED}>Rejected: hidden</option>
           </select>
         </div>
         <SubmitButton pendingText="Adding review...">Add review</SubmitButton>
@@ -168,8 +168,8 @@ export default async function AdminReviewsPage() {
                     <label className="form-label" htmlFor={`approval-${r.id}`}>Approval status</label>
                     <select id={`approval-${r.id}`} name="approvalStatus" defaultValue={r.approvalStatus}>
                       <option value={ReviewApprovalStatus.PENDING}>Pending review</option>
-                      <option value={ReviewApprovalStatus.APPROVED}>Approved - show on site</option>
-                      <option value={ReviewApprovalStatus.REJECTED}>Rejected - hidden</option>
+                      <option value={ReviewApprovalStatus.APPROVED}>Approved: shown on site</option>
+                      <option value={ReviewApprovalStatus.REJECTED}>Rejected: hidden</option>
                     </select>
                   </div>
                   <div className="flex items-center justify-between gap-4 sm:col-span-2">

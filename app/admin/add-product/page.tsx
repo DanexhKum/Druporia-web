@@ -532,7 +532,7 @@ export default function AddProductPage() {
         </h1>
         <p className="mt-1 text-sm text-slate-500">
           Fill in the details below to publish a new product to the marketplace.
-          The page updates instantly — no code push required.
+          The page updates instantly, with no code push required.
         </p>
       </div>
 
@@ -942,9 +942,9 @@ export default function AddProductPage() {
                 defaultValue="DRAFT"
                 className="max-w-xs"
               >
-                <option value="DRAFT">Draft - save privately for preview</option>
-                <option value="PUBLISHED">Published - show in marketplace</option>
-                <option value="ARCHIVED">Archived - hidden from marketplace</option>
+                <option value="DRAFT">Draft: saved privately for preview</option>
+                <option value="PUBLISHED">Published: shown on the Products page</option>
+                <option value="ARCHIVED">Archived: hidden from the Products page</option>
               </select>
               <p className="mt-1 text-xs text-slate-400">
                 Save as draft first to review the product before publishing.

@@ -20,11 +20,11 @@ const geist = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://druporia.vercel.app'),
   title: {
-    default: 'Druporia — Custom engineering for digital commerce',
+    default: 'Druporia | Custom engineering for digital commerce',
     template: '%s | Druporia',
   },
   description:
-    'Druporia designs and builds custom plugins, Shopify apps, AI automation and full-stack platforms for B2B and B2C brands — scoped up front, built in the open, supported after launch.',
+    'Druporia designs and builds custom plugins, Shopify apps, AI automation and full-stack platforms for B2B and B2C brands. Scoped up front, built in the open, supported after launch.',
   keywords: [
     'freelance developer',
     'web development',
@@ -48,26 +48,26 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    title: 'Druporia — Custom engineering for digital commerce',
+    title: 'Druporia | Custom engineering for digital commerce',
     description:
       'Custom plugins, Shopify apps, AI automation and full-stack development for commerce brands. Book a free discovery call.',
     siteName: 'Druporia',
     url: '/',
     images: [
       {
-        url: '/icon.svg',
-        width: 64,
-        height: 64,
+        url: '/og.png',
+        width: 1200,
+        height: 630,
         alt: 'Druporia',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Druporia — Custom engineering for digital commerce',
+    title: 'Druporia | Custom engineering for digital commerce',
     description:
       'Custom plugins, Shopify apps, AI automation and full-stack development for commerce brands.',
-    images: ['/icon.svg'],
+    images: ['/og.png'],
   },
 }
 

@@ -6,6 +6,9 @@
 
 export const CONTACT_EMAIL = 'dhanesh.kumar15@gmail.com'
 
+// Shown at the top of the legal pages. Update when a policy changes.
+export const LEGAL_UPDATED = 'October 29, 2026'
+
 export const NAV_LINKS = [
   { label: 'Services', href: '/#services' },
   { label: 'How we work', href: '/#how-we-work' },
@@ -27,7 +30,7 @@ export const FOOTER_COLUMNS = [
   {
     title: 'Company',
     links: [
-      { label: 'About', href: '/#team' },
+      { label: 'About', href: '/about' },
       { label: 'How we work', href: '/#how-we-work' },
       { label: 'Insights', href: '/insights' },
       { label: 'Products', href: '/marketplace' },
@@ -87,14 +90,14 @@ export const TECH_STACK = [
 export const PROCESS_STEPS = [
   { title: 'Discovery call', description: 'A free 30-minute call to understand your goals, stack and timeline.' },
   { title: 'Fixed-price scope', description: 'A written plan with milestones, deliverables and a clear price.' },
-  { title: 'Build in the open', description: 'Weekly demos and a shared board — you see progress as it happens.' },
+  { title: 'Build in the open', description: 'Weekly demos and a shared board, so you see progress as it happens.' },
   { title: 'Launch & support', description: 'We ship, hand over documentation and stay on for fixes.' },
 ]
 
 export const PILLARS = [
   { title: 'Scalable architecture', description: 'Systems designed for your next stage of growth, not just today’s traffic.' },
   { title: 'Enterprise security', description: 'Secure auth, careful data handling and clean, reviewed code.' },
-  { title: 'AI where it helps', description: 'Practical AI that saves time — support, recommendations, workflows.' },
+  { title: 'AI where it helps', description: 'Practical AI that saves your team time in support, recommendations and everyday workflows.' },
   { title: 'Measurable outcomes', description: 'Every build is scoped against a result you can point to.' },
 ]
 
@@ -124,14 +127,14 @@ export const DEFAULT_FAQS = [
 export const TEAM_INTRO = {
   title: 'The people you’ll work with',
   description:
-    'A small, senior team. The engineers who scope your project are the ones who build it — no account managers, no hand-offs, one shared channel from discovery call to launch.',
+    'A small, senior team. The engineers who scope your project are the ones who build it. No account managers and no hand-offs, just one shared channel from discovery call to launch.',
 }
 
 export const DEFAULT_TEAM = [
   {
     name: 'Dhanesh Kumar',
     role: 'Founder & Principal Engineer',
-    bio: 'Leads every engagement from the first call — scoping, architecture and the code itself. Works across WooCommerce and Shopify extensions, Next.js platforms, n8n automation and AI integrations, and owns the fixed-price scope you sign off on.',
+    bio: 'Leads every engagement from the first call, covering scoping, architecture and the code itself. Works across WooCommerce and Shopify extensions, Next.js platforms, n8n automation and AI integrations, and owns the fixed-price scope you sign off on.',
     focus: ['Architecture', 'Next.js', 'WooCommerce', 'AI'],
     linkedInUrl: 'https://www.linkedin.com/in/dhaneshkum15/',
     githubUrl: 'https://github.com/DanexhKum/',
@@ -139,7 +142,7 @@ export const DEFAULT_TEAM = [
   {
     name: 'Hitesh Kumar',
     role: 'Software Engineer',
-    bio: 'Builds the integrations that connect your store to the rest of your stack — n8n workflows, APIs and AI features like support bots and product recommendations — designed to keep running quietly after launch.',
+    bio: 'Builds the integrations that connect your store to the rest of your stack, from n8n workflows and APIs to AI features like support bots and product recommendations. Everything is designed to keep running quietly after launch.',
     focus: ['n8n', 'APIs', 'Machine learning'],
     linkedInUrl: 'https://www.linkedin.com/in/hitesh-kumar-85454323a/',
     githubUrl: 'https://github.com/hitesh311',
@@ -147,7 +150,7 @@ export const DEFAULT_TEAM = [
   {
     name: 'Aastha Gupta',
     role: 'Data Analyst',
-    bio: 'Turns sales, customer and marketing data into dashboards your team actually opens — cleaning the data, defining the KPIs and building the reporting pipelines behind them.',
+    bio: 'Turns sales, customer and marketing data into dashboards your team actually opens. That means cleaning the data, defining the KPIs and building the reporting pipelines behind them.',
     focus: ['Python', 'Data pipelines', 'Dashboards'],
     linkedInUrl: 'https://www.linkedin.com/in/aastha-gupta-2001582bb/',
     githubUrl: 'https://github.com/A2A2S2T2H2A2-RANI',

@@ -40,11 +40,14 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'grid h-[34px] w-[34px] flex-none place-items-center rounded-full text-lg',
+                    'grid h-[34px] w-[34px] flex-none place-items-center rounded-full',
                     open ? 'bg-orange text-white' : 'bg-canvas text-ink'
                   )}
                 >
-                  {open ? '–' : '+'}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M5 12h14" />
+                    {!open && <path d="M12 5v14" />}
+                  </svg>
                 </span>
               </button>
             </h3>

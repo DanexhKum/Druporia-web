@@ -12,24 +12,24 @@ import { CONTACT_EMAIL, PROCESS_STEPS, parseServiceParam } from '@/lib/site-cont
 export const metadata: Metadata = {
   title: 'Book a free discovery call',
   description:
-    'Tell Druporia what you are building — custom plugins, Shopify apps, AI automation, data dashboards or full-stack platforms. We reply within one business day.',
+    'Tell Druporia what you are building: custom plugins, Shopify apps, AI automation, data dashboards or full-stack platforms. We reply within one business day.',
   alternates: {
     canonical: '/contact',
   },
   openGraph: {
-    title: 'Book a free discovery call — Druporia',
+    title: 'Book a free discovery call | Druporia',
     description:
       'Start a project with Druporia: a free 30-minute call, then a fixed-price scope.',
     url: '/contact',
     type: 'website',
-    images: [{ url: '/icon.svg', width: 64, height: 64, alt: 'Contact Druporia' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Contact Druporia' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Book a free discovery call — Druporia',
+    title: 'Book a free discovery call | Druporia',
     description:
       'Start a project with Druporia: a free 30-minute call, then a fixed-price scope.',
-    images: ['/icon.svg'],
+    images: ['/og.png'],
   },
 }
 
@@ -46,7 +46,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
       <PageHeader
         eyebrow="Contact"
         title="Book a free discovery call"
-        description="Tell us what you’re building. We’ll reply within one business day with next steps and a time for a 30-minute call — no commitment."
+        description="Tell us what you’re building. We’ll reply within one business day with next steps and a time for a free 30-minute call, with no commitment."
       />
 
       <section className="container-page grid gap-12 pb-20 desk:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] desk:gap-16 desk:pb-section">

@@ -22,8 +22,8 @@ export function Hero() {
           </h1>
           <p className="mt-7 max-w-[52ch] text-lead text-body">
             We design and build custom plugins, Shopify apps, AI automation and
-            full-stack platforms for B2B and B2C brands — scoped up front, built in
-            the open, supported after launch.
+            full-stack platforms for B2B and B2C brands. Every project is scoped up
+            front, built in the open and supported after launch.
           </p>
           <div className="mt-10 flex flex-col gap-3 tab:flex-row">
             <Button href="/contact" size="lg">

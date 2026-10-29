@@ -17,7 +17,7 @@ import { CtaBand } from '@/components/marketing/HomeSections'
 export const metadata: Metadata = {
   title: 'Products',
   description:
-    'WooCommerce plugins, Chrome extensions and app starters from Druporia — use one as a starting point, or have us adapt it to your store.',
+    'WooCommerce plugins, Chrome extensions and app starters from Druporia. Use one as a starting point, or have us adapt it to your store.',
   alternates: {
     canonical: '/marketplace',
   },
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 64,
-        height: 64,
+        url: '/og.png',
+        width: 1200,
+        height: 630,
         alt: 'Druporia Products',
       },
     ],
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: 'Druporia Products',
     description:
       'Plugins, extensions and app starters from Druporia, ready to adapt to your store.',
-    images: ['/icon.svg'],
+    images: ['/og.png'],
   },
 }
 

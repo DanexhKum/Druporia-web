@@ -16,14 +16,14 @@ export const metadata: Metadata = {
       'Practical articles about commerce technology, automation, AI, and analytics.',
     url: '/insights',
     type: 'website',
-    images: [{ url: '/icon.svg', width: 64, height: 64, alt: 'Druporia Insights' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Druporia Insights' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Druporia Insights',
     description:
       'Practical articles about commerce technology, automation, AI, and analytics.',
-    images: ['/icon.svg'],
+    images: ['/og.png'],
   },
 }
 
@@ -35,7 +35,7 @@ export default function InsightsPage() {
       <PageHeader
         eyebrow="Insights"
         title="Ideas for commerce, automation, AI and analytics."
-        description="Practical notes for teams building better stores, integrations, workflows and reporting — written by the engineers who do the work."
+        description="Practical notes for teams building better stores, integrations, workflows and reporting. Written by the engineers who do the work."
       />
 
       <section className="container-page pb-20 desk:pb-section">

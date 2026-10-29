@@ -17,7 +17,6 @@ export function Footer() {
         >
           {CONTACT_EMAIL}
         </a>
-        <p className="mt-1.5 text-muted-soft">Remote-first · Worldwide</p>
       </div>
 
       {FOOTER_COLUMNS.map((column) => (
@@ -36,8 +35,8 @@ export function Footer() {
       ))}
 
       <div className="col-span-full flex flex-col justify-between gap-2 border-t border-line pt-7 text-[13px] text-muted-soft tab:flex-row">
-        <span>© {new Date().getFullYear()} Druporia Technologies</span>
-        <span>druporia.vercel.app</span>
+        <span>© {new Date().getFullYear()} Druporia Technologies. All rights reserved.</span>
+        <span>Remote-first, working with clients worldwide</span>
       </div>
     </footer>
   )

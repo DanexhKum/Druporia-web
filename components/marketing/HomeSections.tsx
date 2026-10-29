@@ -19,7 +19,7 @@ export function ServicesSection({ services }: { services: ServiceCardData[] }) {
       <SectionHeading
         eyebrow="Services"
         title="What we build for you"
-        description="From a single plugin to a full platform — every engagement is scoped as fixed-price work with a clear outcome."
+        description="From a single plugin to a full platform, every engagement is scoped as fixed-price work with a clear outcome."
         layout="split"
         className="mb-12 desk:mb-14"
       />
