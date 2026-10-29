@@ -24,6 +24,10 @@ import {
   contactHref,
 } from '@/lib/site-content'
 
+// Re-render at most every 60s so admin edits show up, and so a build
+// that couldn't reach the database doesn't pin the fallback copy.
+export const revalidate = 60
+
 function getTags(value: unknown) {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === 'string')

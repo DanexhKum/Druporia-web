@@ -145,7 +145,21 @@ async function ProductGrid({
   price?: PriceFilter
   sort?: SortOption
 }) {
-  const products = await getProducts(category, query, price, sort)
+  let products: Awaited<ReturnType<typeof getProducts>>
+  try {
+    products = await getProducts(category, query, price, sort)
+  } catch (error) {
+    console.error('[marketplace] product query failed', error)
+    return (
+      <EmptyState
+        icon={PackageSearch}
+        title="Products are unavailable right now"
+        description="Please check back shortly. Need something specific? We build custom plugins and apps as scoped projects."
+        actionHref="/contact"
+        actionLabel="Book a free discovery call"
+      />
+    )
+  }
 
   if (products.length === 0) {
     return (
@@ -208,7 +222,11 @@ export default async function MarketplacePage({ searchParams }: PageProps) {
         ...(category && category !== 'all' ? { category } : {}),
       },
     }),
-  ])
+  ]).catch((error) => {
+    // Filter counts are cosmetic; ProductGrid shows the outage message.
+    console.error('[marketplace] count query failed', error)
+    return [0, 0, 0, 0, 0]
+  })
 
   const categoryCounts = {
     all: totalCount,

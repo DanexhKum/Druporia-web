@@ -5,16 +5,29 @@ import { getInsightPosts } from '@/lib/insights'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://druporia.vercel.app'
 
+// Regenerate hourly so product URLs appear even if the database
+// was unreachable when the site was built.
+export const revalidate = 3600
+
+async function getPublishedProductSlugs() {
+  try {
+    return await prisma.product.findMany({
+      where: { status: ProductStatus.PUBLISHED },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+      orderBy: { updatedAt: 'desc' },
+    })
+  } catch (error) {
+    console.error('[sitemap] product query failed, omitting product URLs', error)
+    return []
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
-  const products = await prisma.product.findMany({
-    where: { status: ProductStatus.PUBLISHED },
-    select: {
-      slug: true,
-      updatedAt: true,
-    },
-    orderBy: { updatedAt: 'desc' },
-  })
+  const products = await getPublishedProductSlugs()
   const insights = getInsightPosts()
 
   const staticRoutes: MetadataRoute.Sitemap = [
